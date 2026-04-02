@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "n_episodes": 30,
+    "success_rate": 0.03333333333333333,
+    "avg_steps": 98.6,
+    "std_steps": 7.539230729988306,
+    "avg_steps_on_success": 58.0,
+    "avg_total_depth": 0.0,
+    "std_total_depth": 0.0,
+    "avg_reward": -0.9523333333333334,
+    "avg_parse_failures": 0.0,
+    "budget_exhausted_rate": 0.0,
+    "depth_distribution": {
+      "0": 2958
+    },
+    "avg_complexity": 0.3761680747126437
+  }
+}

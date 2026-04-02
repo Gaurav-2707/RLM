@@ -18,11 +18,15 @@ class LLMClient:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
+        model: str = "gpt-4o-mini",
         provider: Optional[str] = None,
     ):
         # prefer explicit environment variables; fall back to either name
-        self.api_key = api_key or os.getenv("GENAI_API_KEY")
+        self.api_key = (
+            api_key
+            or os.getenv("OPENAI_API_KEY")
+            or os.getenv("GENAI_API_KEY")
+        )
         if not self.api_key:
             raise ValueError("LLM API key is required; set OPENAI_API_KEY or GENAI_API_KEY")
         self.model = model
@@ -31,11 +35,10 @@ class LLMClient:
         if provider:
             self.provider = provider.lower()
         else:
-            # choose provider based solely on model name prefix
-            if model.lower().startswith("gemini"):
-                self.provider = "gemini"
-            else:
+            if os.getenv("OPENAI_API_KEY"):
                 self.provider = "openai"
+            else:
+                self.provider = "gemini"
 
         if self.provider == "openai":
             try:
@@ -80,17 +83,17 @@ class LLMClient:
                 # Convert OpenAI message format to genai history format
                 # genai only accepts "user" and "model" roles (not "system")
                 from google import genai
-                
+
                 history = []
                 for msg in messages[:-1]:  # all but last message go to history
                     role = msg.get("role", "user")
                     content = msg.get("content", "")
-                    
+
                     # genai only accepts "user" and "model" roles
                     # Convert "system" to "user"
                     if role == "system":
                         role = "user"
-                    
+
                     if content:  # only add non-empty messages
                         history.append(
                             genai.types.Content(
@@ -98,24 +101,24 @@ class LLMClient:
                                 parts=[genai.types.Part(text=content)]
                             )
                         )
-                
+
                 # Create chat with history
                 config = None
                 if max_tokens:
                     config = genai.types.GenerateContentConfig(
                         max_output_tokens=max_tokens
                     )
-                
+
                 chat = self.client.chats.create(
                     model=self.model,
                     config=config,
                     history=history,
                 )
-                
+
                 # Send the last message and get response
                 last_msg = messages[-1].get("content", "") if messages else ""
                 response = chat.send_message(last_msg)
-                
+
                 # Extract text from response
                 if hasattr(response, 'text'):
                     return response.text
@@ -125,7 +128,6 @@ class LLMClient:
                     return ''.join(text_parts) if text_parts else str(response)
                 else:
                     return str(response)
-                    
+
         except Exception as e:
             raise RuntimeError(f"Error during {self.provider} completion: {str(e)}")
-            

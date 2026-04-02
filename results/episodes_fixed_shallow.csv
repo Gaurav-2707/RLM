@@ -1,0 +1,2 @@
+episode,mode,seed,success,total_steps,total_depth,total_reward,budget_exhausted,max_total_depth,wall_time_seconds,parse_failure_count,depth_distribution
+0,fixed_shallow,0,False,100,0,-1.0,False,150,0.0,0,"{""0"": 100, ""1"": 0, ""2"": 0, ""3"": 0}"
