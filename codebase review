@@ -1,0 +1,388 @@
+# RLM Codebase Review
+
+## 1. High-Level Overview
+
+**RLM (Recursive Language Model)** is a Python framework that solves the **fixed context window problem** of modern LLMs. Instead of cramming a million-line document into a prompt, it turns an LLM into an active **agent** that:
+
+1. Receives a query + a (potentially massive) context.
+2. Writes and executes Python code in a sandboxed REPL to navigate and analyze the context.
+3. Can **call sub-LLMs mid-execution** via a `llm_query()` hook injected into the REPL.
+4. Iterates the loop — model writes code → REPL runs it → output fed back → model writes more code — until a `FINAL(answer)` or `FINAL_VAR(variable)` is emitted.
+
+**The canonical demo** (`main.py`) hides a 7-digit secret number inside 1,000,000 lines of random text ("needle-in-a-haystack") and asks the model to find it using only the REPL.
+
+The project also ships a standalone **Adaptive Compute Controller (ACC)** that dynamically decides _how much reasoning depth_ to apply to each step based on a measurable complexity score — a compute budgeting layer intended to sit on top of the REPL loop.
+
+---
+
+## 2. Architecture & Structure
+
+```
+RLM/                         ← repo root
+├── main.py                  ← Needle-in-a-haystack demo entry point
+├── example_acc.py           ← ACC standalone demo (no API key needed)
+├── requirements.txt
+├── tests/
+│   └── test_acc.py          ← pytest suite for ACC only
+│
+└── RLM/                     ← Python package
+    ├── __init__.py
+    ├── rlm.py               ← Abstract base class (RLM interface)
+    ├── rlm_repl.py          ← Main agent: orchestrates LLM + REPL loop
+    ├── repl.py              ← Sandboxed Python REPL environment
+    ├── models.py            ← Pydantic data models (AgentState, MemoryEntry, …)
+    ├── gemini_interface.py  ← Older Gemini-only interface with circuit breaker
+    ├── agent_controller.py  ← Older agent loop (Gemini-specific, not used by main.py)
+    │
+    ├── acc/                 ← Adaptive Compute Controller
+    │   ├── __init__.py      ←   Exports: AdaptiveComputeController, ComplexityScorer
+    │   ├── controller.py    ←   Core depth-selection & budget logic
+    │   ├── complexity.py    ←   Heuristic complexity scorer
+    │   └── models.py        ←   DepthRecord, EpisodeReport dataclasses
+    │
+    ├── engine/
+    │   ├── rlm_engine.py    ←   3-step reasoning pipeline (Decompose/Refine/Synthesise)
+    │   └── templates.py     ←   Prompt templates for each engine step
+    │
+    ├── memory/
+    │   ├── base.py          ←   MemoryEntry dataclass
+    │   ├── retrieval.py     ←   BM25Retriever, JaccardRetriever
+    │   └── system.py        ←   EpisodicMemorySystem (BM25 + recency decay)
+    │
+    ├── utils/
+    │   ├── llm.py           ←   Unified LLMClient (Gemini / OpenAI)
+    │   ├── prompts.py       ←   System & action prompt templates for REPL loop
+    │   └── utils.py         ←   Code-block parsing, REPL execution helpers
+    │
+    └── logger/
+        ├── root_logger.py   ←   ColorfulLogger (ANSI color console logging)
+        └── repl_logger.py   ←   REPLEnvLogger (tracks executions)
+```
+
+The package has **two parallel generations** of agent architecture:
+
+| Layer | Files | Status |
+|---|---|---|
+| **New REPL path** | `rlm_repl.py`, `repl.py`, `utils/` | Primary — used by `main.py` |
+| **Old Agent path** | `agent_controller.py`, `gemini_interface.py` | Legacy — Gemini-specific, not wired to main |
+| **ACC** | `acc/` | Standalone module, not yet wired to REPL loop |
+| **Engine** | `engine/` | Also standalone; wraps any `RLM` impl |
+| **Memory** | `memory/` | Used by old `AgentController` only |
+
+---
+
+## 3. Core Components
+
+### 3.1 `RLM` — Abstract Base (`RLM/rlm.py:3`)
+A 14-line ABC that mandates all RLM implementations to provide:
+- `completion(context, query) → str`
+- `cost_summary() → dict`
+- `reset()`
+
+This is the **single contract** the entire system talks to. Both `RLM_REPL` (the main implementation) and `Sub_RLM` (the nested LLM called from within the REPL) implement it.
+
+---
+
+### 3.2 `RLM_REPL` — Main Orchestrator (`RLM/rlm_repl.py`)
+**The brain.** Extends `RLM` and drives the outer agent loop.
+
+**`__init__`** (line 22): Creates an `LLMClient` (for the root LLM), a `ColorfulLogger`, and a `REPLEnvLogger`. Sets `max_iterations` (default 20).
+
+**`setup_context`** (line 48): Initializes the conversation:
+1. Builds a system-prompt message list via `build_system_prompt()`.
+2. Converts the input context (string/dict/list) via `convert_context_for_repl()`.
+3. Instantiates `REPLEnv` — which writes the context to a temp file, injects `llm_query()` and `FINAL_VAR()` globals.
+
+**`completion`** (line 77): The main loop (up to `max_iterations` rounds):
+1. Calls the root LLM with `messages + next_action_prompt(query, iteration)`.
+2. Parses `\`\`\`repl ... \`\`\`` code blocks from the response (`find_code_blocks`, `utils/utils.py:4`).
+3. If code blocks found → executes them in the REPL → appends stdout/stderr to messages.
+4. Checks for `FINAL(...)` or `FINAL_VAR(...)` in the response (`check_for_final_answer`, `utils/utils.py:114`).
+5. If a final answer is found → returns it. Otherwise continues iterating.
+6. If `max_iterations` is exhausted, forces a final answer with one more LLM call.
+
+---
+
+### 3.3 `REPLEnv` — Sandboxed Python Executor (`RLM/repl.py:72`)
+The REPL is a persistent, notebook-style Python environment that the agent writes code into.
+
+**Sandbox setup** (line 91–162): A carefully curated `__builtins__` dict is passed to `exec()`. It allows most standard builtins but **explicitly blocks** `eval`, `exec`, `compile`, `globals`, `locals`, and `input` (lines 155–160).
+
+> [!WARNING]
+> Despite the blocked list, `__import__` (line 101) and `open` (line 102) are allowed, which means the model can `import os` and access the filesystem or spawn subprocesses. This is a **meaningful security gap** for untrusted use.
+
+**Context loading** (`load_context`, line 201): The context is written to a temp directory as `context.json` or `context.txt`, then `exec()`-ed into the REPL so `context` becomes a first-class variable the model can access.
+
+**Injected globals** (lines 170–195):
+- `llm_query(prompt)` → calls `Sub_RLM.completion()` (a nested LLM call)
+- `FINAL_VAR(variable_name)` → looks up a variable in REPL locals and returns its string value
+
+**`code_execution`** (line 265): The core execution engine.
+- Splits code into `import *` lines and everything else.
+- Imports run in `self.globals` (so they are available to future executions — notebook-style persistence).
+- Other code runs in a combined namespace `{**globals, **locals}`.
+- Smart auto-print: if the last non-comment line looks like an expression (not an assignment or control flow), it's `eval()`-ed and the result is `print()`-ed — like a Jupyter cell.
+- Stdout/stderr are captured via `io.StringIO` in a thread-safe context manager.
+
+**`Sub_RLM`** (line 15): A minimal `RLM` impl that just calls `LLMClient.completion()`. This is what `llm_query()` delegates to — each call to `llm_query()` inside agent-written code is effectively a **recursive, synchronous sub-LLM call**.
+
+---
+
+### 3.4 `LLMClient` — Provider Abstraction (`RLM/utils/llm.py:7`)
+A thin unified wrapper over two backends:
+
+- **Gemini**: Uses `google.genai.Client`. Since Gemini's API only accepts `"user"` and `"model"` roles (not `"system"`), `system` messages are silently converted to `"user"` (line 91). The full conversation history is passed as a `chats.create()` call.
+- **OpenAI**: Standard `client.chat.completions.create()`.
+
+Provider is selected by model name prefix: `gemini-*` → Gemini, everything else → OpenAI (line 35–38).
+
+---
+
+### 3.5 `ComplexityScorer` (`RLM/acc/complexity.py:40`)
+A **pure-Python, API-free** heuristic that scores a query's complexity on [0, 1]:
+
+| Sub-score | Method | What it measures |
+|---|---|---|
+| Lexical entropy | `_lexical_entropy` (line 129) | Shannon entropy of token distribution |
+| Query length | `_length_score` (line 147) | Token count normalized by `length_cap=50` |
+| Keyword density | `_keyword_score` (line 151) | Deep keywords (+) vs shallow keywords (-) |
+| Context signal | `_context_signal` (line 170) | Raw char length, saturates at 1M chars |
+
+Weights default to `(0.35, 0.30, 0.35)` and are normalized internally (line 72–75).
+
+---
+
+### 3.6 `AdaptiveComputeController` (`RLM/acc/controller.py:35`)
+The ACC takes a complexity score and outputs a **depth** (1, 2, or 3), subject to a budget:
+
+```
+score < 0.35   →  depth 1  (cost: 1 API call)
+0.35–0.70      →  depth 2  (cost: 2 API calls)
+> 0.70         →  depth 3  (cost: 3 API calls)
+```
+
+If the requested depth is too expensive for the remaining budget, `_apply_budget()` (line 223) falls back to a cheaper depth (depth→depth-1→depth-2). If even depth 1 can't be afforded, it sets `_budget_exhausted = True` and returns `0` as a stop-signal.
+
+Episode lifecycle: `new_episode()` → repeated `select_depth()` calls → `end_episode()` returns an `EpisodeReport`.
+
+**`EpisodeReport`** (`acc/models.py:38`) captures: all `DepthRecord`s, total API calls, budget exhaustion flag, and computes: depth distribution, non-uniformity check, average complexity, and **Pearson correlation** between complexity scores and depths selected.
+
+---
+
+### 3.7 `RLMEngine` — 3-Step Pipeline (`RLM/engine/rlm_engine.py:13`)
+A structured reasoning wrapper that takes any `RLM` instance and applies a fixed 3-step pipeline to a problem:
+
+1. **Step 0 – Decompose**: Break the problem into logical sub-units. Extract a `<summary>` block.
+2. **Step 1 – Refine**: Critique Step 0's output, identify hidden assumptions, refine hypothesis. Extract summary.
+3. **Step 2 – Synthesise**: Produce the final answer, critique Step 1, propose next action.
+
+The `_extract_summary()` helper (line 24) parses `<summary>...</summary>` XML tags; falls back to last 150 words if tags are missing. This engine is **not called by `main.py`** — it's an alternative reasoning mode.
+
+---
+
+### 3.8 `AgentController` (`RLM/agent_controller.py:12`) — Legacy
+An older, more traditional agent loop that uses `GeminiInterface` directly (not `LLMClient`). Per-iteration flow:
+1. Memory retrieval from `EpisodicMemorySystem`.
+2. Recursive reasoning via JSON-structured prompt to Gemini.
+3. Action dispatch (currently mocked/simulated — `_dispatch_action` line 174 just prints).
+4. Memory commit.
+
+Contains robust JSON parsing with regex fallback (`_parse_json_robust`, line 121). **Not wired to `main.py`** — this is prototype/scaffold code.
+
+---
+
+### 3.9 `EpisodicMemorySystem` (`RLM/memory/system.py:7`)
+A bounded episodic memory store with:
+- **BM25 retrieval** (via `BM25Retriever`, `retrieval.py:5`) for relevance.
+- **Recency decay**: `exp(-λ * (now - timestamp))` with a configurable `decay_rate`.
+- **Composite score**: `α * relevance + β * (recency * outcome_score)` (line 83), defaults α=0.6, β=0.4.
+- **Conflict detection**: uses `JaccardRetriever` (line 66) to flag entries with similar states but opposite outcome scores (line 48).
+- **Pruning**: when `capacity` exceeded, removes the entry with the lowest `(0.7 * outcome + 0.3 * recency)` score.
+
+Only used by `AgentController`, not the active REPL path.
+
+---
+
+### 3.10 `GeminiInterface` (`RLM/gemini_interface.py:22`) — Legacy
+A Gemini-specific wrapper with production-grade resilience:
+- **Circuit breaker** (5 failure threshold, 60s recovery window, lines 37–71).
+- **Exponential backoff with jitter** for 429 rate-limit errors (line 124).
+- **Token tracking** (`total_input_tokens`, `total_output_tokens`, line 110).
+
+This is the most battle-hardened piece of the codebase but is only used by `AgentController`. `LLMClient` does not replicate this resilience.
+
+---
+
+## 4. Data Flow
+
+### Main Use Case: Needle-in-a-Haystack (`main.py`)
+
+```
+main()
+  │
+  ├── generate_massive_context(1_000_000 lines)  → context: str (giant multiline string)
+  │
+  └── rlm.completion(context=context, query="What is the magic number?")
+        │
+        ├── setup_context()
+        │     ├── build_system_prompt() → messages = [{"role":"system", "content": REPL_SYSTEM_PROMPT}]
+        │     ├── convert_context_for_repl(context) → (None, context_str)
+        │     └── REPLEnv(context_str=context_str)
+        │           └── load_context() → writes context.txt to /tmp/repl_env_XXXX/
+        │                               → exec("with open(context.txt) as f: context = f.read()")
+        │
+        └── for iteration in range(max_iterations=10):
+              │
+              ├── llm.completion(messages + next_action_prompt(query, iteration))
+              │     → root LLM response (may contain ```repl ... ``` blocks)
+              │
+              ├── find_code_blocks(response)  [utils.py:4]
+              │     → ["chunk = context[:100000]\nanswer = llm_query(...)"]
+              │
+              ├── repl_env.code_execution(code)  [repl.py:265]
+              │     ├── exec(code, {**globals, **locals})
+              │     │     └── llm_query("...chunk...") → Sub_RLM.completion(prompt)
+              │     │           → LLMClient.completion() → Gemini API → sub-answer
+              │     └── returns REPLResult(stdout, stderr, locals, exec_time)
+              │
+              ├── add_execution_result_to_messages(messages, code, result)
+              │     → appends {"role":"user", "content": "REPL output: ..."} to messages
+              │
+              └── check_for_final_answer(response, repl_env)  [utils.py:114]
+                    → finds FINAL_VAR(answer) in response
+                    → reads repl_env.locals["answer"]
+                    → returns the magic number string
+```
+
+---
+
+## 5. Dependencies & Tech Stack
+
+| Package | Role | Notes |
+|---|---|---|
+| `google-genai >= 1.0.0` | Gemini LLM calls | Used by `LLMClient` and `GeminiInterface` |
+| `openai >= 1.0.0` | OpenAI LLM calls | Used by `LLMClient` |
+| `pydantic >= 2.0.0` | Data validation | `AgentState`, `MemoryEntry`, `ReasoningOutput`, `ActionResult`, `GeminiConfig` |
+| `python-dotenv >= 1.0.0` | API key loading from `.env` | Called globally in `utils/llm.py:4` |
+| `pytest >= 8.0.0` | Testing | ACC unit tests only |
+
+**Zero external ML libraries** — BM25 and Jaccard are hand-rolled in `memory/retrieval.py`. The complexity scorer uses only `math` and `re`.
+
+---
+
+## 6. Entry Points
+
+### Run the Demo
+```bash
+# Set API key (in a .env file or shell)
+export GENAI_API_KEY="your-key"
+
+# Run needle-in-a-haystack benchmark
+python main.py
+```
+
+`main.py:24` → `RLM_REPL("gemini-2.5-flash")` → `rlm.completion(context, query)`.
+
+### Run the ACC Demo (no API key needed)
+```bash
+python example_acc.py
+```
+Uses mock complexity scores, produces a tabular episode report with correlation stats.
+
+### Run Tests
+```bash
+pytest tests/ -v
+```
+Only `tests/test_acc.py` exists — 275 lines, covering `ComplexityScorer`, `AdaptiveComputeController`, and `EpisodeReport`.
+
+### Use as a Library
+```python
+from RLM.rlm_repl import RLM_REPL
+
+rlm = RLM_REPL(model="gemini-2.5-flash", max_iterations=10, enable_logging=True)
+result = rlm.completion(context="...your big doc...", query="What does section 3 say?")
+```
+
+---
+
+## 7. Notable Patterns & Design Decisions
+
+### 7.1 Code-as-Tool (REPL as the action space)
+Instead of defining a fixed tool API (search, slice, etc.), the model is given a **full Python interpreter**. This is a powerful and flexible design: the model can write arbitrary code to solve any retrieval or analysis sub-problem. The downside is that it makes the action space unbounded and harder to audit.
+
+### 7.2 Two Final-Answer Conventions
+Both `FINAL(answer)` (inline in prose) and `FINAL_VAR(my_var)` (via REPL variable reference) are supported. `FINAL_VAR` is smarter — it lets the model build up a result in the REPL over multiple steps, then reference it by name. Both are parsed by regex in `utils.py:14`.
+
+### 7.3 Context Written to Disk, Not Injected into Prompt
+Rather than putting the 1M-line context directly in the LLM's prompt (which would exhaust any context window), it's written to a temp file at `load_context()` (line 201) and the model reads it via code. This is the central architectural trick.
+
+### 7.4 Notebook-style State Persistence
+REPL variables persist across `code_execution()` calls because `self.locals` is accumulated — exactly like a Jupyter notebook. This allows the model to build up intermediate results across iterations.
+
+### 7.5 Abstract `RLM` Interface Enables Nesting
+Because `Sub_RLM`, `RLM_REPL`, and the conceptual `RLMEngine`-wrapped-RLM all implement the same 3-method ABC, the system is naturally composable. You could, in theory, use an `RLM_REPL` as the `rlm` argument of `RLMEngine`, stacking REPL-with-engine reasoning.
+
+### 7.6 ACC Designed as a Separate Concern
+The ACC is clean and well-tested but currently **not wired** into the REPL loop. There's a comment stub in `agent_controller.py:82` and a `depth` parameter in `RLM_REPL.__init__` that is marked `# Unused in this version`. This is a clear extension point.
+
+### 7.7 Parallel Provider Abstractions
+There are **two Gemini clients** in the codebase: `LLMClient` (new, unified) and `GeminiInterface` (old, Gemini-only with circuit breaker). They were built at different times and serve different parts of the system. This creates confusion and maintenance overhead.
+
+### 7.8 JSON Parsing with Regex Fallback
+`_parse_json_robust()` in `agent_controller.py:121` is a solid pattern — attempt `json.loads()`, extract fields with regex if that fails. This guards against common LLM formatting sloppiness.
+
+---
+
+## 8. Potential Improvements & Risks
+
+### 🔴 Security: REPL Sandbox is Not Truly Sandboxed
+
+> [!CAUTION]
+> `repl.py:101` allows `__import__` and `open`. The model can `import os; os.system("rm -rf /")`, write arbitrary files, or make network calls. For production or multi-tenant use, this **must** use a proper sandbox (e.g., `restrictedpython`, Docker, or a subprocess with `seccomp` restrictions).
+
+### 🟡 Fragile Code: `is_expression` Heuristic (`repl.py:302`)
+The logic to decide if the last line of code is an expression (to auto-print it) uses string prefix matching and `'=' not in last_line`. This will misfire on lines like `a == b` (comparison, not assignment) or augmented assignments (`a += 1`). A proper AST parse would be safer.
+
+```python
+# Risky: '=' not in last_line.split('#')[0]
+# 'a == b'  → treated as expression ✓ (okay)
+# 'a += 1'  → '=' in line → treated as statement ✓ (okay)
+# 'x = f()' → '=' in line → treated as statement ✓ (okay)
+# 'f(x=1)'  → '=' in line → treated as statement ✗ (should be expression)
+```
+
+### 🟡 No Cost Tracking
+`RLM_REPL.cost_summary()` raises `NotImplementedError` (line 126). There's no token counting in the active REPL path. Running this against a massive context could surprise users with large API bills.
+
+### 🟡 ACC is Disconnected
+The ACC is the most well-tested module (`test_acc.py` has thorough coverage) but is completely unused in the main agent loop. The `depth` param in `RLM_REPL.__init__` (line 38) is noted as `# Unused`.
+
+### 🟡 Dual Gemini Clients
+`GeminiInterface` has circuit breaking, jitter, and token tracking. `LLMClient` (used by the main path) has none of that. Rate limits will cause `RuntimeError` exceptions without retry (only one `try/except` at line 129 in `llm.py`).
+
+### 🟡 Old `AgentController` Has Dead Code
+`_dispatch_action()` (line 174–188) returns a simulated result, not a real tool call. The ACC hook at line 82 is commented out. This whole file is prototype scaffolding.
+
+### 🟢 Memory Module is Correct but Unused
+`EpisodicMemorySystem` is well-implemented (BM25 + recency decay + pruning + conflict detection) but is only wired to the old `AgentController`. Connecting it to `RLM_REPL` would allow the agent to remember strategies across sessions.
+
+### 🟢 Missing Error Handling on Budget Exhaustion
+In `main.py`, the final fallback (line 118–120) appends a `next_action_prompt(query, iteration, final_answer=True)` and calls the LLM once more. But `iteration` at this point is the last loop variable — which is correct but subtle and worth a comment.
+
+### 🟢 No `__all__` in `RLM/__init__.py`
+The package init only has `__version__ = "0.1.0"`. Exports are not declared, so IDE autocomplete and `from RLM import *` behavior is undefined.
+
+---
+
+## Summary Table
+
+| Aspect | Status |
+|---|---|
+| Core REPL loop | ✅ Well-implemented |
+| ACC module | ✅ Well-designed, well-tested — but disconnected |
+| Memory system | ✅ Correct — but disconnected from main path |
+| LLM abstraction | 🟡 Two parallel clients; new one lacks resilience |
+| Security | 🔴 Sandbox is not truly sandboxed |
+| Cost tracking | 🔴 Not implemented |
+| Test coverage | 🟡 Only ACC is tested; REPL/LLM paths have no tests |
+| Documentation | ✅ README is thorough and accurate |
