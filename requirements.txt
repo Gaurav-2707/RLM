@@ -5,7 +5,7 @@ openai>=1.0.0              # for OpenAI models  (OPENAI_API_KEY)
 # Environment variable loading
 python-dotenv>=1.0.0
 
-# Data validation (used in RLM/models.py)
+# Data validation
 pydantic>=2.0.0
 
 # Testing
@@ -14,3 +14,12 @@ pytest>=8.0.0
 # API Layer
 fastapi>=0.100.0
 uvicorn>=0.23.0
+
+# Benchmark + Dashboard
+datasets>=2.18.0           # HuggingFace datasets (HotpotQA)
+streamlit>=1.32.0          # Dashboard UI
+plotly>=5.18.0             # Interactive charts
+pandas>=2.0.0              # Data wrangling
+
+# BM25 retrieval (used by EpisodicMemorySystem)
+rank-bm25>=0.2.2

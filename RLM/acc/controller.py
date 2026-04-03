@@ -61,7 +61,7 @@ class AdaptiveComputeController:
 
     def __init__(
         self,
-        max_api_calls: Optional[int] = None,
+        max_api_calls: Optional[int] = 10,
         depth_costs: Optional[dict[int, int]] = None,
     ) -> None:
         self.max_api_calls = max_api_calls

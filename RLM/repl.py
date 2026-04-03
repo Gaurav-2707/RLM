@@ -76,6 +76,7 @@ class REPLEnv:
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,
+        plugins: Optional[dict] = None,
     ):
         # Store the original working directory
         self.original_cwd = os.getcwd()
@@ -193,6 +194,11 @@ class REPLEnv:
                 return f"Error retrieving variable '{variable_name}': {str(e)}"
         
         self.globals['FINAL_VAR'] = final_var
+        
+        # Inject any additional plugin functions (e.g. memory_retrieve, deep_reason)
+        if plugins:
+            for name, fn in plugins.items():
+                self.globals[name] = fn
         
         # Finally, run any setup code if provided
         if setup_code:
