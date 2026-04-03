@@ -49,7 +49,7 @@ def load_hotpotqa(num_examples: int = 50, question_type: Optional[str] = None) -
         raise ImportError("Install 'datasets': pip install datasets")
 
     print(f"Loading HotpotQA validation set ({num_examples} examples)...")
-    dataset = load_dataset("hotpot_qa", "distractor", split="validation", trust_remote_code=True)
+    dataset = load_dataset("hotpot_qa", "distractor", split="validation")
 
     examples = []
     for ex in dataset:

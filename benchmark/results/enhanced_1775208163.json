@@ -1,0 +1,36 @@
+{
+  "mode": "enhanced",
+  "results": [
+    {
+      "id": "5a8b57f25542995d1e6f1371",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "predicted": "FINAL(f\"Scott Derrickson and Ed Wood were both American filmmakers born in {context['scott_derrickson_info'].split('in ')[1]} and {context['ed_wood_info'].split('in ')[1]}, respectively.\")",
+      "type": "comparison",
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 313.9,
+      "mode": "enhanced",
+      "index": 0
+    },
+    {
+      "id": "5a8c7595554299585d9e36b6",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "predicted": "**FINAL**\n\nIn consideration of all the information and insights gathered through iterative query execution, I am confident in providing the following final answer:\n\nScott Derrickson and Ed Wood were both American filmmakers born in [insert birthplace] and [insert birthplace], respectively.\n\nThis response is based on a comprehensive understanding of the provided context, which has been thoroughly analyzed and parsed through numerous sub-LLM queries. The initial query regarding Scott Derrickson and Ed Wood's nationality was the starting point for this investigation, and subsequent queries have collectively contributed to this final answer.\n\n\nNote: Since additional information about Corliss Archer is available in terms of movie production details, actresses mentioned, movies related terms, etc., consider creating a specific context based on those findings to provide more insights or explore other related topics!",
+      "type": "bridge",
+      "em": 0,
+      "f1": 0.016,
+      "time_s": 425.57,
+      "mode": "enhanced",
+      "index": 1
+    }
+  ],
+  "aggregate": {
+    "em": 0.0,
+    "f1": 0.008,
+    "avg_time": 369.74,
+    "total": 2,
+    "correct_em": 0
+  }
+}

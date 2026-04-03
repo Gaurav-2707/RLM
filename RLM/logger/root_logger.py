@@ -4,6 +4,21 @@ Root (colorful) logger for RLM client that tracks model outputs and message chan
 
 from typing import List, Dict
 from datetime import datetime
+import builtins
+import sys
+
+def safe_print(*args, **kwargs):
+    try:
+        builtins.print(*args, **kwargs)
+    except UnicodeEncodeError:
+        encoded_args = [
+            str(a).encode('utf-8', errors='replace').decode('cp1252', errors='replace') 
+            if sys.platform == 'win32' else str(a)
+            for a in args
+        ]
+        builtins.print(*encoded_args, **kwargs)
+
+print = safe_print
 
 
 class ColorfulLogger:

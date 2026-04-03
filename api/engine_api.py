@@ -28,7 +28,7 @@ sessions: Dict[str, EngineREPL] = {}
 # ---------------------------------------------------------------------------
 
 class EngineSessionRequest(BaseModel):
-    model: str = "gemini-2.5-flash"
+    model: str = "ollama/llama3"
 
 class EngineSessionResponse(BaseModel):
     session_id: str
@@ -61,7 +61,7 @@ class EngineStatusResponse(BaseModel):
 class ReasonRequest(BaseModel):
     """Stateless reasoning request — no session management required."""
     problem: str
-    model: str = "gemini-2.5-flash"
+    model: str = "ollama/llama3"
 
 class ReasonResponse(BaseModel):
     final_output: str

@@ -15,11 +15,10 @@ from RLM.rlm import RLM
 class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
     
-    def __init__(self, model: str = "gemini-2.5-flash"):
-        # Configuration - model can be specified
+    def __init__(self, model: str = "ollama/llama3"):
         # support either OpenAI or Gemini API key environment variables
         self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("GENAI_API_KEY")
-        if not self.api_key:
+        if not self.api_key and not model.lower().startswith("ollama/"):
             raise ValueError("API key required: set OPENAI_API_KEY or GENAI_API_KEY")
         
         self.model = model
@@ -72,7 +71,7 @@ class REPLResult:
 class REPLEnv:
     def __init__(
         self,
-        recursive_model: str = "gemini-2.5-flash",
+        recursive_model: str = "ollama/llama3",
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,

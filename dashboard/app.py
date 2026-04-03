@@ -157,10 +157,18 @@ with st.sidebar:
     st.markdown("### ⚙️ Benchmark Settings")
     model = st.selectbox(
         "Root LLM Model",
-        ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"],
-        index=0,
+        [
+            "gemini-2.5-flash", 
+            "gemini-2.5-pro", 
+            "gemini-2.0-flash", 
+            "ollama/llama3", 
+            "ollama/mistral",
+            "ollama/gemma2",
+            "ollama/qwen2.5-coder",
+        ],
+        index=3,
     )
-    num_examples = st.slider("Number of Examples", min_value=5, max_value=100, value=20, step=5)
+    num_examples = st.slider("Number of Examples", min_value=1, max_value=100, value=2, step=1)
     question_type = st.selectbox("Question Type", ["all", "bridge", "comparison"])
     max_iterations = st.slider("Max REPL Iterations", min_value=3, max_value=20, value=8)
 
@@ -176,12 +184,13 @@ with st.sidebar:
     run_baseline = st.checkbox("Run Baseline (REPL only)", value=True)
     run_enhanced = st.checkbox("Run Enhanced (REPL + modules)", value=True)
 
-    st.markdown("---")
-    run_button = st.button("▶ Run Benchmark", use_container_width=True,
-                           disabled=not st.session_state.api_key_set)
+    is_ollama = model.startswith("ollama/")
+    can_run = st.session_state.api_key_set or is_ollama
+    
+    run_button = st.button("▶ Run Benchmark", use_container_width=True, disabled=not can_run)
 
-    if not st.session_state.api_key_set:
-        st.warning("Enter your Gemini API key to run.")
+    if not can_run:
+        st.warning("Enter your Gemini API key to run, or select an Ollama model.")
 
     # Load saved results
     st.markdown("### 💾 Load Saved Results")
@@ -250,7 +259,7 @@ def run_benchmark_session(mode: str, enable_acc: bool, enable_memory: bool, enab
         if is_enhanced:
             return IntegratedRLM(
                 model=model,
-                recursive_model="gemini-2.5-flash",
+                recursive_model=model,
                 max_iterations=max_iterations,
                 enable_acc=enable_acc,
                 enable_memory=enable_memory,
@@ -274,7 +283,7 @@ def run_benchmark_session(mode: str, enable_acc: bool, enable_memory: bool, enab
     return output
 
 
-if run_button and st.session_state.api_key_set:
+if run_button and can_run:
     st.session_state.examples = None  # force fresh load
 
     if run_baseline:

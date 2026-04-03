@@ -41,8 +41,8 @@ class QueryRequest(BaseModel):
     session_id: str
     query: str
     context: Optional[str] = None
-    model: str = "gemini-2.5-pro"
-    recursive_model: str = "gemini-2.5-flash"
+    model: str = "ollama/llama3"
+    recursive_model: str = "ollama/llama3"
     enable_logging: bool = False
 
 class QueryResponse(BaseModel):

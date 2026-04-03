@@ -18,42 +18,59 @@ class LLMClient:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
+        model: str = "ollama/llama3",
         provider: Optional[str] = None,
     ):
-        # prefer explicit environment variables; fall back to either name
-        self.api_key = api_key or os.getenv("GENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError("LLM API key is required; set OPENAI_API_KEY or GENAI_API_KEY")
         self.model = model
 
         # determine provider
         if provider:
             self.provider = provider.lower()
         else:
-            # choose provider based solely on model name prefix
-            if model.lower().startswith("gemini"):
+            if model.lower().startswith("ollama/"):
+                self.provider = "ollama"
+            elif model.lower().startswith("gemini"):
                 self.provider = "gemini"
             else:
                 self.provider = "openai"
 
-        if self.provider == "openai":
+        if self.provider == "ollama":
+            self.api_key = "ollama-dummy"
+            # Strip the ollama/ prefix as the ollama server just expects "llama3"
+            if self.model.startswith("ollama/"):
+                self.model = self.model[7:]
+                
             try:
                 from openai import OpenAI
             except ImportError as exc:
-                raise ImportError("openai package is required for OpenAI provider") from exc
-            self.client = OpenAI(api_key=self.api_key)
-        elif self.provider == "gemini":
-            try:
-                from google import genai
-            except ImportError as exc:
-                raise ImportError(
-                    "google-genai package is required for Gemini provider"
-                ) from exc
-            # create genai client
-            self.client = genai.Client(api_key=self.api_key)
+                raise ImportError("openai package is required for Ollama provider") from exc
+            
+            base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+            self.client = OpenAI(api_key=self.api_key, base_url=base_url)
+            # Re-map provider to openai so the completion logic can be reused natively
+            self.provider = "openai"
         else:
-            raise ValueError(f"Unsupported provider '{self.provider}'")
+            # prefer explicit environment variables; fall back to either name
+            self.api_key = api_key or os.getenv("GENAI_API_KEY")
+            if not self.api_key:
+                raise ValueError("LLM API key is required; set OPENAI_API_KEY or GENAI_API_KEY")
+
+            if self.provider == "openai":
+                try:
+                    from openai import OpenAI
+                except ImportError as exc:
+                    raise ImportError("openai package is required for OpenAI provider") from exc
+                self.client = OpenAI(api_key=self.api_key)
+            elif self.provider == "gemini":
+                try:
+                    from google import genai
+                except ImportError as exc:
+                    raise ImportError(
+                        "google-genai package is required for Gemini provider"
+                    ) from exc
+                self.client = genai.Client(api_key=self.api_key)
+            else:
+                raise ValueError(f"Unsupported provider '{self.provider}'")
 
     def completion(
         self,

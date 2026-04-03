@@ -12,14 +12,24 @@ def find_code_blocks(text:str) -> List[str]:
     return results
 
 def find_final_answer(text:str) -> Optional[Tuple[str,str]]:
-    final_var_pattern = r'^\s*FINAL_VAR\((.*?)\)'
-    match = re.search(final_var_pattern, text, re.MULTILINE | re.DOTALL)
+    # Find FINAL_VAR(...) and FINAL(...) ignoring what's before them on the line,
+    # and allowing nested parentheses by matching non-greedily inside but as greedily as possible
+    # We can match FINAL( up to the last ) in the string.
+    final_var_pattern = r'FINAL_VAR\s*\((.*)\)'
+    match = re.search(final_var_pattern, text, re.DOTALL)
     if match:
         return ('FINAL_VAR', match.group(1).strip())
-    final_pattern = r'^\s*FINAL\((.*?)\)'
-    match = re.search(final_pattern, text, re.MULTILINE | re.DOTALL)
+        
+    final_pattern = r'FINAL\s*\((.*)\)'
+    match = re.search(final_pattern, text, re.DOTALL)
     if match:
-        return ('FINAL', match.group(1).strip())
+        content = match.group(1)
+        # Handle trailing text after the last )
+        if content.endswith(')'):
+            content = content[:-1]
+        elif ')' in content:
+            content = content.rsplit(')', 1)[0]
+        return ('FINAL', content.strip())
     
     return None
 

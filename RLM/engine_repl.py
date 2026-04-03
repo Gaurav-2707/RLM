@@ -19,12 +19,12 @@ class EngineREPL:
     Parameters
     ----------
     model : str
-        LLM model string (e.g. "gemini-2.5-flash").
+        LLM model string (e.g. "ollama/llama3").
     api_key : str, optional
         API key override. If None, reads from environment variable.
     """
 
-    def __init__(self, model: str = "gemini-2.5-flash"):
+    def __init__(self, model: str = "ollama/llama3"):
         self.model = model
         self.sub_rlm = Sub_RLM(model=model)
         self.engine = RLMEngine(self.sub_rlm)
@@ -58,7 +58,7 @@ class EngineREPL:
         into ``REPLEnv.globals``.
 
         The model can call ``deep_reason("complex sub-question")`` inside a
-        ``\`\`\`repl`` block to trigger the full 3-step reasoning pipeline.
+        `` ```repl `` block to trigger the full 3-step reasoning pipeline.
         """
         def deep_reason(problem: str) -> str:
             """Use deep_reason(problem) for complex multi-step sub-problems requiring structured reasoning."""

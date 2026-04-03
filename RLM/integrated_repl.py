@@ -9,7 +9,7 @@ Usage:
     from RLM.integrated_repl import IntegratedRLM
 
     rlm = IntegratedRLM(
-        model="gemini-2.5-flash",
+        model="ollama/llama3",
         enable_acc=True,
         enable_memory=True,
         enable_engine=True,
@@ -54,8 +54,8 @@ class IntegratedRLM(RLM_REPL):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
-        recursive_model: str = "gemini-2.5-flash",
+        model: str = "ollama/llama3",
+        recursive_model: str = "ollama/llama3",
         max_iterations: int = 10,
         enable_logging: bool = False,
         enable_acc: bool = False,
@@ -123,7 +123,7 @@ class IntegratedRLM(RLM_REPL):
             if memory_context:
                 self.messages.append({
                     "role": "user",
-                    "content": f"[System Memory]\n{memory_context}",
+                    "content": f"The following are previous problems you have solved. Use them ONLY as inspiration for your reasoning methodology or syntax. DO NOT confuse them with your current task!\n\n[System Memory]\n{memory_context}",
                 })
 
         # Build plugins dict for REPLEnv
@@ -197,7 +197,12 @@ class IntegratedRLM(RLM_REPL):
 
         # Exhausted iterations — force final answer
         self.messages.append(next_action_prompt(query, iteration, final_answer=True))
-        final_answer = self.llm.completion(self.messages)
+        final_answer_raw = self.llm.completion(self.messages)
+        
+        # Try to parse out FINAL() or FINAL_VAR() from the raw forced response
+        parsed_answer = utils.check_for_final_answer(final_answer_raw, self.repl_env, self.logger)
+        final_answer = parsed_answer if parsed_answer else final_answer_raw.strip("* ")
+
         self.logger.log_final_response(final_answer)
         self._post_completion(query or "", final_answer)
         return final_answer

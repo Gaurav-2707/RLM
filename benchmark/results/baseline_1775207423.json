@@ -1,0 +1,36 @@
+{
+  "mode": "baseline",
+  "results": [
+    {
+      "id": "5a8b57f25542995d1e6f1371",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "predicted": "final answer",
+      "type": "comparison",
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 67.62,
+      "mode": "baseline",
+      "index": 0
+    },
+    {
+      "id": "5a8c7595554299585d9e36b6",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "predicted": "**FINAL**\n\nThe original query was not specified, but based on the context and code executed so far, we understand that there were questions about government positions and Shirley Temple.\n\nAccording to the provided text, Shirley Temple held several government positions, including:\n\n* United States ambassador to Ghana\n* United States ambassador to Czechoslovakia\n* Chief of Protocol of the United States\n\nThere is no information in the context about a woman who portrayed Corliss Archer holding a government position.",
+      "type": "bridge",
+      "em": 0,
+      "f1": 0.0833,
+      "time_s": 201.7,
+      "mode": "baseline",
+      "index": 1
+    }
+  ],
+  "aggregate": {
+    "em": 0.0,
+    "f1": 0.0416,
+    "avg_time": 134.66,
+    "total": 2,
+    "correct_em": 0
+  }
+}

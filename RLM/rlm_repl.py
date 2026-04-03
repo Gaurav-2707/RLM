@@ -21,8 +21,8 @@ class RLM_REPL(RLM):
     
     def __init__(self, 
                  api_key: Optional[str] = None, 
-                 model: str = "gemini-2.5-flash",
-                 recursive_model: str = "gemini-2.5-flash",
+                 model: str = "ollama/llama3",
+                 recursive_model: str = "ollama/llama3",
                  max_iterations: int = 20,
                  depth: int = 0,
                  enable_logging: bool = False,
