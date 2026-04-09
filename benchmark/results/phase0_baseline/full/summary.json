@@ -1,5 +1,5 @@
 {
-  "mode": "standard",
+  "mode": "full",
   "results": [
     {
       "id": "5a8b57f25542995d1e6f1371",
@@ -9,15 +9,15 @@
       "type": "comparison",
       "em": 1,
       "f1": 1.0,
-      "time_s": 119.17,
-      "mode": "standard",
+      "time_s": 82.58,
+      "mode": "full",
       "index": 0
     }
   ],
   "aggregate": {
     "em": 1.0,
     "f1": 1.0,
-    "avg_time": 119.17,
+    "avg_time": 82.58,
     "total": 1,
     "correct_em": 1
   }

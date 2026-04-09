@@ -120,12 +120,12 @@ class IntegratedRLM(RLM_REPL):
         self.messages = build_system_prompt()
         self.logger.log_initial_messages(self.messages)
 
-        # --- Memory pre-retrieval —-
+        # --- Memory pre-retrieval ---
         if self.enable_memory and self._memory_adapter:
             memory_context = self._memory_adapter.retrieve_as_context(query, top_k=3)
             if memory_context:
                 self.messages.append({
-                    "role": "user",
+                    "role": "system",
                     "content": f"The following are previous problems you have solved. Use them ONLY as inspiration for your reasoning methodology or syntax. DO NOT confuse them with your current task!\n\n[System Memory]\n{memory_context}",
                 })
 
@@ -194,7 +194,7 @@ class IntegratedRLM(RLM_REPL):
             # We add a placeholder entry that we'll update if code is executed
             trace_entry_idx = len(self.tracer.repl_history)
             self.tracer.add_repl_step(
-                iteration=iteration,
+                iteration=iteration + 1,
                 response=response,
                 code=None,
                 stdout=None,
@@ -227,7 +227,7 @@ class IntegratedRLM(RLM_REPL):
                         engine_history = self._engine_adapter.get_steps()
 
                     self.tracer.add_repl_step(
-                        iteration=iteration,
+                        iteration=iteration + 1,
                         response=response,
                         code=exec_info.code,
                         stdout=exec_info.stdout,
