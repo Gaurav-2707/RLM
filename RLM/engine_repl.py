@@ -53,7 +53,7 @@ class EngineREPL:
         return result.get("final_output", "")
 
     def get_repl_function(self) -> callable:
-        """
+        r"""
         Return a ``deep_reason(problem)`` callable suitable for injection
         into ``REPLEnv.globals``.
 

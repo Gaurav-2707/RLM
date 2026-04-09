@@ -74,6 +74,7 @@ def run_benchmark(
     rlm_factory: Callable,
     mode: str = "baseline",
     on_result: Optional[Callable[[dict], None]] = None,
+    trace_dir: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Run RLM on a list of HotpotQA examples.
@@ -90,6 +91,8 @@ def run_benchmark(
     on_result : callable, optional
         Called with each per-example result dict as it completes.
         Use for streaming progress to a dashboard.
+    trace_dir : str, optional
+        Directory to save structured research traces (.json).
     
     Returns
     -------
@@ -130,6 +133,14 @@ def run_benchmark(
             "mode": mode,
             "index": i,
         }
+
+        # Save trace if tracer is available and trace_dir is set
+        if trace_dir and hasattr(rlm, "tracer"):
+            trace_path = os.path.join(trace_dir, f"{ex['id']}_em{result['em']}_f1{result['f1']}.json")
+            # Attach final metrics to trace for cross-analysis
+            rlm.tracer.set_metadata({"em": result["em"], "f1": result["f1"]})
+            rlm.tracer.save(trace_path)
+
         results.append(result)
 
         if on_result:

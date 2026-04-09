@@ -23,6 +23,7 @@ from RLM.rlm_repl import RLM_REPL
 from RLM.repl import REPLEnv
 from RLM.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import RLM.utils.utils as utils
+from RLM.utils.tracing import TraceStorage
 
 
 class IntegratedRLM(RLM_REPL):
@@ -74,6 +75,8 @@ class IntegratedRLM(RLM_REPL):
         self.enable_acc = enable_acc
         self.enable_memory = enable_memory
         self.enable_engine = enable_engine
+
+        self.tracer = TraceStorage()
 
         # Lazy-init adapters
         self._acc_adapter = None
@@ -146,6 +149,17 @@ class IntegratedRLM(RLM_REPL):
         if self.enable_acc:
             self._acc_controller.new_episode()
 
+        # --- Tracer reset ---
+        self.tracer.reset()
+        self.tracer.set_metadata({
+            "model": self.model,
+            "recursive_model": self.recursive_model,
+            "enable_acc": self.enable_acc,
+            "enable_memory": self.enable_memory,
+            "enable_engine": self.enable_engine
+        })
+        self.tracer.set_query(query)
+
         return self.messages
 
     # ------------------------------------------------------------------
@@ -176,11 +190,50 @@ class IntegratedRLM(RLM_REPL):
             code_blocks = utils.find_code_blocks(response)
             self.logger.log_model_response(response, has_tool_calls=code_blocks is not None)
 
+            # --- Trace capture (Initial response) ---
+            # We add a placeholder entry that we'll update if code is executed
+            trace_entry_idx = len(self.tracer.repl_history)
+            self.tracer.add_repl_step(
+                iteration=iteration,
+                response=response,
+                code=None,
+                stdout=None,
+                stderr=None,
+                engine_history=None
+            )
+
             if code_blocks is not None:
+                # Capture current execution count to track new executions in this iteration
+                prev_exec_count = self.repl_env_logger.execution_count
+
                 self.messages = utils.process_code_execution(
                     response, self.messages, self.repl_env,
                     self.repl_env_logger, self.logger,
                 )
+
+                # Capture traceability for each execution triggered by the model
+                # Note: If multiple code blocks exist, we update the trace. 
+                # For simplicity in Phase 0, we'll just track the last execution's info in the entry
+                # or create multiple entries if needed. Let's do multiple entries for precision.
+                
+                # Remove the placeholder if we are adding specific execution steps
+                self.tracer.repl_history.pop(trace_entry_idx)
+
+                for i in range(prev_exec_count, self.repl_env_logger.execution_count):
+                    exec_info = self.repl_env_logger.executions[i]
+                    
+                    engine_history = None
+                    if self.enable_engine and self._engine_adapter:
+                        engine_history = self._engine_adapter.get_steps()
+
+                    self.tracer.add_repl_step(
+                        iteration=iteration,
+                        response=response,
+                        code=exec_info.code,
+                        stdout=exec_info.stdout,
+                        stderr=exec_info.stderr,
+                        engine_history=engine_history
+                    )
             else:
                 self.messages.append({
                     "role": "assistant",
@@ -226,3 +279,11 @@ class IntegratedRLM(RLM_REPL):
                 outcome=f"Answered: {answer[:200]}",
                 outcome_score=0.6,  # Default neutral-positive; can be updated with EM score later
             )
+
+        # Finalise tracer
+        self.tracer.set_predicted_answer(answer)
+        if self.enable_acc:
+            self.tracer.set_acc_data({
+                "depth_selected": self.last_depth,
+                "records": [str(r) for r in self._acc_controller.records]
+            })

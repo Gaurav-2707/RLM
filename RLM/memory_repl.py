@@ -105,7 +105,7 @@ class MemoryREPL:
         return self.system.add_memory(entry)
 
     def get_repl_function(self) -> callable:
-        """
+        r"""
         Return a ``memory_retrieve(query, top_k=3)`` callable suitable for
         injection into ``REPLEnv.globals``.
 
