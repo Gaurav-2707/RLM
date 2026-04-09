@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "model": "ollama/llama3",
+    "recursive_model": "ollama/llama3",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 6.246345,
+    "timestamp": "2026-04-09T11:28:16.799657"
+  },
+  "query": "Were Scott Derrickson and Ed Wood of the same nationality?",
+  "predicted_answer": "",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": []
+}

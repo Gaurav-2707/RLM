@@ -1,0 +1,24 @@
+{
+  "mode": "full",
+  "results": [
+    {
+      "id": "5a8b57f25542995d1e6f1371",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "predicted": "Yes",
+      "type": "comparison",
+      "em": 1,
+      "f1": 1.0,
+      "time_s": 82.58,
+      "mode": "full",
+      "index": 0
+    }
+  ],
+  "aggregate": {
+    "em": 1.0,
+    "f1": 1.0,
+    "avg_time": 82.58,
+    "total": 1,
+    "correct_em": 1
+  }
+}
