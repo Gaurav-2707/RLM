@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Any
 
 from RLM.rlm import RLM
 from RLM.repl import REPLEnv
-from RLM.utils.llm import LLMClient
+from RLM.utils.llm import LLMClient, DEFAULT_MODEL
 from RLM.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import RLM.utils.utils as utils
 
@@ -21,17 +21,17 @@ class RLM_REPL(RLM):
     
     def __init__(self, 
                  api_key: Optional[str] = None, 
-                 model: str = "ollama/llama3",
-                 recursive_model: str = "ollama/llama3",
+                 model: str = None,
+                 recursive_model: str = None,
                  max_iterations: int = 20,
                  depth: int = 0,
                  enable_logging: bool = False,
                  ):
         self.api_key = api_key
-        self.model = model
-        self.recursive_model = recursive_model
+        self.model = model or DEFAULT_MODEL
+        self.recursive_model = recursive_model or DEFAULT_MODEL
         # create a generic LLM client; model string determines provider (e.g. "gemini-3" or "gpt-5")
-        self.llm = LLMClient(api_key, model)
+        self.llm = LLMClient(api_key, self.model)
         
         # Track recursive call depth to prevent infinite loops
         self.repl_env = None

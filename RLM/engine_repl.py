@@ -24,7 +24,7 @@ class EngineREPL:
         API key override. If None, reads from environment variable.
     """
 
-    def __init__(self, model: str = "ollama/llama3"):
+    def __init__(self, model: str = None):
         self.model = model
         self.sub_rlm = Sub_RLM(model=model)
         self.engine = RLMEngine(self.sub_rlm)

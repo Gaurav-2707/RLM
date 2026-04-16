@@ -158,15 +158,17 @@ with st.sidebar:
     model = st.selectbox(
         "Root LLM Model",
         [
-            "gemini-2.5-flash", 
-            "gemini-2.5-pro", 
-            "gemini-2.0-flash", 
-            "ollama/llama3", 
+            "ollama/llama3.1:70b",
+            "ollama/llama3.1:8b",
+            "ollama/llama3",
+            "ollama/qwen2.5:72b",
             "ollama/mistral",
             "ollama/gemma2",
-            "ollama/qwen2.5-coder",
+            "ollama/deepseek-r1:70b",
+            "gemini-2.5-flash", 
+            "gemini-2.5-pro", 
         ],
-        index=3,
+        index=0,
     )
     num_examples = st.slider("Number of Examples", min_value=1, max_value=100, value=2, step=1)
     question_type = st.selectbox("Question Type", ["all", "bridge", "comparison"])

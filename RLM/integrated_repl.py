@@ -9,7 +9,7 @@ Usage:
     from RLM.integrated_repl import IntegratedRLM
 
     rlm = IntegratedRLM(
-        model="ollama/llama3",
+        model="ollama/llama3.1:8b",
         enable_acc=True,
         enable_memory=True,
         enable_engine=True,
@@ -24,6 +24,7 @@ from RLM.repl import REPLEnv
 from RLM.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import RLM.utils.utils as utils
 from RLM.utils.tracing import TraceStorage
+from RLM.utils.llm import DEFAULT_MODEL
 
 
 class IntegratedRLM(RLM_REPL):
@@ -55,8 +56,8 @@ class IntegratedRLM(RLM_REPL):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "ollama/llama3",
-        recursive_model: str = "ollama/llama3",
+        model: str = None,
+        recursive_model: str = None,
         max_iterations: int = 10,
         enable_logging: bool = False,
         enable_acc: bool = False,
@@ -89,9 +90,11 @@ class IntegratedRLM(RLM_REPL):
         self.last_depth = None
 
         if enable_acc:
-            from RLM.acc import AdaptiveComputeController, ComplexityScorer
+            from RLM.acc import AdaptiveComputeController, SemanticComplexityScorer
             self._acc_controller = AdaptiveComputeController()
-            self._scorer = ComplexityScorer()
+            self._scorer = SemanticComplexityScorer()
+
+        self._code_history: List[str] = []
 
         if enable_memory:
             from RLM.memory_repl import MemoryREPL
@@ -149,6 +152,9 @@ class IntegratedRLM(RLM_REPL):
         if self.enable_acc:
             self._acc_controller.new_episode()
 
+        # --- REPL Code History reset ---
+        self._code_history = []
+
         # --- Tracer reset ---
         self.tracer.reset()
         self.tracer.set_metadata({
@@ -202,7 +208,16 @@ class IntegratedRLM(RLM_REPL):
                 engine_history=None
             )
 
-            if code_blocks is not None:
+            if code_blocks:
+                # Loop Detection: If we've seen this exact code block before, warn the model
+                merged_code = "\n".join(code_blocks)
+                if merged_code in self._code_history:
+                    loop_warning = "\n\nCRITICAL WARNING: You are repeating the exact same code block. This indicates a reasoning loop. Please change your search strategy, use different keywords in llm_query/search_context, or synthesize a final answer if you are stuck."
+                    # We inject this into the next prompt
+                    self.messages.append({"role": "user", "content": loop_warning})
+                
+                self._code_history.append(merged_code)
+
                 # Capture current execution count to track new executions in this iteration
                 prev_exec_count = self.repl_env_logger.execution_count
 
@@ -248,17 +263,37 @@ class IntegratedRLM(RLM_REPL):
                 self._post_completion(query or "", final_answer)
                 return final_answer
 
-        # Exhausted iterations — force final answer
-        self.messages.append(next_action_prompt(query, iteration, final_answer=True))
-        final_answer_raw = self.llm.completion(self.messages)
-        
-        # Try to parse out FINAL() or FINAL_VAR() from the raw forced response
-        parsed_answer = utils.check_for_final_answer(final_answer_raw, self.repl_env, self.logger)
-        final_answer = parsed_answer if parsed_answer else final_answer_raw.strip("* ")
+        # --- Salvage Step: Handle case where max_iterations reached without FINAL() ---
+        salvaged_answer = self._force_final_extraction(query or "")
+        self.logger.log_final_response(salvaged_answer)
+        self._post_completion(query or "", salvaged_answer)
+        return salvaged_answer
 
-        self.logger.log_final_response(final_answer)
-        self._post_completion(query or "", final_answer)
-        return final_answer
+    def _force_final_extraction(self, query: str) -> str:
+        """
+        One last attempt to extract a clean answer from the reasoning history.
+        Uses a zero-temperature (if supported by client) or highly constrained prompt.
+        """
+        extract_prompt = """You have exhausted your execution budget. 
+Based on ALL the research and code execution results above, what is the final answer?
+Provide ONLY the concise answer string (e.g., a name, a date, or 'Yes/No'). 
+Do NOT include any reasoning, code blocks, or variable names like 'final_answer'."""
+        
+        # Build history for extraction
+        extraction_messages = self.messages + [{"role": "user", "content": extract_prompt}]
+        
+        # Use simple low-temperature check if possible; default to root LLM
+        final_extraction = self.llm.completion(extraction_messages).strip()
+        
+        # Post-process common hallucinated prefixes/suffixes
+        final_extraction = final_extraction.replace("```repl", "").replace("```", "").strip()
+        if "FINAL(" in final_extraction:
+            import re
+            match = re.search(r'FINAL\((.*?)\)', final_extraction)
+            if match:
+                final_extraction = match.group(1).strip("'\"")
+        
+        return final_extraction
 
     # ------------------------------------------------------------------
     # Post-completion hooks (memory store, ACC report)

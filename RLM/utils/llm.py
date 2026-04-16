@@ -3,6 +3,11 @@ from typing import Optional
 from dotenv import load_dotenv
 load_dotenv()
 
+# ── Centralized default model ──────────────────────────────────────────
+# Set OLLAMA_MODEL env var to override. On H100 80GB, use 70B models.
+# On consumer GPUs (8-16GB), use "ollama/llama3" (8B).
+DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "ollama/llama3.1:8b")
+
 
 class LLMClient:
     """Thin wrapper around different LLM providers.
@@ -18,10 +23,10 @@ class LLMClient:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "ollama/llama3",
+        model: Optional[str] = None,
         provider: Optional[str] = None,
     ):
-        self.model = model
+        self.model = model or DEFAULT_MODEL
 
         # determine provider
         if provider:
