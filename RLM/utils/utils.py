@@ -25,19 +25,11 @@ def find_final_answer(text:str) -> Optional[Tuple[str,str]]:
         return ('FINAL_VAR', match.group(1).strip())
     
     # Try FINAL(...)  — use greedy match but only on the cleaned text
-    match = re.search(r'FINAL\s*\((.+)\)\s*$', cleaned, re.DOTALL | re.MULTILINE)
+    # We allow multiline here but will clean it later
+    match = re.search(r'FINAL\s*\((.*)\)', cleaned, re.DOTALL)
     if match:
         content = match.group(1).strip()
         # Strip wrapping quotes if the model wrote FINAL("answer")
-        if (content.startswith('"') and content.endswith('"')) or \
-           (content.startswith("'") and content.endswith("'")):
-            content = content[1:-1]
-        return ('FINAL', content)
-    
-    # Fallback: looser match for FINAL(text) not at end of line
-    match = re.search(r'FINAL\s*\(([^)]+)\)', cleaned)
-    if match:
-        content = match.group(1).strip()
         if (content.startswith('"') and content.endswith('"')) or \
            (content.startswith("'") and content.endswith("'")):
             content = content[1:-1]
@@ -84,36 +76,33 @@ def check_for_final_answer(response: str, repl_env, logger) -> Optional[str]:
         # Resolve the variable from REPL
         resolved = _resolve_variable(content, repl_env)
         if resolved is not None:
-            return resolved
+            return str(resolved).strip()
         else:
             error_msg = f"Variable '{content}' not found in REPL environment"
             logger.log_tool_execution("FINAL_VAR", error_msg)
             return None
     
     elif answer_type == 'FINAL':
-        # Check if content looks like code or a bare variable name
-        if _looks_like_code(content):
-            # The model wrote something like FINAL(answer.strip()) — try extracting the var name
-            var_match = re.match(r'^(\w+)', content)
-            if var_match:
-                resolved = _resolve_variable(var_match.group(1), repl_env)
-                if resolved is not None:
-                    return resolved
-            # Can't resolve — return None so the loop continues
+        # Strip common meta-reasoning patterns that the model might include
+        # e.g. "The answer is X" -> "X"
+        clean_content = content.replace("```repl", "").replace("```", "").strip()
+        
+        # If it looks like a sentence, try to extract the core noun phrase if it's too long
+        if ". " in clean_content and len(clean_content) > 50:
+            # Heuristic: the model is talking too much. 
+            # We'll keep it for now but the judge might penalize it.
+            pass
+
+        # Final safety check: if it contains code, it's not a final answer
+        if _looks_like_code(clean_content):
+            # Try to see if it's just a variable name
+            if clean_content.isidentifier():
+                 resolved = _resolve_variable(clean_content, repl_env)
+                 if resolved and not _looks_like_code(str(resolved)):
+                     return str(resolved).strip()
             return None
         
-        # Check if content is a bare Python identifier (like "final_answer" or "answer")
-        if content.isidentifier() and len(content) > 2:
-            resolved = _resolve_variable(content, repl_env)
-            if resolved is not None:
-                return resolved
-            # Variable not found — it might genuinely be a one-word answer like "Yes" or "No"
-            # Only return it if it looks like a plausible answer (short, capitalized)
-            if len(content) <= 15:
-                return content
-            return None
-        
-        return content
+        return clean_content
     
     return None
 

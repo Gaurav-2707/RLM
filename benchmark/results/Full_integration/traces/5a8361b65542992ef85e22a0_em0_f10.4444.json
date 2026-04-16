@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "em": 0,
+    "f1": 0.4444,
+    "duration_s": 18.141827,
+    "timestamp": "2026-04-16T13:07:16.414969"
+  },
+  "query": "Vince Phillips held a junior welterweight title by an organization recognized by what larger Hall of Fame?",
+  "predicted_answer": "International Boxing Federation (IBF)",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.411569, depth_selected=1, api_calls_used=0, timestamp=1776344836.4151065)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "```repl\nresult = llm_query(\"organization recognized by what larger Hall of Fame\", context)\nprint(result)\n```",
+      "code": "result = llm_query(\"organization recognized by what larger Hall of Fame\", context)\nprint(result)",
+      "stdout": "The International Boxing Federation (IBF) is an organization recognized by the International Boxing Hall of Fame (IBHOF).\n",
+      "stderr": "",
+      "engine_history": []
+    }
+  ]
+}

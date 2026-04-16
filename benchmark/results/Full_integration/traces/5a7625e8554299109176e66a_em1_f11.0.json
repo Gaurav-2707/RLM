@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "em": 1,
+    "f1": 1.0,
+    "duration_s": 8.073649,
+    "timestamp": "2026-04-16T03:51:32.598622"
+  },
+  "query": "In which year was the King who made the 1925 Birthday Honours born?",
+  "predicted_answer": "1865",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.519867, depth_selected=2, api_calls_used=0, timestamp=1776311492.5987272)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "```repl\ncontext = input(context)\nanswer = llm_query(f\"Who in 1925 Birthday Honours list was given honours for services in connection with coronation of a king who was not yet deceased? And from that, infer the related anniversary date?\\n\\n{context}\")\nprint(answer)\n```",
+      "code": "context = input(context)\nanswer = llm_query(f\"Who in 1925 Birthday Honours list was given honours for services in connection with coronation of a king who was not yet deceased? And from that, infer the related anniversary date?\\n\\n{context}\")\nprint(answer)",
+      "stdout": "",
+      "stderr": "TypeError: 'NoneType' object is not callable",
+      "engine_history": []
+    },
+    {
+      "iteration": 6,
+      "response": "```repl\nprint(context)\nking_birth_year = llm_query(f\"What is the birth year of King George V?\\n\\n{context}\")\nprint(king_birth_year)\n```",
+      "code": "print(context)\nking_birth_year = llm_query(f\"What is the birth year of King George V?\\n\\n{context}\")\nprint(king_birth_year)",
+      "stdout": "**2017 Birthday Honours**\nThe 2017 Queen's Birthday Honours are appointments by some of the 16 Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The Birthday Honours are awarded as part of the Queen's Official Birthday celebrations during the month of June.  The Queen's Birthday Honours for the United Kingdom were announced on 16 June; the honours for New Zealand were announced on 5 June and for Australia on 12 June.\n\n**2014 Birthday Honours**\nThe 2014 Birthday Honours were appointments by some of the 16 Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The Birthday Honours are awarded as part of the Queen's Official Birthday celebrations during the month of June.  The Queen's Birthday Honours were announced on 14 June 2014 in the United Kingdom, on 9 June 2014 in Australia, on 2 June 2014 in New Zealand, on 14 June 2014 in Grenada, Papua New Guinea, Solomon Islands, Tuvalu, Saint Lucia and Belize.\n\n**2015 Birthday Honours**\nThe 2015 Queen's Birthday Honours are appointments by some of the 16 Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The Birthday Honours are awarded as part of the Queen's Official Birthday celebrations during the month of June.  The Queen's Birthday Honours were announced on 1 June 2015 in New Zealand, on 8 June in Australia, and on 12 June in the United Kingdom, in Grenada, Papua New Guinea, Solomon Islands, Tuvalu, Saint Lucia and Belize.\n\n**2016 Birthday Honours**\nThe 2016 Queen's Birthday Honours are appointments by some of the 16 Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The Birthday Honours are awarded as part of the Queen's Official Birthday celebrations during the month of June.  The Queen's Birthday Honours were announced on 6 June 2016 in New Zealand and 10 June in the United Kingdom.\n\n**Birthday Honours**\nKing's/Queen's Birthday Honours is, in some Commonwealth realms, the marking of the reigning monarch's official birthday by granting various individuals appointment into national or dynastic orders or the award of decorations and medals.  The honours are presented by the monarch or a viceregal representative.  New Year Honours and Birthday Honours are bestowed each year.  All royal honours are published in the relevant gazette, and the daily newspapers of each realm.\n\n**1965 Birthday Honours**\nThe Queen's Birthday Honours 1965 were appointments in many of the Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The appointments were made to celebrate the official birthday of The Queen.  The announcement date varies from year to year.  The 1965 Queen's Birthday Honours were announced on 12 June for the United Kingdom, Australia, New Zealand, Sierra Leone, Jamaica, Trinidad and Tobago, Malawi, and the Gambia.\n\n**George V**\nGeorge V (George Frederick Ernest Albert; 3 June 1865 \u2013 20 January 1936) was King of the United Kingdom and the British Dominions, and Emperor of India, from 6 May 1910 until his death in 1936.\n\n**1951 Birthday Honours**\nThe King's Birthday Honours 1951 were appointments in many of the Commonwealth realms of King George VI to various orders and honours to reward and highlight good works by citizens of those countries.  The appointments were made to celebrate the official birthday of the King, and were published on 1 June 1951 for the British Empire, Australia, New Zealand, Ceylon, and Pakistan.  These were the last Birthday Honours awarded by George VI, who died eight months later.\n\n**2013 Birthday Honours**\nThe 2013 Birthday Honours were appointments by some of the 16 Commonwealth realms of Queen Elizabeth II to various orders and honours to reward and highlight good works by citizens of those countries.  The Birthday Honours are awarded as part of the Queen's Official Birthday celebrations during the month of June.  The Queen's Birthday Honours were announced on 15 June 2013 in the United Kingdom, on 10 June 2013 in Australia on 3 June 2013 in New Zealand, on 15 June 2013 in Grenada, Papua New Guinea, Solomon Islands, Tuvalu, Saint Lucia and Belize.\n\n**1925 Birthday Honours**\nThe 1925 Birthday Honours were appointments by King George V to various orders and honours to reward and highlight good works by citizens of the British Empire.  The appointments were made to celebrate the official birthday of The King, and were published in \"The London Gazette\" on 3 June 1925.\nAccording to the provided text, the birth year of King George V is:\n\n**1865**\n",
+      "stderr": "",
+      "engine_history": []
+    },
+    {
+      "iteration": 10,
+      "response": "```repl\nking_birth_year = llm_query(f\"In which year was King George V born?\\n\\n{context}\")\nprint(king_birth_year)\n```",
+      "code": "king_birth_year = llm_query(f\"In which year was King George V born?\\n\\n{context}\")\nprint(king_birth_year)",
+      "stdout": "According to the provided text, King George V was born on **June 3rd, 1865**.\n",
+      "stderr": "",
+      "engine_history": []
+    }
+  ]
+}

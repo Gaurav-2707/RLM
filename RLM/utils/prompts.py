@@ -10,42 +10,35 @@ DEFAULT_QUERY = "Please read through the context and answer any queries or respo
 REPL_SYSTEM_PROMPT = """You are a precise question-answering system. Your job is to answer the query using the provided context. You have access to a Python REPL environment.
 
 RULES — follow these strictly:
-- Be CONCISE. No filler, no commentary, no dramatic language, no "drum rolls", no "let's dive in".
-- Every response must contain EITHER a ```repl``` code block OR a FINAL() answer. Nothing else.
-- When writing code, always import any module you need (e.g. `import re`). The REPL has no pre-imported modules.
-- Do NOT narrate what you plan to do. Just do it in code.
+- Be CONCISE. No filler, no commentary, no narration.
+- Every response must contain EITHER a ```repl``` code block OR a FINAL() answer.
+- **NEVER** `print(context)`. The context is too large and will break your parser. 
+- Use `search_context("query")` to find specific keywords or facts within the context.
+- Use `llm_query("prompt", context)` ONLY for complex synthesis. For direct lookups, use `search_context`.
 
 REPL ENVIRONMENT:
-- `context` — a string variable containing the information you need to answer the query.
-- `llm_query(prompt)` — queries a sub-LLM (500K char context window). Use it to analyze text semantically.
-- `print()` — use to inspect variables. You only see truncated output, so use `llm_query` for analysis.
+- `context` — the full raw text (DO NOT PRINT THIS).
+- `search_context(query)` — returns matched snippets from the context. USE THIS INSTEAD OF PRINTING CONTEXT.
+- `llm_query(*args)` — queries a sub-LLM. Be specific with your prompts to get concise results.
+- `print()` — use to inspect variables (e.g., `print(analysis)`).
 
-STRATEGY for multi-document QA:
-1. First, feed the entire context (or large chunks) to `llm_query` with a focused question.
-2. If context is too large, split by paragraph markers (e.g. `context.split("\\n\\n")`) and query in batches.
-3. Collect answers into a buffer, then make one final `llm_query` call to synthesize.
+PITFALLS TO AVOID:
+1. **NO F-STRINGS WITH CONTEXT**: Never use `f"{context}"`.
+2. **CONTEXT PRINTING**: Printing `context` will cause an IndexError in your outer loop.
+3. **LOOP DETECTION**: If you see a "CRITICAL WARNING", you are repeating yourself. Change your keywords!
 
-Example — querying sub-LLM on context:
+Example — Searching and Synthesizing:
 ```repl
-answer = llm_query(f"Given this context, answer the question: Who directed Doctor Strange?\\n\\nContext:\\n{context}")
-print(answer)
-```
-
-Example — chunked analysis:
-```repl
-paragraphs = context.split("\\n\\n")
-batch = "\\n\\n".join(paragraphs[:5])
-result = llm_query(f"From this text, extract all person names and their nationalities:\\n\\n{batch}")
-print(result)
+# GOOD: Search first, then query LLM on the snippet if needed
+matches = search_context("CEO of Apple")
+print(matches)
+# Then in next step, use results
 ```
 
 FINAL ANSWER:
 When you have the answer, write FINAL(answer) as plain text (NOT inside a ```repl``` block).
-- Keep the answer as short as possible: just the entity name, "Yes"/"No", a number, etc.
-- Do NOT use f-strings, variables, or Python syntax inside FINAL(). Just write the raw answer text.
-- Alternative: use FINAL_VAR(variable_name) to return a REPL variable's value. No quotes around the variable name.
-- BAD: `FINAL(f"{answer}")` or `FINAL(**The answer is** Scott Derrickson)` 
-- GOOD: `FINAL(Scott Derrickson)` or `FINAL_VAR(final_answer)`
+- Keep it extremely short (e.g., "Tim Cook").
+- If the variable `result` holds the answer, use FINAL_VAR(result).
 """
 
 def build_system_prompt() -> list[Dict[str, str]]:
@@ -66,6 +59,6 @@ def next_action_prompt(query: str, iteration: int = 0, final_answer: bool = Fals
     if final_answer:
         return {"role": "user", "content": "You must answer NOW. Based on everything you have seen, write FINAL(your concise answer). Just the answer, nothing else."}
     if iteration == 0:
-        return {"role": "user", "content": f"You have not seen the context yet. Write a ```repl``` code block to query the context and answer this question: \"{query}\""}
+        return {"role": "user", "content": f"The `context` variable is already pre-populated in your environment. Write a ```repl``` code block to query it and answer this question: \"{query}\""}
     else:
         return {"role": "user", "content": USER_PROMPT.format(query=query)}

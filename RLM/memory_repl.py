@@ -130,3 +130,17 @@ class MemoryREPL:
         """Clear all stored memories."""
         self.system.memories = []
         self.system.retriever = type(self.system.retriever)()
+
+    def warmup_memory(self, examples: List[dict]):
+        """
+        Pre-populate memory with 'Gold' examples.
+        Each example should be a dict with: query, reasoning, action, outcome, score.
+        """
+        for ex in examples:
+            self.store(
+                query=ex.get("query", ""),
+                reasoning=ex.get("reasoning", ""),
+                action=ex.get("action", "gold_standard"),
+                outcome=ex.get("outcome", ""),
+                outcome_score=ex.get("score", 1.0)
+            )

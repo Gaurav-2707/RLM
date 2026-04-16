@@ -60,12 +60,6 @@ class REPLResult:
     stderr: str
     locals: dict
     execution_time: float
-
-    def __init__(self, stdout: str, stderr: str, locals: dict, execution_time: float=None):
-        self.stdout = stdout
-        self.stderr = stderr
-        self.locals = locals
-        self.execution_time = execution_time
     
     def __str__(self):
         return f"REPLResult(stdout={self.stdout}, stderr={self.stderr}, locals={self.locals}, execution_time={self.execution_time})"
@@ -179,12 +173,59 @@ class REPLEnv:
         self.globals['math'] = _math
         self.globals['collections'] = _collections
         
-        def llm_query(prompt: str) -> str:
-            """Query the LLM with the given prompt."""
-            return self.sub_rlm.completion(prompt)
+        def llm_query(*args, **kwargs) -> str:
+            """
+            Query the LLM with the given prompt. Returns a concise text answer (string).
+            
+            IMPORTANT: This function returns a raw string. It does NOT have an '.answer' attribute.
+            Usage: fact = llm_query("What is X?")
+            """
+            # Heuristic: Add a "concise" system constraint to prevent conversational leakage
+            query_prompt = [
+                {"role": "system", "content": "You are a factual assistant. Provide a direct, minimal answer to the user's query. If you cannot find the answer, say 'Answer not found'."},
+                {"role": "user", "content": " ".join(str(arg) for arg in args)}
+            ]
+            return self.sub_rlm.completion(query_prompt)
         
         # Add (R)LM query function to globals
         self.globals['llm_query'] = llm_query
+
+        def search_context(query: str, n_results: int = 3, snippet_length: int = 300, **kwargs) -> str:
+            """
+            Search for snippets in the context that match the query.
+            Returns a formatted string of matched snippets.
+            """
+            ctx = self.globals.get('context', '')
+            if not isinstance(ctx, str) or not ctx:
+                return "Error: context is not available as a string for searching."
+            
+            # Simple keyword-based snippet extraction
+            query_words = query.lower().split()
+            sentences = ctx.split('. ')
+            
+            scored_sentences = []
+            for sent in sentences:
+                score = sum(1 for word in query_words if word in sent.lower())
+                if score > 0:
+                    scored_sentences.append((score, sent))
+            
+            # Sort by score descending
+            scored_sentences.sort(key=lambda x: x[0], reverse=True)
+            
+            top_matches = [s[1] for s in scored_sentences[:n_results]]
+            
+            if not top_matches:
+                return "No direct matches found in context."
+            
+            result = "Matched snippets from context:\n"
+            for i, snippet in enumerate(top_matches):
+                # Clean up and truncate snippet if needed (though sentences are usually short enough)
+                clean_snippet = snippet.strip().replace('\n', ' ')
+                result += f"{i+1}. [...]{clean_snippet}[...]\n"
+            
+            return result
+            
+        self.globals['search_context'] = search_context
         
         # Add FINAL_VAR function to globals
         def final_var(variable_name: str) -> str:
@@ -203,9 +244,13 @@ class REPLEnv:
                     return f"Error: Variable '{variable_name}' not found in REPL environment"
             except Exception as e:
                 return f"Error retrieving variable '{variable_name}': {str(e)}"
-        
         self.globals['FINAL_VAR'] = final_var
         
+        # Inject a dummy FINAL function to catch when the model uses it incorrectly inside code
+        def final_error(*args, **kwargs):
+            raise RuntimeError("'FINAL()' should NOT be used inside Python code blocks! Output your final answer as raw text directly.")
+        self.globals['FINAL'] = final_error
+
         # Inject any additional plugin functions (e.g. memory_retrieve, deep_reason)
         if plugins:
             for name, fn in plugins.items():
@@ -287,7 +332,7 @@ class REPLEnv:
         with self._capture_output() as (stdout_buffer, stderr_buffer):
             with self._temp_working_directory():
                 try:
-                    # Split code into import statements and other code
+                    # Split code into lines
                     lines = code.split('\n')
                     import_lines = []
                     other_lines = []
@@ -303,75 +348,64 @@ class REPLEnv:
                         import_code = '\n'.join(import_lines)
                         exec(import_code, self.globals, self.globals)
                     
-                    # Execute the rest of the code. We also want to print last expressions
+                    # Execute the rest of the code. We also want to support expression printing.
                     if other_lines:
-                        other_code = '\n'.join(other_lines)
-                        # Create a combined namespace that includes both globals and locals
-                        combined_namespace = {**self.globals, **self.locals}
-                        
-                        # Check if the last non-comment line is an expression
-                        non_comment_lines = [line for line in other_lines if line and not line.startswith('#')]
+                        # Clean up lines for expression detection
+                        non_comment_lines = []
+                        for line in other_lines:
+                            stripped = line.strip()
+                            if stripped and not stripped.startswith('#'):
+                                non_comment_lines.append(line)
                         
                         if non_comment_lines:
                             last_line = non_comment_lines[-1]
                             
                             # Check if the last line looks like an expression (not a statement)
                             is_expression = (
-                                not last_line.startswith(('import ', 'from ', 'def ', 'class ', 'if ', 'for ', 'while ', 'try:', 'with ', 'return ', 'yield ', 'break', 'continue', 'pass')) and
+                                not last_line.strip().startswith(('import ', 'from ', 'def ', 'class ', 'if ', 'for ', 'while ', 'try:', 'with ', 'return ', 'yield ', 'break', 'continue', 'pass')) and
                                 '=' not in last_line.split('#')[0] and  # Not an assignment
-                                not last_line.endswith(':') and  # Not a control structure
-                                not last_line.startswith('print(')  # Not an explicit print
+                                not last_line.strip().endswith(':') and  # Not a control structure
+                                not last_line.strip().startswith('print(')  # Not an explicit print
                             )
                             
                             if is_expression:
-                                try:
-                                    # Execute all lines except the last one as statements
-                                    if len(non_comment_lines) > 1:
-                                        # Find where the last line starts in the original code
-                                        last_line_start = -1
-                                        for i, line in enumerate(other_lines):
-                                            if line == last_line:
-                                                last_line_start = i
-                                                break
-                                        
-                                        if last_line_start > 0:
-                                            statements_code = '\n'.join(other_lines[:last_line_start])
-                                            exec(statements_code, combined_namespace, combined_namespace)
-                                    
-                                    # Evaluate the last line as an expression and print the result
-                                    result = eval(last_line, combined_namespace, combined_namespace)
-                                    if result is not None:
-                                        print(repr(result))
-                                        
-                                except:
-                                    # If evaluation fails, fall back to normal execution
-                                    exec(other_code, combined_namespace, combined_namespace)
+                                # Execute everything except the last line
+                                head_code = '\n'.join(other_lines[:-1])
+                                if head_code.strip():
+                                    exec(head_code, self.globals, self.locals)
+                                
+                                # Evaluate the last line
+                                result = eval(last_line, self.globals, self.locals)
+                                if result is not None:
+                                    print(result)
                             else:
-                                # Execute normally as statements
-                                exec(other_code, combined_namespace, combined_namespace)
-                        else:
-                            # Only comments, execute normally (though it won't do anything)
-                            exec(other_code, combined_namespace, combined_namespace)
-                        
-                        # Update locals with any new variables created
-                        for key, value in combined_namespace.items():
-                            if key not in self.globals:
-                                self.locals[key] = value
-                    
-                    stdout_content = stdout_buffer.getvalue()
-                    stderr_content = stderr_buffer.getvalue()
+                                # Just execute the whole block
+                                other_code = '\n'.join(other_lines)
+                                exec(other_code, self.globals, self.locals)
+                                
                 except Exception as e:
-                    stderr_content = stderr_buffer.getvalue() + str(e)
-                    stdout_content = stdout_buffer.getvalue()
+                    error_msg = str(e)
+                    
+                    # INJECT HINTS BASED ON ERROR TYPE
+                    hint = ""
+                    if isinstance(e, AttributeError) and "attribute 'answer'" in error_msg:
+                        hint = "\nHINT: llm_query() returns a raw STRING, not an object. Don't use '.answer'. Use 'result = llm_query(...)' directly."
+                    elif isinstance(e, NameError) and "analysis" in error_msg:
+                        hint = "\nHINT: You used 'analysis' before defining it. Did you mean to define it in the REPL first?"
+                    elif isinstance(e, TypeError) and "unexpected keyword argument 'text'" in error_msg:
+                        hint = "\nHINT: search_context() uses 'context' automatically. Don't pass 'text=context' to it."
+                    elif isinstance(e, SyntaxError):
+                        hint = "\nHINT: Check if you used an f-string (e.g., f\"{context}\"), it likely crashed or failed. Use \"...\" + context or llm_query(\"prompt\", context) instead."
+                    
+                    sys.stderr.write(f"{type(e).__name__}: {error_msg}{hint}\n")
         
-        end_time = time.time()
-        execution_time = end_time - start_time
-        
-        # Store output in locals for access
-        self.locals['_stdout'] = stdout_content
-        self.locals['_stderr'] = stderr_content
-        
-        return REPLResult(stdout_content, stderr_content, self.locals.copy(), execution_time)
+        execution_time = time.time() - start_time
+        return REPLResult(
+            stdout=stdout_buffer.getvalue(),
+            stderr=stderr_buffer.getvalue(),
+            locals=self.locals.copy(),
+            execution_time=execution_time
+        )
     
     def get_cost_summary(self):
         raise NotImplementedError("Cost tracking is not implemented for the REPL Environment.")

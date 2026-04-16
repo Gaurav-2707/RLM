@@ -8,11 +8,13 @@ across an episode.
 
 from .controller import AdaptiveComputeController
 from .complexity import ComplexityScorer
+from .semantic_complexity import SemanticComplexityScorer
 from .models import DepthRecord, EpisodeReport
 
 __all__ = [
     "AdaptiveComputeController",
     "ComplexityScorer",
+    "SemanticComplexityScorer",
     "DepthRecord",
     "EpisodeReport",
 ]
