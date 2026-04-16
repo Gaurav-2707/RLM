@@ -1,5 +1,5 @@
 from .base import MemoryEntry
-from .retrieval import BM25Retriever
+from .retrieval import DenseRetriever
 import math
 import time
 from typing import List, Tuple, Optional
@@ -23,7 +23,7 @@ class EpisodicMemorySystem:
         self.decay_rate = decay_rate
         self.conflict_thresh = conflict_thresh
         self.memories: List[MemoryEntry] = []
-        self.retriever = BM25Retriever()
+        self.retriever = DenseRetriever()
 
     def add_memory(self, entry: MemoryEntry) -> List[str]:
         """Adds a memory and checks for conflicts."""

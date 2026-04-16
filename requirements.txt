@@ -15,6 +15,9 @@ pytest>=8.0.0
 fastapi>=0.100.0
 uvicorn>=0.23.0
 
+# Vector Embeddings
+sentence-transformers>=2.2.0
+numpy>=1.24.0
 # Benchmark + Dashboard
 datasets>=2.18.0           # HuggingFace datasets (HotpotQA)
 streamlit>=1.32.0          # Dashboard UI

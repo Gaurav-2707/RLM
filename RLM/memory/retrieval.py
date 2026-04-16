@@ -1,6 +1,13 @@
 import math
 import re
 from typing import List, Dict, Any
+import numpy as np
+
+try:
+    from sentence_transformers import SentenceTransformer
+except ImportError:
+    SentenceTransformer = None
+
 
 class BM25Retriever:
     """
@@ -79,3 +86,47 @@ class JaccardRetriever:
         intersection = len(set1.intersection(set2))
         union = len(set1.union(set2))
         return intersection / union
+
+class DenseRetriever:
+    """
+    Dense vector-based retrieval using SentenceTransformers.
+    Computes cosine similarity between queries and documents.
+    """
+    def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
+        if SentenceTransformer is None:
+            raise ImportError("Please install sentence-transformers and numpy to use DenseRetriever.")
+        self.model = SentenceTransformer(model_name)
+        self.corpus_embeddings = None
+        self._last_query = None
+        self._last_query_embedding = None
+
+    def fit(self, documents: List[str]):
+        """Encode the corpus into dense vectors."""
+        if not documents:
+            self.corpus_embeddings = np.array([])
+        else:
+            self.corpus_embeddings = self.model.encode(documents)
+
+    def score(self, query: str, doc_index: int) -> float:
+        """
+        Score a single document against a query using cosine similarity.
+        Cosine similarity ranges from -1 to 1. 1 means perfectly identical.
+        """
+        if self.corpus_embeddings is None or len(self.corpus_embeddings) <= doc_index:
+            return 0.0
+            
+        # Cache the query embedding to avoid re-encoding for every document
+        if query != self._last_query:
+            self._last_query = query
+            self._last_query_embedding = self.model.encode([query])[0]
+            
+        query_embedding = self._last_query_embedding
+        doc_embedding = self.corpus_embeddings[doc_index]
+        
+        norm_q = np.linalg.norm(query_embedding)
+        norm_d = np.linalg.norm(doc_embedding)
+        
+        if norm_q == 0 or norm_d == 0:
+            return 0.0
+            
+        return float(np.dot(query_embedding, doc_embedding) / (norm_q * norm_d))
