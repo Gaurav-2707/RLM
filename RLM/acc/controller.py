@@ -23,13 +23,9 @@ from .models import DepthRecord, EpisodeReport
 logger = logging.getLogger(__name__)
 
 
-# ---------------------------------------------------------------------------
-# Depth-tier thresholds (from the paper spec)
-# ---------------------------------------------------------------------------
-
-_THRESHOLD_SHALLOW = 0.35  # score < this  → depth 1
-_THRESHOLD_DEEP    = 0.70  # score > this  → depth 3
-# otherwise depth 2
+# Default thresholds — used when adaptive calibration is disabled
+_DEFAULT_THRESHOLD_SHALLOW = 0.40
+_DEFAULT_THRESHOLD_DEEP    = 0.60
 
 
 class AdaptiveComputeController:
@@ -63,11 +59,27 @@ class AdaptiveComputeController:
         self,
         max_api_calls: Optional[int] = 10,
         depth_costs: Optional[dict[int, int]] = None,
+        threshold_shallow: Optional[float] = None,
+        threshold_deep: Optional[float] = None,
+        adaptive_calibration: bool = True,
+        calibration_window: int = 10,
     ) -> None:
         self.max_api_calls = max_api_calls
         self.depth_costs: dict[int, int] = depth_costs or dict(
             self._DEFAULT_DEPTH_COSTS
         )
+
+        # Threshold configuration
+        # If explicit thresholds are given, use them (fixed mode).
+        # Otherwise, if adaptive_calibration is True, auto-compute
+        # thresholds from the first `calibration_window` scores.
+        self._adaptive = adaptive_calibration and (threshold_shallow is None and threshold_deep is None)
+        self._calibration_window = calibration_window
+        self._calibration_scores: list[float] = []
+        self._calibrated = not self._adaptive  # True if using fixed thresholds
+        
+        self.threshold_shallow = threshold_shallow or _DEFAULT_THRESHOLD_SHALLOW
+        self.threshold_deep = threshold_deep or _DEFAULT_THRESHOLD_DEEP
 
         # Episode state (reset via new_episode())
         self._step: int = 0
@@ -205,20 +217,48 @@ class AdaptiveComputeController:
     # Private helpers                                                      #
     # ------------------------------------------------------------------ #
 
-    @staticmethod
-    def _map_score_to_depth(score: float) -> int:
+    def _map_score_to_depth(self, score: float) -> int:
         """
-        Apply the three-tier mapping rule.
+        Apply the three-tier mapping rule using instance thresholds.
 
-            Score < 0.35        →  d = 1
-            0.35 ≤ Score ≤ 0.70 →  d = 2
-            Score > 0.70        →  d = 3
+            Score < threshold_shallow  →  d = 1
+            threshold_shallow <= Score <= threshold_deep  →  d = 2
+            Score > threshold_deep  →  d = 3
         """
-        if score < _THRESHOLD_SHALLOW:
+        # Adaptive calibration: collect scores and derive thresholds
+        if self._adaptive and not self._calibrated:
+            self._calibration_scores.append(score)
+            if len(self._calibration_scores) >= self._calibration_window:
+                self._calibrate()
+        
+        if score < self.threshold_shallow:
             return 1
-        if score <= _THRESHOLD_DEEP:
+        if score <= self.threshold_deep:
             return 2
         return 3
+
+    def _calibrate(self) -> None:
+        """Compute P33/P66 percentile thresholds from collected scores."""
+        scores = sorted(self._calibration_scores)
+        n = len(scores)
+        p33 = scores[n // 3]
+        p66 = scores[2 * n // 3]
+        
+        # Ensure minimum gap between thresholds
+        if p66 - p33 < 0.05:
+            mid = (p33 + p66) / 2
+            p33 = mid - 0.05
+            p66 = mid + 0.05
+        
+        self.threshold_shallow = round(p33, 4)
+        self.threshold_deep = round(p66, 4)
+        self._calibrated = True
+        
+        logger.info(
+            "ACC: adaptive calibration complete from %d samples. "
+            "Thresholds: shallow=%.4f, deep=%.4f",
+            n, self.threshold_shallow, self.threshold_deep,
+        )
 
     def _apply_budget(self, requested_depth: int) -> int:
         """

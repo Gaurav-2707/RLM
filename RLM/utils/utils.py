@@ -12,24 +12,108 @@ def find_code_blocks(text:str) -> List[str]:
     return results
 
 def find_final_answer(text:str) -> Optional[Tuple[str,str]]:
-    # Find FINAL_VAR(...) and FINAL(...) ignoring what's before them on the line,
-    # and allowing nested parentheses by matching non-greedily inside but as greedily as possible
-    # We can match FINAL( up to the last ) in the string.
-    final_var_pattern = r'FINAL_VAR\s*\((.*)\)'
-    match = re.search(final_var_pattern, text, re.DOTALL)
+    """Parse FINAL_VAR(name) or FINAL(answer) from model output.
+    
+    Ignores FINAL() calls that appear inside ```repl``` code blocks.
+    """
+    # Strip out code blocks so we don't match FINAL() inside them
+    cleaned = re.sub(r'```.*?```', '', text, flags=re.DOTALL)
+    
+    # Try FINAL_VAR first
+    match = re.search(r'FINAL_VAR\s*\(([^)]+)\)', cleaned)
     if match:
         return ('FINAL_VAR', match.group(1).strip())
-        
-    final_pattern = r'FINAL\s*\((.*)\)'
-    match = re.search(final_pattern, text, re.DOTALL)
+    
+    # Try FINAL(...)  — use greedy match but only on the cleaned text
+    match = re.search(r'FINAL\s*\((.+)\)\s*$', cleaned, re.DOTALL | re.MULTILINE)
     if match:
-        content = match.group(1)
-        # Handle trailing text after the last )
-        if content.endswith(')'):
-            content = content[:-1]
-        elif ')' in content:
-            content = content.rsplit(')', 1)[0]
-        return ('FINAL', content.strip())
+        content = match.group(1).strip()
+        # Strip wrapping quotes if the model wrote FINAL("answer")
+        if (content.startswith('"') and content.endswith('"')) or \
+           (content.startswith("'") and content.endswith("'")):
+            content = content[1:-1]
+        return ('FINAL', content)
+    
+    # Fallback: looser match for FINAL(text) not at end of line
+    match = re.search(r'FINAL\s*\(([^)]+)\)', cleaned)
+    if match:
+        content = match.group(1).strip()
+        if (content.startswith('"') and content.endswith('"')) or \
+           (content.startswith("'") and content.endswith("'")):
+            content = content[1:-1]
+        return ('FINAL', content)
+    
+    return None
+
+
+def _looks_like_code(text: str) -> bool:
+    """Heuristic: does this string look like Python code rather than a plain-text answer?"""
+    code_signals = [
+        '.strip(', '.group(', '.replace(', '.split(',   # method calls
+        'llm_query(', 'print(', 're.search(',             # function calls
+        'f"', "f'",                                       # f-strings
+        '\\n', 'elif ', 'else:', 'import ',               # control flow
+        ' = ', '==', '!=',                                # assignments/comparisons
+        '].', ').', '}{',                                 # chained operations
+    ]
+    return any(sig in text for sig in code_signals)
+
+
+def _resolve_variable(name: str, repl_env) -> Optional[str]:
+    """Try to resolve a variable name from the REPL environment."""
+    name = name.strip().strip('"').strip("'").strip()
+    # Check locals first, then globals
+    if name in repl_env.locals:
+        return str(repl_env.locals[name])
+    if name in repl_env.globals:
+        val = repl_env.globals[name]
+        # Don't return functions/modules/builtins
+        if isinstance(val, (str, int, float, bool)):
+            return str(val)
+    return None
+
+
+def check_for_final_answer(response: str, repl_env, logger) -> Optional[str]:
+    result = find_final_answer(response)
+    if result is None:
+        return None
+    
+    answer_type, content = result
+    
+    if answer_type == 'FINAL_VAR':
+        # Resolve the variable from REPL
+        resolved = _resolve_variable(content, repl_env)
+        if resolved is not None:
+            return resolved
+        else:
+            error_msg = f"Variable '{content}' not found in REPL environment"
+            logger.log_tool_execution("FINAL_VAR", error_msg)
+            return None
+    
+    elif answer_type == 'FINAL':
+        # Check if content looks like code or a bare variable name
+        if _looks_like_code(content):
+            # The model wrote something like FINAL(answer.strip()) — try extracting the var name
+            var_match = re.match(r'^(\w+)', content)
+            if var_match:
+                resolved = _resolve_variable(var_match.group(1), repl_env)
+                if resolved is not None:
+                    return resolved
+            # Can't resolve — return None so the loop continues
+            return None
+        
+        # Check if content is a bare Python identifier (like "final_answer" or "answer")
+        if content.isidentifier() and len(content) > 2:
+            resolved = _resolve_variable(content, repl_env)
+            if resolved is not None:
+                return resolved
+            # Variable not found — it might genuinely be a one-word answer like "Yes" or "No"
+            # Only return it if it looks like a plausible answer (short, capitalized)
+            if len(content) <= 15:
+                return content
+            return None
+        
+        return content
     
     return None
 
@@ -120,37 +204,6 @@ def process_code_execution(
             )
     
     return messages
-
-def check_for_final_answer(response: str, repl_env, logger) -> Optional[str]:
-    result = find_final_answer(response)
-    if result is None:
-        return None
-    
-    answer_type, content = result
-    
-    if answer_type == 'FINAL':
-        return content
-    elif answer_type == 'FINAL_VAR':
-        # Get the variable directly from the REPL environment
-        try:
-            # Strip spaces, quotes, and newlines from variable name
-            variable_name = content.strip().strip('"').strip("'").strip('\n').strip('\r')
-            
-            # Check if variable exists in the REPL environment's locals
-            if variable_name in repl_env.locals:
-                variable_value = repl_env.locals[variable_name]
-                return str(variable_value)
-            else:
-                error_msg = f"Variable '{variable_name}' not found in REPL environment"
-                logger.log_tool_execution("FINAL_VAR", error_msg)
-                return None
-        except Exception as e:
-            error_msg = f"Error retrieving variable '{variable_name}': {str(e)}"
-            print('ERROR MESSAGE', error_msg)
-            logger.log_tool_execution("FINAL_VAR", error_msg)
-            return None
-    
-    return None
 
 def convert_context_for_repl(context):
     if isinstance(context, dict):

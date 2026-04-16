@@ -10,12 +10,14 @@ from dataclasses import dataclass
 from typing import Optional
 
 from RLM.rlm import RLM
+from RLM.utils.llm import DEFAULT_MODEL
 
 # Simple sub LM for REPL environment. Note: This could also be just the RLM itself!
 class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
     
-    def __init__(self, model: str = "ollama/llama3"):
+    def __init__(self, model: str = None):
+        model = model or DEFAULT_MODEL
         # support either OpenAI or Gemini API key environment variables
         self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("GENAI_API_KEY")
         if not self.api_key and not model.lower().startswith("ollama/"):
@@ -71,7 +73,7 @@ class REPLResult:
 class REPLEnv:
     def __init__(
         self,
-        recursive_model: str = "ollama/llama3",
+        recursive_model: str = None,
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,
@@ -166,6 +168,16 @@ class REPLEnv:
         self.stderr_buffer = io.StringIO()
 
         self.load_context(context_json, context_str)
+
+        # Pre-inject commonly used stdlib modules so model code doesn't crash
+        import re as _re
+        import json as _json
+        import math as _math
+        import collections as _collections
+        self.globals['re'] = _re
+        self.globals['json'] = _json
+        self.globals['math'] = _math
+        self.globals['collections'] = _collections
         
         def llm_query(prompt: str) -> str:
             """Query the LLM with the given prompt."""

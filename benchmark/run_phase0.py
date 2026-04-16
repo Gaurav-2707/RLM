@@ -8,12 +8,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from benchmark.hotpotqa_runner import load_hotpotqa, run_benchmark, save_results
 from RLM.integrated_repl import IntegratedRLM
+from RLM.utils.llm import DEFAULT_MODEL
 
 def main():
     parser = argparse.ArgumentParser(description="Phase 0 Baseline Runner for RLM NLP Integration Research")
     parser.add_argument("--num_examples", type=int, default=100, help="Number of examples to run per configuration")
-    parser.add_argument("--model", type=str, default="ollama/llama3", help="Root model to use")
-    parser.add_argument("--recursive_model", type=str, default="ollama/llama3", help="Recursive model to use")
+    parser.add_argument("--model", type=str, default=DEFAULT_MODEL, help="Root model to use")
+    parser.add_argument("--recursive_model", type=str, default=DEFAULT_MODEL, help="Recursive model to use")
     args = parser.parse_args()
 
     # Base path for results

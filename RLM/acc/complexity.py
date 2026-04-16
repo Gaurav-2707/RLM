@@ -25,8 +25,7 @@ from typing import Optional
 # ---------------------------------------------------------------------------
 
 _SHALLOW_KEYWORDS: set[str] = {
-    "what", "who", "when", "where", "list", "name", "define", "identify",
-    "simple", "basic", "quick",
+    "list", "define", "identify", "simple", "basic", "quick",
 }
 
 _DEEP_KEYWORDS: set[str] = {
@@ -35,6 +34,20 @@ _DEEP_KEYWORDS: set[str] = {
     "implications", "consequences", "relationship", "mechanism", "strategy",
     "plan", "design", "critique", "justify", "argue",
 }
+
+# Patterns that signal multi-hop reasoning (common in HotpotQA)
+_MULTIHOP_PATTERNS: list[str] = [
+    r"the \w+ who",           # "the woman who portrayed..."
+    r"the \w+ that",          # "the film that starred..."
+    r"the \w+ where",         # "the city where..."
+    r"also",                  # "also known for..."
+    r"both",                  # comparing two entities
+    r"same",                  # "of the same nationality"
+    r"older|younger|taller|more|fewer|higher|lower",  # comparative
+    r"and .+ (both|also)",    # conjunction + shared property
+    r"born in .+ (who|that|which)",  # nested reference
+    r"based (on|in) .+ (who|that|which|where)",
+]
 
 
 class ComplexityScorer:
@@ -57,20 +70,20 @@ class ComplexityScorer:
 
     def __init__(
         self,
-        length_cap: int = 50,
-        context_weight: float = 0.15,
-        weights: tuple[float, float, float] = (0.35, 0.30, 0.35),
+        length_cap: int = 40,
+        context_weight: float = 0.10,
+        weights: tuple[float, float, float, float] = (0.20, 0.20, 0.25, 0.35),
     ) -> None:
         if not (0.0 <= context_weight <= 1.0):
             raise ValueError("context_weight must be in [0, 1].")
-        if len(weights) != 3 or any(w < 0 for w in weights):
-            raise ValueError("weights must be a 3-tuple of non-negative floats.")
+        if len(weights) != 4 or any(w < 0 for w in weights):
+            raise ValueError("weights must be a 4-tuple of non-negative floats.")
 
         self.length_cap = length_cap
         self.context_weight = context_weight
 
         total = sum(weights)
-        self.w_entropy, self.w_length, self.w_keywords = (
+        self.w_entropy, self.w_length, self.w_keywords, self.w_multihop = (
             w / total for w in weights
         )
 
@@ -101,11 +114,13 @@ class ComplexityScorer:
         s_entropy  = self._lexical_entropy(tokens)
         s_length   = self._length_score(tokens)
         s_keywords = self._keyword_score(tokens)
+        s_multihop = self._multihop_score(query)
 
         base_score = (
             self.w_entropy  * s_entropy
             + self.w_length   * s_length
             + self.w_keywords * s_keywords
+            + self.w_multihop * s_multihop
         )
 
         # Blend in context signal when present
@@ -166,6 +181,42 @@ class ComplexityScorer:
 
         # Shift to [0, 1]
         return min(max((normalised + 1.0) / 2.0, 0.0), 1.0)
+
+    @staticmethod
+    def _multihop_score(query: str) -> float:
+        """
+        Score based on multi-hop reasoning indicators.
+        
+        Detects patterns like nested entity references, comparisons,
+        and bridging language that signal the query requires connecting
+        information across multiple documents.
+        """
+        query_lower = query.lower()
+        score = 0.0
+        
+        # 1. Multi-hop pattern matching (each match adds signal)
+        pattern_hits = sum(
+            1 for pat in _MULTIHOP_PATTERNS
+            if re.search(pat, query_lower)
+        )
+        score += min(pattern_hits / 3.0, 1.0) * 0.4  # up to 0.4
+        
+        # 2. Named entity density — more proper nouns = more complex
+        #    (count capitalized words that aren't sentence starters)
+        words = query.split()
+        if len(words) > 1:
+            caps = sum(1 for w in words[1:] if w[0].isupper() and w.isalpha())
+            score += min(caps / 4.0, 1.0) * 0.3  # up to 0.3
+        
+        # 3. Subordinate clause depth (commas, "which", "that", "where", "who")
+        subordinators = len(re.findall(r'\b(which|that|where|who|whom|whose)\b', query_lower))
+        score += min(subordinators / 2.0, 1.0) * 0.2  # up to 0.2
+        
+        # 4. Question-within-question (e.g., "the X of the Y who did Z")
+        chain_depth = len(re.findall(r'\b(of|by|in|from|for) (the|a) \w+', query_lower))
+        score += min(chain_depth / 2.0, 1.0) * 0.1  # up to 0.1
+        
+        return min(score, 1.0)
 
     def _context_signal(self, context: str) -> float:
         """

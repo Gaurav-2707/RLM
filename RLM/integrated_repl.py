@@ -9,7 +9,7 @@ Usage:
     from RLM.integrated_repl import IntegratedRLM
 
     rlm = IntegratedRLM(
-        model="ollama/llama3",
+        model="ollama/llama3.1:8b",
         enable_acc=True,
         enable_memory=True,
         enable_engine=True,
@@ -24,6 +24,7 @@ from RLM.repl import REPLEnv
 from RLM.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import RLM.utils.utils as utils
 from RLM.utils.tracing import TraceStorage
+from RLM.utils.llm import DEFAULT_MODEL
 
 
 class IntegratedRLM(RLM_REPL):
@@ -55,8 +56,8 @@ class IntegratedRLM(RLM_REPL):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "ollama/llama3",
-        recursive_model: str = "ollama/llama3",
+        model: str = None,
+        recursive_model: str = None,
         max_iterations: int = 10,
         enable_logging: bool = False,
         enable_acc: bool = False,

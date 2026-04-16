@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from RLM.acc import AdaptiveComputeController, ComplexityScorer
 from RLM.acc_repl import AdaptiveRLM
+from RLM.utils.llm import DEFAULT_MODEL
 from api.engine_api import router as engine_router
 from api.memory_api import router as memory_router
 
@@ -41,8 +42,8 @@ class QueryRequest(BaseModel):
     session_id: str
     query: str
     context: Optional[str] = None
-    model: str = "ollama/llama3"
-    recursive_model: str = "ollama/llama3"
+    model: str = None
+    recursive_model: str = None
     enable_logging: bool = False
 
 class QueryResponse(BaseModel):
