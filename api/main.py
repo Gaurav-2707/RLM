@@ -5,12 +5,18 @@ from pydantic import BaseModel
 
 from RLM.acc import AdaptiveComputeController, ComplexityScorer
 from RLM.acc_repl import AdaptiveRLM
+from api.engine_api import router as engine_router
+from api.memory_api import router as memory_router
 
 app = FastAPI(
-    title="RLM Adaptive Compute Controller API",
-    description="API for managing reasoning complexity and iteration bounds in the RLM framework.",
+    title="RLM API",
+    description="Unified API for the RLM Adaptive Compute Controller, Engine, and Memory modules.",
     version="1.0.0"
 )
+
+# Mount sub-routers
+app.include_router(engine_router, prefix="/engine", tags=["Engine"])
+app.include_router(memory_router, prefix="/memory", tags=["Memory"])
 
 # In-memory storage for active sessions (session_id -> AdaptiveComputeController)
 sessions: Dict[str, AdaptiveComputeController] = {}
@@ -35,8 +41,8 @@ class QueryRequest(BaseModel):
     session_id: str
     query: str
     context: Optional[str] = None
-    model: str = "gemini-2.5-pro"
-    recursive_model: str = "gemini-2.5-flash"
+    model: str = "ollama/llama3"
+    recursive_model: str = "ollama/llama3"
     enable_logging: bool = False
 
 class QueryResponse(BaseModel):

@@ -39,11 +39,15 @@ for i in range(1, len(sections), 2):
     buffers.append(f"{{header}}: {{summary}}")
 final_answer = llm_query(f"Based on these summaries, answer the original query: {{query}}\\n\\nSummaries:\\n" + "\\n".join(buffers))
 ```
-In the next step, we can return FINAL_VAR(final_answer).
+In the next step, we can output FINAL_VAR(final_answer).
 
-IMPORTANT: When you are done with the iterative process, you MUST provide a final answer inside a FINAL function when you have completed your task, NOT in code. Do not use these tags unless you have completed your task. You have two options:
-1. Use FINAL(your final answer here) to provide the answer directly
-2. Use FINAL_VAR(variable_name) to return a variable you have created in the REPL environment as your final output
+IMPORTANT: When you are completely done with the iterative process, you MUST provide a final answer inside a FINAL function. Do not do this inside a ````repl`` block; it must be plain text in your final response. 
+
+If the query is a specific question, your answer inside FINAL() should be as concise as possible (e.g., just the entity name, or "Yes", or "No"). DO NOT include conversational filler in the final answer.
+
+You have two options for the final answer:
+1. Use FINAL(your plain text answer) to provide the answer as raw text directly. DO NOT use f-strings or python variables here (e.g. absolutely no `FINAL(f"{var}")`).
+2. Use FINAL_VAR(variable_name) to return a variable you have created in the REPL environment as your final output. DO NOT put quotes around the variable name.
 
 Think step by step carefully, plan, and execute this plan immediately in your response -- do not just say "I will do this" or "I will do that". Output to the REPL environment and recursive LLMs as much as possible. Remember to explicitly answer the original query in your final answer.
 """
@@ -58,7 +62,7 @@ def build_system_prompt() -> list[Dict[str, str]]:
 
 
 # Prompt at every step to query root LM to make a decision
-USER_PROMPT = """Think step-by-step on what to do using the REPL environment (which contains the context) to answer the original query: \"{query}\".\n\nContinue using the REPL environment, which has the `context` variable, and querying sub-LLMs by writing to ```repl``` tags, and determine your answer. Your next action:""" 
+USER_PROMPT = """Think step-by-step on what to do using the REPL environment (which contains the context) to answer the original query: \"{query}\".\n\nContinue using the REPL environment, which has the `context` variable, and querying sub-LLMs by writing to ```repl``` tags, and determine your answer. If you have the answer, output FINAL(your answer). Your next action:""" 
 def next_action_prompt(query: str, iteration: int = 0, final_answer: bool = False) -> Dict[str, str]:
     if final_answer:
         return {"role": "user", "content": "Based on all the information you have, provide a final answer to the user's query."}

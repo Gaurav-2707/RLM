@@ -9,8 +9,8 @@ from RLM.acc import AdaptiveComputeController, ComplexityScorer
 class AdaptiveRLM(RLM_REPL):
     def __init__(self,
                  api_key: Optional[str] = None,
-                 model: str = "gemini-2.5-pro",
-                 recursive_model: str = "gemini-2.5-flash",
+                 model: str = "ollama/llama3",
+                 recursive_model: str = "ollama/llama3",
                  enable_logging: bool = False,
                  acc: Optional[AdaptiveComputeController] = None):
         super().__init__(

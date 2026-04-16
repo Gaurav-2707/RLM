@@ -28,8 +28,8 @@ def main():
 
     # choose an available Gemini family model (or any other model string)
     rlm = RLM_REPL(
-        model="gemini-2.5-flash",
-        recursive_model="gemini-2.5-flash",
+        model="ollama/llama3",
+        recursive_model="ollama/llama3",
         enable_logging=True,
         max_iterations=10
     )
