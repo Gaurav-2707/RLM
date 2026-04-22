@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "f1": 0.6667,
+    "duration_s": 20.724481,
+    "timestamp": "2026-04-21T19:09:17.734132"
+  },
+  "query": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+  "predicted_answer": "Monica",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.578072, depth_selected=2, api_calls_used=0, timestamp=1776798557.7388961)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "From the Global Context Preview, I can see that Monica Lewinsky is mentioned as a former White House intern who was involved in an affair with President Bill Clinton.\n\nSince the necessary information is provided in the preview, I will not need to use any search tools or perform further reasoning beyond this brief observation.\n\nFINAL ANSWER: Monica",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

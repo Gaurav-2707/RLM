@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "f1": 1.0,
+    "duration_s": 0.671135,
+    "timestamp": "2026-04-21T18:25:16.137709"
+  },
+  "query": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+  "predicted_answer": "conscription",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "Upon checking the Global Context Preview, we find that...\n\nFINAL ANSWER: conscription",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

@@ -6,7 +6,7 @@ Official normalization + EM + F1 matching (mirrors hotpot_evaluate_v1.py).
 import re
 import string
 from collections import Counter
-from typing import Tuple
+from typing import Tuple, List
 
 
 def normalize_answer(s: str) -> str:
@@ -24,7 +24,12 @@ def normalize_answer(s: str) -> str:
     def lower(text):
         return text.lower()
 
-    return white_space_fix(remove_articles(remove_punc(lower(s))))
+    # Add a strip of trailing punctuation and normalized spacing
+    s = lower(s)
+    s = remove_punc(s)
+    s = remove_articles(s)
+    s = white_space_fix(s)
+    return s.strip()
 
 
 def get_tokens(s: str) -> list:
@@ -59,6 +64,50 @@ def f1_score(prediction: str, ground_truth: str) -> Tuple[float, float, float]:
     f1 = (2 * precision * recall) / (precision + recall)
     return f1, precision, recall
 
+
+def trace_consistency_judge(question: str, trace_history: List[dict], final_answer: str) -> int:
+    """
+    Uses a 70B LLM to judge if the agent's code and reasoning steps 
+    directly and correctly lead to the final answer.
+    Returns a score 1-5.
+    """
+    from RLM.utils.llm import LLMClient
+    judge = LLMClient(model="ollama/llama3.1:70b")
+    
+    # Format the trace for the judge
+    history_text = ""
+    for step in trace_history:
+        history_text += f"\n--- Iteration {step['iteration']} ---\n"
+        history_text += f"Reasoning/Code: {step['response']}\n"
+        history_text += f"Output: {step['stdout'] or 'None'}\n"
+        if step.get('stderr'):
+            history_text += f"Error: {step['stderr']}\n"
+
+    prompt = f"""You are a Logical Auditor. Your task is to verify if an agent's reasoning process is CONSISTENT with its final answer.
+
+Question: {question}
+Reasoning History:
+{history_text}
+
+Agent's Final Answer: {final_answer}
+
+GRADES (1 to 5):
+1: Contradictory - Logic clearly points elsewhere, yet the agent guessed this answer.
+2: Disconnected - The reasoning has nothing to do with the question or answer.
+3: Partially Support - The logic finds some relevant info but skips steps or has minor logic errors.
+4: Strong Support - The logic is correct, but perhaps contains extra unverified assumptions.
+5: Deductive - The answer follows perfectly and inexorably from the code outputs and reasoning.
+
+Response with JUST the integer grade."""
+
+    try:
+        response = judge.completion(prompt).strip()
+        # Extract first digit
+        import re
+        match = re.search(r'\d', response)
+        return int(match.group()) if match else 1
+    except Exception:
+        return 1
 
 def score(prediction: str, ground_truth: str) -> dict:
     """Return a dict with em, f1, precision, recall."""

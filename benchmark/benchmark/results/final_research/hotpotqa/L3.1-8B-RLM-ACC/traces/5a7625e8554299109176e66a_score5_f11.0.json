@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "em": 1,
+    "f1": 1.0,
+    "duration_s": 0.635962,
+    "timestamp": "2026-04-21T07:12:37.290015"
+  },
+  "query": "In which year was the King who made the 1925 Birthday Honours born?",
+  "predicted_answer": "1865",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.404315, depth_selected=1, api_calls_used=0, timestamp=1776755557.299689)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The year of birth is mentioned in the preview: \"...the King who made the 1925 Birthday Honours...\"\n\nFINAL ANSWER: 1865",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 3
+  }
+}

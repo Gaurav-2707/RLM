@@ -1,0 +1,56 @@
+{
+  "full": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 2.08,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  },
+  "no_acc": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 1.52,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  },
+  "no_mem": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 1.56,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  },
+  "no_eng": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 1.52,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  },
+  "minimal": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 1.59,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  },
+  "baseline": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 1.62,
+    "total": 2,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  }
+}

@@ -41,15 +41,31 @@ class SemanticComplexityScorer:
     Estimates reasoning complexity using embedding similarity to prototypes.
     """
     def __init__(self, model_name: str = "all-MiniLM-L6-v2", device: Optional[str] = None):
-        if not HAS_SBERT:
-            raise ImportError("sentence-transformers not installed.")
-        
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = SentenceTransformer(model_name, device=self.device)
+        self.model = None
+        self.fallback_scorer = None
         
-        # Pre-encode prototypes
-        self.complex_embeddings = self.model.encode(_COMPLEX_PROTOTYPES, convert_to_tensor=True, device=self.device)
-        self.simple_embeddings = self.model.encode(_SIMPLE_PROTOTYPES, convert_to_tensor=True, device=self.device)
+        if HAS_SBERT:
+            try:
+                # Attempt to load the model. 
+                # Note: SentenceTransformer often tries to reach HF Hub even for cached models.
+                self.model = SentenceTransformer(model_name, device=self.device)
+                
+                # Pre-encode prototypes
+                self.complex_embeddings = self.model.encode(_COMPLEX_PROTOTYPES, convert_to_tensor=True, device=self.device)
+                self.simple_embeddings = self.model.encode(_SIMPLE_PROTOTYPES, convert_to_tensor=True, device=self.device)
+            except Exception as e:
+                # Silently catch and prepare fallback to avoid crashing RLM initialisation
+                import logging
+                logging.getLogger(__name__).warning(
+                    f"Could not initialize SentenceTransformer '{model_name}': {e}. "
+                    "Falling back to keyword-based ComplexityScorer."
+                )
+                self.model = None
+
+        if self.model is None:
+            from .complexity import ComplexityScorer
+            self.fallback_scorer = ComplexityScorer()
 
     def score(self, query: str, context: Optional[str] = None) -> float:
         """
@@ -58,6 +74,10 @@ class SemanticComplexityScorer:
         """
         if not query.strip():
             return 0.0
+            
+        # Use fallback if semantic model failed to load
+        if self.model is None:
+            return self.fallback_scorer.score(query, context)
             
         # Encode query
         query_emb = self.model.encode(query, convert_to_tensor=True, device=self.device)

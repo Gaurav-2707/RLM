@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.5,
+    "duration_s": 19.862404,
+    "timestamp": "2026-04-21T07:04:20.099175"
+  },
+  "query": "What race track in the midwest hosts a 500 mile race eavery May?",
+  "predicted_answer": "Indianapolis",
+  "acc_data": {
+    "depth_selected": 3,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.616594, depth_selected=3, api_calls_used=0, timestamp=1776755060.104283)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The Global Context Preview mentions \"Indianapolis Motor Speedway\" as the host of the 500 mile race, specifically referring to the \"Southern 500\".\n\nGLOBAL CONTEXT PREVIEW confirms presence of Indianapolis.\n\nFINAL ANSWER: Indianapolis",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 3
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.8,
+    "duration_s": 20.450954,
+    "timestamp": "2026-04-21T06:34:45.014166"
+  },
+  "query": "Which of Tara Strong major voice role in animated series is an American animated television series based on the DC Comics fictional superhero team, the \"Teen Titans\"?",
+  "predicted_answer": "Teen Titans",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is clearly visible in the preview. Tara Strong's major voice role that matches the description is \"Teen Titans\" (not Teen Titans Go!). \n\nFINAL ANSWER: Teen Titans",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 5
+  }
+}

@@ -66,8 +66,42 @@ class TraceStorage:
             "repl_history": self.repl_history
         }
 
+    def calculate_research_metrics(self) -> Dict[str, float]:
+        """
+        Calculate research-specific metrics:
+        - ERR (Error Recovery Rate): Successful steps after a failed step.
+        - CAR (Compute-to-Accuracy Ratio): Accuracy / Total tokens/calls.
+        """
+        # ERR calculation
+        errors = 0
+        recoveries = 0
+        for i in range(len(self.repl_history) - 1):
+            if self.repl_history[i].get("stderr"):
+                errors += 1
+                # If next step has no stderr, it's a recovery
+                if not self.repl_history[i+1].get("stderr"):
+                    recoveries += 1
+        
+        err = recoveries / errors if errors > 0 else 1.0
+
+        # CAR calculation (simplified: 1/num_steps if correct)
+        semantic_score = self.metadata.get("semantic_score", 0)
+        is_correct = 1.0 if semantic_score >= 4 else 0.0
+        num_steps = len(self.repl_history)
+        car = is_correct / max(1, num_steps)
+
+        return {
+            "error_recovery_rate": round(err, 4),
+            "compute_to_accuracy_ratio": round(car, 4),
+            "total_steps": num_steps,
+            "errors_encountered": errors
+        }
+
     def save(self, filepath: str):
         """Save the trace to a JSON file."""
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        with open(filepath, "w") as f:
-            json.dump(self.to_dict(), f, indent=2)
+        # Inject research metrics before saving
+        data = self.to_dict()
+        data["research_metrics"] = self.calculate_research_metrics()
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)

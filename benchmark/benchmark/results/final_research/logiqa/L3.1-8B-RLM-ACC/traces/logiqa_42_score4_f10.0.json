@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.0,
+    "duration_s": 19.952709,
+    "timestamp": "2026-04-21T10:44:04.608423"
+  },
+  "query": "Plantings of cotton bioengineered to produce its own insecticide against bollworms, a major cause of crop failure, sustained little bollworm damage until this year. This year the plantings are being seriously damaged by bollworms. Bollworms, however, are not necessarily developing resistance to the cotton' s insecticide. Bollworms breed on corn, and last year more corn than usual was planted throughout cotton-growing regions. So it is likely that the cotton is simply being overwhelmed by corn-bred bollworms.\n\nIn evaluating the argument, establishing whether other crops that have been bioengineered to produce their own insecticide successfully resist the pests against which the insecticide was to protect them would be most useful.",
+  "predicted_answer": "Most useful",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.539933, depth_selected=2, api_calls_used=0, timestamp=1776768244.6149182)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The preview already mentions the establishment of whether other crops that have been bioengineered to produce their own insecticide successfully resist the pests against which the insecticide was to protect them as \"most useful\". \n\nFINAL ANSWER: Most useful",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 3
+  }
+}

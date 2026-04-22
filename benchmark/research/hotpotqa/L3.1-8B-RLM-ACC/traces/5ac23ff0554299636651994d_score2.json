@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 2,
+    "f1": 0.0,
+    "duration_s": 13.864889,
+    "timestamp": "2026-04-21T18:35:30.688005"
+  },
+  "query": "When was Poison's album \"Shut Up, Make Love\" released?",
+  "predicted_answer": "February",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.590877, depth_selected=2, api_calls_used=0, timestamp=1776796530.6957173)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is visible in the preview. Poison's album \"Shut Up, Make Love\" was released with lead guitarist Blues Saraceno on March 14, but more specifically it says \"the first single/sampler...released in February...\".\n\nFINAL ANSWER: February",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

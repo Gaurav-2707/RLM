@@ -24,8 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 # Default thresholds — used when adaptive calibration is disabled
-_DEFAULT_THRESHOLD_SHALLOW = 0.40
-_DEFAULT_THRESHOLD_DEEP    = 0.60
+_DEFAULT_THRESHOLD_SHALLOW = 0.35
+_DEFAULT_THRESHOLD_DEEP    = 0.55
 
 
 class AdaptiveComputeController:

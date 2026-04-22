@@ -1,0 +1,1010 @@
+{
+  "results": [
+    {
+      "id": "logiqa_0",
+      "question": "There are two kinds of fruit candy and toffee in the jar.The kindergarten teacher put his hands into the jar, and then clenched his fists to take out a piece of candies. Then the teacher said four things: 1. The right hand is definitely not fruit candy. 2. Or the left hand is fruit candies, or fruit candies on the right hand. 3. If the left hand is fruit candies, then the right hand is not fruit candies. 4. Both the left hand and the right hand are fruit candies.\n\nAssuming that three of the four sentences the teacher said are true and one is false, the correct option is 'Left hand fruit candy, right hand toffee'.",
+      "gold": "entailment",
+      "predicted": "If sentence 1 is false, then the right hand could be fruit candy. However, this would mean that both hands have fruit candies according to sentence 4, which contradicts the conditions for sentences 2 and 3 being true.\n\n Sentences 1, 2, and 3 are all true if the left hand holds a fruit candy and the right hand holds a piece of toffee. This is because:\n- Sentence 1: The right hand indeed does not hold fruit candy.\n- Sentence 2: Since the left hand is holding fruit candies, even though it doesn't address what's in the right hand specifically, this part isn't negated, fitting within the confines of that statement when combined with 4.\n- Sentence 3 remains true because the right hand still holds a toffee.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 144.64
+    },
+    {
+      "id": "logiqa_1",
+      "question": "Social phobia is an important subtype of anxiety disorder, its main symptom is the fear of being watched, such as fear of speaking in public, and even afraid to go out when the symptoms are serious. Shyness is a common personality trait, which is not pathological in itself. However, the vast majority of patients with social phobia will be significantly relieved after treatment, and psychotherapy should be the first choice for patients with mild symptoms; if patients are unable or unwilling to receive psychotherapy because of busy work and other reasons, drug treatment can be the first choice, but the combination of drug therapy and psychotherapy is the most effective way to treat social phobia. In addition, most people with social phobias start in adolescence, so prevention is very important.\n\nCombination therapy is the most effective in patients with mild symptoms is true according to the passage.",
+      "gold": "entailment",
+      "predicted": "False, according to the passage, combination therapy is the most effective way to treat social phobia, but for patients with mild symptoms, psychotherapy should be the first choice.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 32.5
+    },
+    {
+      "id": "logiqa_2",
+      "question": "Many people who call themselves teachers are not actually teachers, because teaching is not their main source of income.\n\nThe conclusion that low income prevents teachers from being dedicated to their work is assumed by the above discussion.",
+      "gold": "not-entailment",
+      "predicted": "No. The statement doesn't comment on dedication or quality of work, simply that if teaching isn't one's primary income source, they shouldn't be considered a teacher.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 28.27
+    },
+    {
+      "id": "logiqa_3",
+      "question": "There is a sentence in the award message of the annual Top Ten people moving China event held by CCTV: Young people like the wind, he continues to surpass and never give up, which represents an accelerating nation. Dressed in the national flag, he stood in front of the world with a leap. \n\nThe prince of the hurdles is not only a record, but also a memory, a lingering strong memory, is mainly used to explain the extreme metaphor 'Young people like the wind' in this passage.",
+      "gold": "not-entailment",
+      "predicted": "Su Bingtian.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 5.6
+    },
+    {
+      "id": "logiqa_4",
+      "question": "Violations of the law must be prosecuted, but there is almost no punishment for violations of morality. If this becomes a routine, the people will lose their moral constraints. The threat of moral runaway to social stability is no less than that of law. Therefore, in order to maintain social stability, any violation of morality can not go unpunished.\n\nThe most appropriate evaluation of the above argument is that it has loopholes, which exaggerates the social harm of moral violations.",
+      "gold": "entailment",
+      "predicted": "I disagree. The text presents a valid concern about the potential consequences of neglecting moral offenses, but its reasoning relies on an assumption that moral violations pose a similar threat to social stability as lawbreaking, without providing clear evidence or comparisons. Additionally, the conclusion that any violation of morality cannot go unpunished is overly broad and doesn't consider potential nuances in what constitutes a moral violation or appropriate responses to such actions.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 64.54
+    },
+    {
+      "id": "logiqa_5",
+      "question": "All highly successful salespersons are both well organized and self-motivated, characteristics absent from many salespersons who are not highly successful. Further, although only those who are highly successful are well known among their peers, no salespersons who are self-motivated regret their career choices.\n\nIf all of the statements above are true, no salespersons who are well known among their peers regret their career choices must be true.",
+      "gold": "entailment",
+      "predicted": "Yes. \n\nFrom the text we know that: \n- All highly successful salespersons are both well organized and self-motivated.\n- No salespersons who are self-motivated regret their career choices.\n- Only those who are highly successful are well known among their peers.\n\nSo it logically follows that no salespersons who are well known among their peers (i.e., the highly successful ones) regret their career choices, because they must be self-motivated.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 74.94
+    },
+    {
+      "id": "logiqa_6",
+      "question": "After using various conventional advertising and promotion methods, the online sales revenue of an e-commerce company did not improve as expected. For this reason, the management hired professionals to conduct market analysis. The analysis report proposed that the people who have activated the mobile payment (usually refers to the people who use smartphones to pay for the goods or services they consume)  function are the real potential customer groups of the e-commerce. Therefore, the management decided to cooperate with a large commercial bank to carry out publicity and promotion among the newly opened mobile payment functions. But after a month, the effect was not satisfactory, and the online sales revenue did not increase significantly.\n\nThe statement 'Generally speaking, it takes a period of time for those who have newly opened the mobile payment function to make such online shopping' can best explain the above result.",
+      "gold": "entailment",
+      "predicted": "Yes. \n\nThis statement suggests that people who have recently activated their mobile payment functions may not immediately use them for online shopping, which explains why the cooperation with the commercial bank did not lead to a significant increase in online sales revenue after just one month. It implies that a longer period of time is needed for these new mobile payment users to become accustomed to using this function for online transactions and ultimately becoming potential customers for the e-commerce company.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 73.19
+    },
+    {
+      "id": "logiqa_7",
+      "question": "In parts of South America, vitamin-A deficiency is a serious health problem, especially among children. In one region, agriculturists are attempting to improve nutrition by encouraging farmers to plant a new variety of sweet potato called SPK004 that is rich in beta-carotene, which the body converts into vitamin A. The plan has good chances of success, since sweet potato is a staple of the region' s diet and agriculture, and the varieties currently grown contain little beta-carotene.\n\nThe varieties of sweet potato currently cultivated in the region contain some important nutrients that are lacking in SPK004, if true, most strongly supports the prediction that the plan will succeed.",
+      "gold": "not-entailment",
+      "predicted": "No, this statement would undermine the prediction of success. If true, it would suggest that adopting SPK004 might reduce the intake of other essential nutrients in the region's diet and agriculture.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 32.41
+    },
+    {
+      "id": "logiqa_8",
+      "question": "Market research shows that in the price war, the price of famous-brand computers is reduced by no more than 10%, so the price of Shenzhou computers is reduced by no more than 10%.\n\nThe statement 'The market share of Shenzhou computer has increased by 10%' can best overturn the above argument.",
+      "gold": "not-entailment",
+      "predicted": "This is a classic example of an unspoken assumption, which is that if the price of Shenzhou computers is reduced by no more than 10%, it means they are following the trend and not gaining a significant advantage. However, if the market share of Shenzhou computer has increased by 10%, it suggests that despite keeping their price reduction at or below the industry standard (no more than 10%), they have still managed to attract more customers than before.\n\nThis implies that either their original pricing was not competitive enough and they had room for larger discounts without going under the 10% threshold, or other factors are driving customer choice more significantly than price, making Shenzhou's adherence to the 10% maximum reduction less relevant. Thus, this statement effectively undermines the idea that following the 10% maximum price cut would not yield a significant market share gain for Shenzhou.\n\nTherefore, it can be said that an increase in Shenzhou's market share despite limiting their price cuts overturns the initial argument which equates adhering to the industry-wide pricing strategy with a lack of competitive advantage.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 185.27
+    },
+    {
+      "id": "logiqa_9",
+      "question": "If the weather is fine, Xiao Liu will go on an outing. If his wife does not go with him, Xiao Liu will not go on an outing; if there is an emergency in the unit, Xiao Liu will not go on an outing; if today is not Saturday, Xiao Liu will not go on an outing.\n\nAssuming that the above statement is correct, then Xiao Liu cannot determine that today is Saturday if he goes on an outing.",
+      "gold": "not-entailment",
+      "predicted": "False.\n\nIf Xiao Liu went on an outing and his wife accompanied him, it must be Saturday. Otherwise, if it wasn't Saturday, Xiao Liu wouldn't go even with his wife's accompaniment.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 36.49
+    },
+    {
+      "id": "logiqa_10",
+      "question": "Micro-innovation, this concept is becoming a new direction for Chinese companies to try. Today's technological innovation is no longer a subversive update in many cases. Any small change to the user experience may detonate the entire market. Weibo can be regarded as a micro-innovation on the basis of blogs, lowering the user threshold with 140 characters, and quickly triggering a wave of microblogs for all people. For companies that are accustomed to imitation, how to prevent micro-innovation from becoming a synonym for cottage is the key to the problem.Especially in the Internet field, a lot of phenomenon such as group buying is not uncommon, but it is difficult to see micro-innovation playing a role in it.\n\nCopy and imitate can be described by group buying in this text.",
+      "gold": "entailment",
+      "predicted": "Group Buying.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 4.86
+    },
+    {
+      "id": "logiqa_11",
+      "question": "Did all ancient Chinese cities have walls? In people's impression, all ancient cities seemed to have walls, especially the towering walls of capital city, which marked the loss of the supreme walls of imperial power and often meant the demise of empires.The city of Beijing in the Ming and Qing dynasties, the city of Bianliang in the Northern Song Dynasty, the city of Yongtang, the city of Changan, the female east capital of Luoyang and so on. The Lifang pattern in these cities and the tall city walls in the periphery constitute the most distinct physical and chemical representation of the imperial capital.\n\nThe most likely option to be followed by this passage is Ancient Chinese cities without walls.",
+      "gold": "entailment",
+      "predicted": "Not all ancient Chinese cities had walls. There were smaller towns or villages that did not have walls, especially those in more remote areas with less strategic importance.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 26.9
+    },
+    {
+      "id": "logiqa_12",
+      "question": "The official listing of an animal species as endangered triggers the enforcement of legal safeguards designed to protect endangered species, such as tighter animal export and trade restrictions and stronger antipoaching laws. Nevertheless, there have been many cases in which the decline in the wild population of a species was more rapid after that species was listed as endangered than before it was so listed.\n\nThe statement 'The process of officially listing a species as endangered can take many years' does most to account for the increase in the rate of population decline described above.",
+      "gold": "not-entailment",
+      "predicted": "No. \n\nThis answer choice doesn\u2019t explain why there would be an acceleration of the population decline after listing; it simply suggests that such a lag exists, which actually might even lead one to expect a delay or reduction of the decline due to any protections afforded by listing occurring several years earlier.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 49.84
+    },
+    {
+      "id": "logiqa_13",
+      "question": "Therapist: Cognitive psychotherapy focuses on changing a patient' s conscious beliefs. Thus, cognitive psychotherapy is likely to be more effective at helping patients overcome psychological problems than are forms of psychotherapy that focus on changing unconscious beliefs and desires, since only conscious beliefs are under the patient' s direct conscious control.\n\nThe statement \"No form of psychotherapy that focuses on changing the patient's unconscious beliefs and desires can be effective unless it also helps change beliefs that are under the patient's direct conscious control\" would most strengthen the therapist's argument.",
+      "gold": "not-entailment",
+      "predicted": "This answer choice supports the therapist's conclusion by ruling out a potential counterexample. It establishes that, even if changing unconscious beliefs is somehow useful, it cannot be enough on its own to make therapy effective; conscious change will always be necessary as well. Thus, any form of psychotherapy that ignores changes in conscious beliefs must be ineffective.\n\nThe correct answer choice therefore makes the therapist's argument more convincing by limiting the potential effectiveness of non-cognitive forms of psychotherapy.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 81.51
+    },
+    {
+      "id": "logiqa_14",
+      "question": "Obligatory norms require people to do or not to do certain acts in some way. Authorized norms show that people have the right to do or not to do certain acts. The relationship between the two is: when an act is established as an obligation, it is also established as a right; denying that an act is an obligation does not mean denying that it is a right; when an act is established as a right, it does not mean that this kind of behavior is an obligation; denying a certain act is a right, that is, denying that a certain act is an obligation.\n\nThe statement 'If it is stipulated that citizens do not have the right to interfere with other people's freedom of marriage, it means that citizens have no obligation to interfere with other people's freedom of marriage' is wrong according to the above definition.",
+      "gold": "not-entailment",
+      "predicted": "Correct. The statement misinterprets the relationship between obligatory and authorized norms as described in the context. According to the given definitions: \"denying a certain act is a right, that is, denying that a certain act is an obligation.\" This implies that if citizens do not have the right to interfere with other people's freedom of marriage, they cannot do it because it's forbidden, which means they indeed have an obligation (in this case, an obligation NOT to interfere).",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 82.5
+    },
+    {
+      "id": "logiqa_15",
+      "question": "There are 42 employees in a college. They either do teaching and research work or do administrative work. In the college, professors do not perform administrative work, and young doctors under the age of 30 are doing administrative work. Many people in the college are They are recruited from overseas, and they all have doctoral degrees.Li Ming is the youngest professor of the college.He is only 29 years old.\n\nSome professors in the college are not recruited from overseas can be derived based on the above statement.",
+      "gold": "entailment",
+      "predicted": "True. Li Ming is a 29-year-old professor and he may or may not have been recruited from overseas, but since many people in the college are recruited from overseas, it can be inferred that there must also exist professors who were not recruited from overseas.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 42.71
+    },
+    {
+      "id": "logiqa_16",
+      "question": "In the early Qing Dynasty, the dramatist Li Yu was seriously ill. He did not agree to see a doctor who could prescribe a doctor to cure a disease, but a doctor who had prescribed a prescription to treat people who had died. This puzzled his wife and mother. Afterwards, Li Yu said, every doctor who can cure a disease must push it when he sees a critically ill patient. There is no ability to treat critically ill patients, and doctors who have killed people are not afraid of severe death. Although they have treated the dead, they have also gained experience. \n\nThe option 'We can't blame people for perfection, nor can we not allow others to fail' is not the truth of this story.",
+      "gold": "not-entailment",
+      "predicted": "The main point conveyed by Li Yu in this anecdote is that a doctor who has had failures or has treated patients who died has gained valuable experience from those cases. Such experiences shape their ability and preparedness for future critical conditions, making them perhaps more adept at handling severe illnesses than doctors without such experience.\n\nIn essence, Li Yu suggests that it's not the success rate alone but also what is learned from failures and adverse outcomes that contributes to a doctor's skillset and expertise. This perspective aligns with the broader understanding that learning often occurs through mistakes or setbacks, as much as through successes.",
+      "semantic_score": 1,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 104.0
+    },
+    {
+      "id": "logiqa_17",
+      "question": "It is proposed to allow the sale, without prescription, of a medication that physicians currently prescribe to treat the common ear inflammation called swimmer' s ear.  The principal objection is that most people lack the expertise for proper self-diagnosis and might not seek medical help for more serious conditions in the mistaken belief that they have swimmer' s ear. Yet in a recent study, of 1, 000 people who suspected that they had swimmer' s ear, 84 percent had made a correct diagnosis -- a slightly better accuracy rate than physicians have in diagnosing swimmer' s ear. Thus, clearly, most people can diagnose swimmer' s ear in themselves without ever having to consult a physician.\n\nMost of the people who diagnosed themselves correctly had been treated by a physician for prior occurrence of swimmer's ear, if true, most undermines the conclusion.",
+      "gold": "entailment",
+      "predicted": "The fact that most people who correctly diagnosed themselves with swimmer's ear were previously treated by a physician suggests that their correct diagnoses may have been informed by medical expertise rather than any inherent ability to diagnose themselves independently. Therefore, it undermines the conclusion that most people can accurately self-diagnose without consulting a physician based on an assumption of natural diagnostic capability among the general public.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 65.3
+    },
+    {
+      "id": "logiqa_18",
+      "question": "Vanwilligan: Some have argued that professional athletes receive unfairly high salaries. But in an unrestricted free market, such as the market these athletes compete in, salaries are determined by what someone else is willing to pay for their services. These athletes make enormous profits for their teams' owners, and that is why owners are willing to pay them extraordinary salaries. Thus the salaries they receive are fair.\n\nVanwilligan's conclusion follows logically if the assumption that 'Any salary that a team owner is willing to pay for the services of a professional athlete is a fair salary' is made.",
+      "gold": "entailment",
+      "predicted": "The statement provided already includes an explanation and analysis of Vanwilligan's argument. Therefore, I will rephrase it as requested:\n\nVanwilligan assumes that any salary a team owner is willing to pay is fair when he concludes that the high salaries of professional athletes are justified because they generate enormous profits for their teams' owners.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 56.17
+    },
+    {
+      "id": "logiqa_19",
+      "question": "Self-contradiction means that in the same thinking or debate process, the same subject makes two negative conclusions about one same object.\n\nThe assertion that 'Although there are fewer and fewer species of birds in the Antarctic coast, there are still many birds' contains self-contradiction.",
+      "gold": "not-entailment",
+      "predicted": "No. \n\n\"Fewer and fewer\" and \"many\" are contradictory descriptions about the quantity of birds, but \"fewer and fewer\" is a comparison to the past and \"many\" is an absolute term to describe the current state which does not exclude the possibility of decline from the past.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 49.66
+    },
+    {
+      "id": "logiqa_20",
+      "question": "Numerous books describe the rules of etiquette. Usually the authors of such books merely codify standards of behavior by classifying various behaviors as polite or rude. However, this suggests that there is a single, objective standard of politeness. Clearly, standards of politeness vary from culture to culture, so it is absurd to label any one set of behaviors as correct and others as incorrect.\n\nThe reasoning in the argument is most vulnerable to criticism on the grounds that the argument bases a generalization about all books of etiquette on the actions of a few authors.",
+      "gold": "not-entailment",
+      "predicted": "Actually, this is not the case. The text states \"Usually\" the authors do such codifying, which implies it's common but not universal. The main criticism would be that it assumes a objective standard cannot exist simply because standards vary from culture to culture, without considering other possibilities, like shared human norms across cultures or universally applicable principles of politeness.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 59.2
+    },
+    {
+      "id": "logiqa_21",
+      "question": "The right to privacy is the right of individuals to keep their personal actions and personal materials confidential and not to be illegally informed, in order to protect their reputation and image without violating the law.\n\nThe right of a suspected corruption offender to keep his source of income secret from the media is the right to privacy.",
+      "gold": "not-entailment",
+      "predicted": "No. \n\nWhile individuals have the right to keep personal information confidential, the context provided makes it clear that this right exists to protect one's reputation and image without violating the law. In cases of suspected corruption, keeping sources of income secret could itself be seen as an attempt to cover up illegal or unethical activities, thus potentially violating the law. The right to privacy does not extend to concealing information that may be pertinent to lawful investigations into alleged wrongdoing, including corruption.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 77.56
+    },
+    {
+      "id": "logiqa_22",
+      "question": "Fragments of charred antelope bone have recently been found at a million-year-old settlement of Homo erectus, an early human species. This discovery demonstrates that humans were making controlled use of fire to cook meat at a very early stage of their development.\n\nThe assumption that early human settlements can be identified by the presence of charred antelope bones is made by the argument above.",
+      "gold": "not-entailment",
+      "predicted": "False. The passage does not make an assumption about identifying early human settlements, but rather uses the discovery as evidence to demonstrate controlled use of fire at a very early stage of human development.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 31.0
+    },
+    {
+      "id": "logiqa_23",
+      "question": "To solve the problem of urban traffic congestion, the government has been expanding new roads, but the new road surface is quickly flooded by vehicles. Traffic congestion is not alleviated, but more serious.\n\nThe statement 'People tend to drive on new roads' is the least likely to explain this phenomenon.",
+      "gold": "not-entailment",
+      "predicted": "Induced Demand Theory.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 6.11
+    },
+    {
+      "id": "logiqa_24",
+      "question": "Auto industry executive: Statistics show that cars that were built smaller after 1977 to make them more fuel-efficient had a higher incidence of accident-related fatalities than did their earlier, larger counterparts. For this reason we oppose recent guidelines that would require us to produce cars with higher fuel efficiency.\n\nNew computerized fuel systems can enable large cars to meet fuel efficiency standards established by the recent guidelines would constitute the strongest objection to the executive's argument.",
+      "gold": "entailment",
+      "predicted": "This is because it shows that just because \"smaller\" cars had a higher incidence of accident-related fatalities, doesn't mean that larger cars with higher efficiency can't be as safe.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 31.38
+    },
+    {
+      "id": "logiqa_25",
+      "question": "Virtual economy is an economic activity in which human beings participate in speculation and simply expect the price of goods (materials or goods) to rise, without involving any material transformation. Strictly speaking, all virtual economic activities are caused by transaction costs, information costs or information asymmetry. From the perspective of reducing transaction costs, information costs or asymmetric information, Virtual economic activities greatly promote their real activities and participate in value manufacturing.\n\nThe fundamental difference between virtual economy and real economy described in this paragraph is that no value manufacturing is involved.",
+      "gold": "not-entailment",
+      "predicted": "no material transformation",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 4.11
+    },
+    {
+      "id": "logiqa_26",
+      "question": "In fact, delaying debt repayment not only does not help to truly resolve the debt risk of local governments, but in most cases, it has planted a more powerful time bomb. Once borrowing the new and returning the old has become the routine practice of local governments, the consequences are unimaginable. In view of this, the central government should take strong measures in time to stop local governments from singing the delaying tactic; Relevant ministries and commissions should also actively consider digesting local government public debt with the help of the capital market, introducing private capital by means of debt securitization and resolving debt risks; Local governments should also appropriately reduce their economic construction functions, realize equal financial and administrative rights, and fundamentally eliminate the living soil of excessive debt.\n\nThe most accurate summary of this passage is that it discusses the effective means to resolve the risk of local government debt.",
+      "gold": "entailment",
+      "predicted": "The passage argues that delaying debt repayment worsens the problem, and proposes a three-pronged solution:\n\n1. The central government should stop local governments from using delaying tactics.\n2. Relevant ministries should use the capital market to digest debt through securitization.\n3. Local governments should reduce their economic functions and eliminate the root causes of excessive debt.\n\nOverall, the passage suggests that a combination of regulatory action, financial engineering, and structural reforms is needed to address local government debt risk effectively.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 86.2
+    },
+    {
+      "id": "logiqa_27",
+      "question": "The main culprit for the serious impact of air pollutants on the brain is fine particles, that is, air pollutants less than 2.5 microns in diameter. Once inhaled, they can reach deep into the lungs, enter the bloodstream, and then enter the brain. The fine particles are small enough to cross the blood-brain barrier that blocks large toxic molecules. If fine particles are inhaled through the nose, they can also enter the brain through the olfactory nerves in the nasal cavity. These particles may trigger an inflammatory response, leading to severe brain disease and affecting cognitive ability.\n\nThe harm of fine particles in air pollutants entering the brain is the main description of this passage.",
+      "gold": "entailment",
+      "predicted": "Fine particles can cross the blood-brain barrier, enter through olfactory nerves, and trigger inflammation, leading to severe brain disease and affecting cognitive ability.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 27.61
+    },
+    {
+      "id": "logiqa_28",
+      "question": "At present, the problem of relative poverty in some areas is due to the lack of information and resources. In the modern information society, people who have more information and resources can get more opportunities to get rich; on the contrary, some people who lack information and resources will be gradually divided into relatively poor people. In view of the root causes and main characteristics of relative poverty, while further increasing policy support and capital investment, and speeding up infrastructure construction, we will form the support and guarantee of multi-level resources to solve relative poverty, such as industrial poverty alleviation, financial poverty alleviation, technological poverty alleviation, information poverty alleviation, education poverty alleviation, employment poverty alleviation, cultural poverty alleviation, disaster reduction poverty alleviation, medical poverty alleviation, and so on.\n\nThe intended description of the passage is that solving relative poverty is an important content and way of poverty alleviation.",
+      "gold": "not-entailment",
+      "predicted": "No. The passage describes a specific approach to addressing relative poverty in modern information societies, but does not explicitly state that solving relative poverty is the most important or primary method of poverty alleviation. It outlines various forms of support and guarantee for multi-level resources to address relative poverty, indicating one strategy among others to tackle the issue.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 55.7
+    },
+    {
+      "id": "logiqa_29",
+      "question": "Internet tourism financial service refers to an emerging financial service that the tourism industry relies on Internet tools to realize financing, payment, information intermediary and other businesses. In the future, Internet tourism financial service will also have more advantages.\n\nThe proportion of Chinese online tourism users aged 36 ~ 45 who choose tourism financial services is higher best supports the above view.",
+      "gold": "not-entailment",
+      "predicted": "Yes.",
+      "semantic_score": 1,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 3.4
+    },
+    {
+      "id": "logiqa_30",
+      "question": "From dragonflies flying low to predict the weather to toads moving to predict earthquakes, ancient Chinese people have accumulated a lot of experience. These experiences have been passed down from generation to generation, and today, they still have a high degree of trust in people - including today's network. Modern earthquake research emphasizes data and concepts. The accurate prediction of an area in ancient times, with a horizontal comparison with today's information collection, is no longer of universal significance.\n\nThe author's view on the experience of earthquake prediction accumulated by the people in ancient China is that it can be effectively used in modern seismic research.",
+      "gold": "not-entailment",
+      "predicted": "No",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 2.93
+    },
+    {
+      "id": "logiqa_31",
+      "question": "Zhu Hong: red squirrels make holes in the bark of sugar pines to absorb sap. Since the sap of sugar pine is mainly composed of water and a small amount of sugar, it is roughly certain that red squirrels are looking for water or sugar. Water is easily available in other ways where pine trees grow. Therefore, red pine trees are not trying to dig holes because they are looking for water, they may be looking for sugar. Lina: it must not be looking for sugar but something else, because the concentration of sugar in sugar pine sap is so low that red squirrels have to drink a lot of sap to get a little sugar.\n\nIf the statement \"Red squirrels do not absorb the sap until most of the water in the sap that seeps from the hole in the tree evaporates\" is true, it is the most serious one that shakes Lin Na's rebuttal to Zhu Hong.",
+      "gold": "entailment",
+      "predicted": "The statement contradicts Lina's argument because if the red squirrels only absorb the sap after most of the water has evaporated, then they would be left with a more concentrated sugar solution, which makes it plausible that they are looking for the sugar despite the initially low concentration. This challenges Lina's rebuttal by addressing the issue of low sugar concentration in the original sap.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 65.04
+    },
+    {
+      "id": "logiqa_32",
+      "question": "In translation, literal translation focuses on the faithfulness to the original text, while free translation focuses on the smoothness of the tone of the translation. People hold their own opinions on which translation method is the most appropriate. In my opinion, the difference between literal translation and free translation should not exist at all. A faithful translation must be able to express the meaning of the original text as much as possible. Thoughts, feelings and language are consistent and change with each other. There is only one accurate statement for a meaning, another statement, Therefore, if you want to express the meaning of the original text as much as possible, you must try to maintain the sentence organization of the original text. Therefore, literal translation cannot be free translation, and free translation cannot be literal translation.\n\nIn this passage, the author believes that faithfulness to the original idea is the highest art of translation.",
+      "gold": "entailment",
+      "predicted": "No, the author actually believes that faithfulness to the original text, including maintaining sentence organization, is the most important aspect of translation. This does not necessarily mean that they value faithfulness to the original idea above all else; rather, they believe that accurately reproducing the original text's structure and wording is essential for conveying its intended meaning.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 60.46
+    },
+    {
+      "id": "logiqa_33",
+      "question": "At the beginning of the 5 th century, the phonetic characters of borrowed Chinese characters called Kana appeared in Japan. In the eighth century, the use of marking Japanese pronunciation with Chinese characters has been relatively fixed and its mark is the compilation of Wanya set, so it is called Wanya Kana. It is the basis for pure Japanese phonetic character. The final creation of Japanese characters was completed by Ji Bei and Hirodhara Master (Konghai). Both of them lived in Tang Dynasty for a long time and studied Chinese characters deeply. The former creates Japanese katakana according to the italic side of phonetic Chinese characters, while the latter uses Kanji cursive to create Japanese Hiragana. Today, Japanese characters, which have occupied an important position in the world, still retain more than 1000 simplified Chinese characters.\n\nThe intended topic of this paragraph is the influence of Chinese characters on Japanese characters.",
+      "gold": "entailment",
+      "predicted": "That's incorrect. The topic is actually about the history and creation of Japanese characters and their connection to Chinese characters. The influence of Chinese characters on Japanese characters is a subtopic, but not the main focus of the paragraph. A more accurate summary would be \"The origin and development of Japanese characters\".",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 53.4
+    },
+    {
+      "id": "logiqa_34",
+      "question": "Company X conducted a taste test to determine whether its new soft drink had a good chance of commercial success. A sample of consumers was asked to compare the flavor of the new soft drink to that of an established brand without knowing the true identity of either beverage. Overwhelmingly, the consumers preferred the taste of the proposed soft drink to that of the established brand. Clearly, Company X has a good chance of commercial success with its new soft drink.\n\nThe statement 'The name of the new soft drink is very close to that of the established brand' would most seriously weaken the argument above.",
+      "gold": "not-entailment",
+      "predicted": "If the names are similar, participants may have confused the two and rated Company X's product more highly due to brand recognition or loyalty.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 23.26
+    },
+    {
+      "id": "logiqa_35",
+      "question": "Institutional entrepreneurs: refers to those who not only perform the functions of traditional entrepreneurs, but also help establish a market system in the process of their career development. They are highly sensitive to opportunities in the development environment and dare to break through institutional barriers to obtain considerable income.\n\nAn entrepreneur who innovated the mode of instant messaging to change the way people transmit information is not an institutional entrepreneur according to the above definition.",
+      "gold": "not-entailment",
+      "predicted": "The correct answer would be \"True\".\n\nAlthough the entrepreneur innovated a new mode of instant messaging, which changed the way people transmit information, this action alone does not necessarily involve helping to establish a market system or breaking through institutional barriers. Therefore, they do not meet the full criteria for an institutional entrepreneur as defined in the context provided.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 54.7
+    },
+    {
+      "id": "logiqa_36",
+      "question": "Twelve healthy volunteers with the Apo-A-IV-1 gene and twelve healthy volunteers who instead have the Apo-A-IV-2 gene each consumed a standard diet supplemented daily by a high-cholesterol food. A high level of cholesterol in the blood is associated with an increased risk of heart disease. After three weeks, the blood cholesterol levels of the subjects in the second group were unchanged, whereas the blood cholesterol levels of those with the Apo-A-IV-1 gene rose 20 percent.\n\nThe presence of the Apo-A-IV-1 gene seems to indicate that a person has a lower risk of heart disease is most strongly supported by the information above.",
+      "gold": "not-entailment",
+      "predicted": "No, this statement is not supported. In fact, it's the opposite: according to the text, people with the Apo-A-IV-1 gene have increased cholesterol levels after consuming high-cholesterol food, which would suggest a higher risk of heart disease, not a lower one.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 51.9
+    },
+    {
+      "id": "logiqa_37",
+      "question": "The more television children watch, the less competent they are in mathematical knowledge. More than a third of children in the United States watch television for more than five hours a day; in South Korea the figure is only 7 percent. But whereas less than 15 percent of children in the United States understand advanced measurement and geometric concepts, 40 percent of South Korean children are competent in these areas. Ttherefore, if United States children are to do well in mathematics, they must watch less television.\n\nChildren in the United States being less interested in advanced measurement and geometric concepts than are South Korean children is an assumption upon which the argument depends.",
+      "gold": "not-entailment",
+      "predicted": "Incorrect. \n\nThe passage does not assume that U.S. children are inherently less interested in these mathematical areas; rather, it seems to suggest that watching a significant amount of television may contribute to U.S. children's relative incompetence in mathematics.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 40.74
+    },
+    {
+      "id": "logiqa_38",
+      "question": "The national economy is an organic whole, like a machine, each part has its own function, its normal operation is determined by the components and overall performance, whether it can be fast or not will waste the machine, and blindly ask for speed will damage the machine.\n\nCoordinated development of the national economy best supports this view.",
+      "gold": "entailment",
+      "predicted": "I apologize, but there seems to be a misunderstanding. The provided response does not answer the question but instead repeats the context statement verbatim, which is not in line with the requested format for providing an answer that directly addresses the query.\n\nGiven the actual task is to identify what best supports the view presented, let's adjust our approach:\n\nThe statement emphasizes the interdependence of various components within the national economy and cautions against prioritizing speed over sustainability. Coordinated development suggests a balanced approach where growth or \"speed\" is not pursued at the expense of other necessary factors.\n\nTherefore, without an explicit question beyond repeating the context for analysis, the most relevant response aligning with your requested format would be:\n\nAnswer (short): This concept supports coordinated and sustainable economic growth.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 127.18
+    },
+    {
+      "id": "logiqa_39",
+      "question": "Insomnia or poor sleep quality can seriously affect people's physical and mental health. The survey found that many people with poor sleep have a habit of drinking coffee before going to bed. Therefore, drinking coffee helps to improve the quality of sleep. Is the auxiliary means that treats insomnia.\n\nCoffee as an auxiliary treatment for insomnia can have serious side effects is the strongest rebuttal to the conclusion of the question.",
+      "gold": "not-entailment",
+      "predicted": "No, it doesn't logically follow that drinking coffee would help improve the quality of sleep or treat insomnia. The argument mistakenly assumes a causal relationship based solely on correlation. It ignores potential other factors involved and overlooks the widely acknowledged stimulatory effects of caffeine, which are known to interfere with sleep if consumed close to bedtime.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 53.4
+    },
+    {
+      "id": "logiqa_40",
+      "question": "Scientists have discovered that in the past 200 years, the earth's magnetic field has decayed sharply. Scientists said that, at this speed, it may completely disappear in the next 1,000 years, and the earth's creatures will face an unprecedented cosmic ray catastrophe.\n\nEarth's magnetic field can block radiation from space can be inferred from the information above.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.4
+    },
+    {
+      "id": "logiqa_41",
+      "question": "A charitable foundation received an unsigned donation. After investigation, it was learned that it was donated by Lin Chuan, Wu Fei, Zheng Fu and one of Guo Bo. When asked, Lin Chuan said, I didn't donate, Zheng Fu said: it was donated by Wu Fei, Wu Fei said: it was donated by Guo Bo, and Guo Bo said: it wasn't donated by me.\n\nIf only one of the four speaks the truth, Zheng Fu lied and donated it.",
+      "gold": "not-entailment",
+      "predicted": "Zheng Fu.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 4.51
+    },
+    {
+      "id": "logiqa_42",
+      "question": "Plantings of cotton bioengineered to produce its own insecticide against bollworms, a major cause of crop failure, sustained little bollworm damage until this year. This year the plantings are being seriously damaged by bollworms. Bollworms, however, are not necessarily developing resistance to the cotton' s insecticide. Bollworms breed on corn, and last year more corn than usual was planted throughout cotton-growing regions. So it is likely that the cotton is simply being overwhelmed by corn-bred bollworms.\n\nIn evaluating the argument, establishing whether other crops that have been bioengineered to produce their own insecticide successfully resist the pests against which the insecticide was to protect them would be most useful.",
+      "gold": "not-entailment",
+      "predicted": "No.\n\nEstablishing whether other crops that have been bioengineered to produce their own insecticide successfully resist the target pests is not relevant to understanding why the specific cotton plantings in question are being damaged by bollworms this year, as opposed to previous years. The argument suggests that an environmental factor (the increased corn crop) rather than a flaw in the genetic modification itself may be responsible for the recent damage.\n\nIn evaluating the argument, it would be more useful to gather information about last year's corn yields and acreage relative to those of this year, pest populations on nearby non-bioengineered crops that are subject to similar insect pests, or experimental controls comparing the impact of bollworms on bioengineered versus traditional cotton crops.\n\nTherefore, option (1), 2, 3, 4, 5 and 6 have correct answer.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 148.0
+    },
+    {
+      "id": "logiqa_43",
+      "question": "Although the pricing of operating pension institutions is liberalized and the government cannot intervene, from the point of view of protecting the rights and interests of buyers, stabilizing the price of old-age beds and standardizing market order, the parties concerned need to be highly vigilant of the problems brought about by this business model of selling beds. For example, if beds can be speculated, it may deviate from the nature of beds in pension institutions-turning pension services into a form of investment, and it may also coax up the price of beds in pension institutions, making it impossible for the elderly to afford or live in. In addition, there is likely to be idle waste after the bed price is high. In short, if not regulated, it is possible to repeat the mistakes of property speculation in China's property market.\n\nThe content that this text is meant to emphasize is that the government should standardize the management model of pension institutions.",
+      "gold": "entailment",
+      "predicted": "Although unstated directly, yes, the government should regulate the pricing and sales model of operating pension institutions to prevent problems such as price inflation and speculation.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 26.0
+    },
+    {
+      "id": "logiqa_44",
+      "question": "There are two kinds of fruit candy and toffee in the jar.The kindergarten teacher put his hands into the jar, and then clenched his fists to take out a piece of candies. Then the teacher said four things: 1. The right hand is definitely not fruit candy. 2. Or the left hand is fruit candies, or fruit candies on the right hand. 3. If the left hand is fruit candies, then the right hand is not fruit candies. 4. Both the left hand and the right hand are fruit candies.\n\nAssuming that three of the four sentences the teacher said are true and one is false, the correct option is 'Left hand toffee, right hand fruit candies.'",
+      "gold": "not-entailment",
+      "predicted": "Let's analyze the statements:\n\n1. The right hand is definitely not fruit candy.\n2. Or the left hand is fruit candies, or fruit candies on the right hand.\n3. If the left hand is fruit candies, then the right hand is not fruit candies.\n4. Both the left hand and the right hand are fruit candies.\n\nAssuming three of the statements are true and one is false, we can conclude that statement 1 is actually false (contrary to its claim). Statements 2 and 3 complement each other and must be true. Statement 4 cannot be true because it directly contradicts statement 1.\n\nGiven this analysis, the correct option is indeed: 'Left hand toffee, right hand fruit candies.'",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 123.14
+    },
+    {
+      "id": "logiqa_45",
+      "question": "Professor Lan believes that a person who is not good at thinking cannot become a good manager. There is no humble wise man who learns astrology. Astrologers all learn astrology, but some astrologers are good managers.\n\nAll humble wise men are good thinking people, if true, can best refute professor Lan's above point of view.",
+      "gold": "not-entailment",
+      "predicted": "If \"all humble wise men are good thinking people\" is true, it suggests that there are individuals who are both humble and possess wisdom, implying they think well. However, given the additional information that \"there is no humble wise man who learns astrology,\" it indicates these humble wise men do not pursue astrology, despite their good thinking abilities. \n\nSince Professor Lan's belief hinges on a person's ability to be a good manager based on their thinking skills, and if we consider that astrologers (some of whom are also good managers) do not include the category of \"humble wise men\" in their ranks according to the given statements, it challenges Professor Lan's assumption indirectly. \n\nThe presence of good managers who are also astrologers but not humble wise men could imply other qualities than just thinking skills might be at play for being a good manager, thereby refuting or complicating Professor Lan's view without directly contradicting it through an example of individuals known to think well (the humble wise men).",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 168.3
+    },
+    {
+      "id": "logiqa_46",
+      "question": "An aircraft engine manufacturer has developed a new engine with safety features that early models lack, while early models are still in production. In the first year when both models were sold at the same time, sales of the early models exceeded those of the new models, and the manufacturer concluded that safety was not the customer's top priority.\n\nThe statement that 'the new type of engine can be used by all aircraft using the old type of engine' most seriously weakens the manufacturer's conclusion.",
+      "gold": "not-entailment",
+      "predicted": "If the new engine is compatible with all aircraft that use the old model, it suggests that factors other than safety concerns are driving purchasing decisions. For example, cost or availability might be more influential in customer choices than the presence of specific safety features, indicating that safety not being the top priority might not solely be due to customers dismissing its importance but could also reflect their consideration for other crucial factors such as compatibility with existing infrastructure and operational continuity.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 71.02
+    },
+    {
+      "id": "logiqa_47",
+      "question": "Bacteria that benefit human beings when they are present in the body are called commensals. The bacterium Helicobacter pylori plays a primary role in the development of stomach ulcers. But since stomach ulcers occur in less than 10 percent of those harboring H. pylori, and since it allegedly strengthens immune response, many scientists now consider it a commensal. But this is surely misguided. Only about 10 percent of the people who harbor Mycobacter tuberculosis -- a bacterium that can cause tuberculosis -- get sick from it, yet no one would call M. tuberculosis a commensal.\n\nThe statement 'People who harbor M. tuberculosis derive no benefit from its presence' most seriously undermines the argument's reasoning.",
+      "gold": "entailment",
+      "predicted": "No.\n\nThe text does not state that people who have M. tuberculosis derive no benefit whatsoever from its presence; it only says that \"no one would call M. tuberculosis a commensal\" because it can cause sickness. In fact, just like in the case of H. pylori, only 10 percent of those with M. tuberculosis get sick.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 61.66
+    },
+    {
+      "id": "logiqa_48",
+      "question": "There are two kinds of agricultural products A and B. A cannot grow in dry climate and B cannot grow in cold climate. In most parts of a country, either agricultural product Aor agricultural product B can be planted.\n\nIf the above statement is true, the statement 'This country can only grow agricultural products A' must be false.",
+      "gold": "not-entailment",
+      "predicted": "True. If the country could only grow A, then in areas where both cannot be planted due to unsuitable climate would contradict with the fact that either product A or B can always be grown.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 31.49
+    },
+    {
+      "id": "logiqa_49",
+      "question": "The gu, the hu, and the jue are types of bronze libation vessels that were produced in China during the Shang dynasty, almost 4, 000 years ago. Close examination of authentic gu, hu, and jue vessels reveals that they all bear incised patterns symbolizing the taotie, a mythological beast of greed. It must be true then that any bronze libation vessel that does not bear incised patterns symbolizing the taotie is not an authentic vessel produced in China during the Shang dynasty.\n\nThe argument makes the error of reasoning of treating the fact that some members of a category possess a certain characteristic as sufficient evidence that possession of the characteristic is necessary for membership in that category.",
+      "gold": "entailment",
+      "predicted": "This type of error is called \"affirming the consequent\" or \"false conversion.\" It assumes that because all authentic gu, hu, and jue vessels have taotie patterns, any vessel without such patterns cannot be an authentic Shang dynasty vessel. However, it's possible that not all Shang dynasty bronze libation vessels bear these incised patterns, even if many do.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 67.6
+    },
+    {
+      "id": "logiqa_50",
+      "question": "Children's Day is coming, the kindergarten teacher for the class Xiao Ming, Xiao Lei, Xiao Gang, Xiao Fang, florets and other 5 children prepared red, orange, yellow, green, green, blue, purple and other 7 gifts. It is known that all gifts are given, and each gift can only be received by one person, with a maximum of two gifts per person. In addition, the gift delivery also needs to meet the following requirements :(1) if Xiao Ming receives an orange gift, Xiao  Fang will receive a blue gift; (2) If Xiao Lei does not receive a red gift, Xiao Fang will not receive a blue gift; (3) If Xiao Gang does not receive a yellow gift, then Xiao Gang will not receive a purple gift; (4) No one can receive both yellow and green gifts. Xiao Ming only got orange presents, and Xiao Hua only got purple presents.\n\nAccording to the above information, if Xiao Gang received two gifts, it can be concluded that Xiao Gang received yellow and cyan presents.",
+      "gold": "entailment",
+      "predicted": "I'm ready to help, but I must point out that there is a slight mistake in the context. The correct color should be \"purple\" instead of \"cyan\".\n\nHere's my answer:\n\nIf Xiao Gang received two gifts, according to requirement (3), if Xiao Gang did not receive a yellow gift, then he would not receive a purple gift either. However, since Xiao Hua already received the only purple gift, and Xiao Gang can't receive both yellow and green gifts, it is possible that Xiao Gang received yellow and a remaining color that hasn't been ruled out yet.\n\nConsidering all possibilities, I think the conclusion should be revised: If Xiao Gang received two gifts, it can be concluded that one of them must be yellow.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 126.81
+    },
+    {
+      "id": "logiqa_51",
+      "question": "Professor Lin suffers from bronchitis. In order to achieve curative effect, Dr. Zhang asked Professor Lin to quit smoking immediately.\n\nProfessor Lin smokes inferior cigarettes is preset by Dr. Zhang's requirements.",
+      "gold": "not-entailment",
+      "predicted": "No, he is required to quit smoking.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 8.5
+    },
+    {
+      "id": "logiqa_52",
+      "question": "Mr. Harry must be a senior employee of the company. He always wears a tie to work.\n\nThe premise that the company has a policy that men wear ties and formal clothes to work is the basis for the conclusion.",
+      "gold": "not-entailment",
+      "predicted": "This is not necessarily true, as there may be other reasons for Mr. Harry's attire. However, given the information provided, it is likely that he is a senior employee of the company.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 32.76
+    },
+    {
+      "id": "logiqa_53",
+      "question": "Johnson is likely to win the 110m hurdles.\n\nThe statement 'Johnson is bound to lose the 110m hurdles' is closest to the meaning of the above propositions.",
+      "gold": "not-entailment",
+      "predicted": "No. The exact opposite.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 6.1
+    },
+    {
+      "id": "logiqa_54",
+      "question": "Heterogeneous human capital refers to the human capital with the form of increasing productivity in a particular historical stage, which is manifested as the unique abilities of the owner. These abilities mainly include: comprehensive coordination ability, judgment and decision-making ability, learning and innovation ability and ability to bear risks, etc.\n\nAccording to the above definition, the statement that \"A packaging factory was not profitable. After the designer Wang applied to the factory, due to his novel design and fresh style, the packaging products of the factory became popular all at once\" does not involve heterogeneous human capital.",
+      "gold": "entailment",
+      "predicted": "True",
+      "semantic_score": 1,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 2.61
+    },
+    {
+      "id": "logiqa_55",
+      "question": "Secondary pollution refers to the re pollution of the environment caused by the physical, chemical or biological effects of pollutants discharged into the environment from pollution sources.\n\nThe harmful compounds in automobile exhaust produce photochemical reaction under the action of sunlight to produce a variety of strong oxidants dominated by ozone, which is harmful to human health belongs to secondary pollution.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.4
+    },
+    {
+      "id": "logiqa_56",
+      "question": "Inference by complete induction: it refers to the conclusion that each individual food in a certain kind of food has a certain property, and this kind of food generally has this property:\n\nThe statement 'We found cells in animals and plants and nuclei in plant cells, so we deduced that there were also nuclei in animal cells. Later, we observed them with a microscope, and sure enough, we found nuclei in animal cells' belongs to inference by complete induction.",
+      "gold": "not-entailment",
+      "predicted": "No",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 2.6
+    },
+    {
+      "id": "logiqa_57",
+      "question": "The cricket is a very interesting little animal. On a quiet summer night, there were bursts of clear and melodious calls in the grass. It was the cricket singing. The beautiful song of the cricket came not from its good voice, but from its wings. When the left and right wings open and close and rub against each other, they can make a pleasant sound. The cricket is also an expert in architecture. Compared with its soft digging tools, the cricket's house is a great project. At the door of his house, there is a very comfortable platform. On summer nights, crickets are sure to sing on this platform unless it rains or it's windy.\n\nIf it is not windy, crickets will sing on the platform on a rainless summer night.",
+      "gold": "entailment",
+      "predicted": "Yes. That's correct. According to the text, wind and rain are the conditions that prevent crickets from singing on their platforms.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 23.54
+    },
+    {
+      "id": "logiqa_58",
+      "question": "Garbage in this neighborhood probably will not be collected until Thursday this week. Garbage is usually collected here on Wednesdays, and the garbage collectors in this city are extremely reliable. However, Monday was a public holiday, and after a public holiday that falls on a Monday, garbage throughout the city is supposed to be collected one day later than usual.\n\nThe argument proceeds by treating several pieces of irrelevant evidence as though they provide support for the conclusion.",
+      "gold": "not-entailment",
+      "predicted": "That's incorrect. The fact that garbage collectors are extremely reliable and other neighborhoods' trash collection being delayed provides relevant supporting evidence for why the neighborhood's garbage collection will be delayed, rather than being irrelevant.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 32.64
+    },
+    {
+      "id": "logiqa_59",
+      "question": "In the naval battle between Britain and Denmark in Copenhagen, British Navy Colonel Nelson was in danger and received a signal to retreat. When the captain asked him what to do, he raised the telescope to one of his blind eyes and said, I don't see that signal. So he bravely continued to command the battle, and the result was victory, and Denmark was forced to call a truce.\n\nThe main content of this text is",
+      "gold": "entailment",
+      "predicted": "Horatio Nelson ignoring a retreat signal during a naval battle.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 11.64
+    },
+    {
+      "id": "logiqa_60",
+      "question": "Today, with multiple interests and highly developed information network, government administration is inseparable from public participation. Working behind closed doors and going one's own way, it is easy to disagree with the public and have to face pressure from public opinion, stability considerations and even higher authorities. The public often mistrust the government because of their lack of foresight and understanding of decision-making, which affects the credibility of the government. In this sense, the introduction of public participation is a necessary choice for the government in the process of administration.\n\nThe importance of transparency in government decision-making process is intended to be explained in this passage.",
+      "gold": "not-entailment",
+      "predicted": "No\n\nAlthough the passage mentions that \"the public often mistrust the government because of their lack of foresight and understanding of decision-making\", it doesn't directly talk about the importance of transparency. The focus is more on how working behind closed doors can lead to disagreement with the public, and how introducing public participation is necessary in administration.\n\nAnswer (long): While the passage touches upon the issue of mistrust stemming from lack of understanding, the primary concern is not highlighting the significance of transparency but rather emphasizing that isolation in decision-making leads to conflicts with public interests.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 94.2
+    },
+    {
+      "id": "logiqa_61",
+      "question": "People without integrity don't know self-respect, and people who don't know self-respect can't win the respect of others.\n\nThose who can win the respect of others are honest can be inferred.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.3
+    },
+    {
+      "id": "logiqa_62",
+      "question": "The Champions League has entered the semi-final stage: the Bei team of Spain's first-class Football League is against the Qi team of the British Premier League, and the Ba team of Spain's first-class Football League is against the Qie team of Germany's first-class Football League. Before the game, Joe predicted that the champion can only be produced in the two teams of Spain's first-class Football League; Xiao Zhou predicted that Bei and Qi could only win the runner up at most. After the game, it proved that their predictions were incorrect.\n\nA team of the British Premier League won the championship.",
+      "gold": "entailment",
+      "predicted": "Neither A nor B from Spain's first-class Football League made it to the final; therefore, a team from neither Spain's league was the champion or the runner up. The winner of the tournament was either Qi from the British Premier League or Qie from Germany's first-class Football League. Since Qi won against Bei, Joe's prediction could only be incorrect if Qi became the champions which would make Xiao Zhou's prediction also incorrect",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 70.9
+    },
+    {
+      "id": "logiqa_63",
+      "question": "The blue-tipped puffer is a migratory bird that is found along the coast of this state in summer months. The puffers enjoy the seeds of Thomson' s Mulberry trees; because these trees are plentiful in the state' s Coastal Park, traditionally many blue-tipped puffers would be found in the park during summer months. Ten years ago, the grey fox, a primary predator of the puffer, was re-introduced into the park, and its numbers have been thriving. Over that time, we have seen many fewer puffers in the park during the summer months. Clearly, the puffers are choosing to spend their summers elsewhere.\n\nThe most important factor to determine in order to evaluate the argument is whether other coastal areas in the state have seen an increase in the number of blue-tipped puffers over the last decade.",
+      "gold": "entailment",
+      "predicted": "No, the most important factor to determine would be whether Thomson's Mulberry trees and other food sources remain plentiful in Coastal Park. The argument assumes that the introduction of grey fox is the reason for the decline of puffers, but doesn't consider if other environmental changes have occurred that might affect their presence.\n\nHowever, another important factor could also be: Did the blue-tipped puffing population decrease state-wide or are they indeed \"choosing to spend their summers elsewhere\", which means looking into whether other coastal areas have seen an increase in puffer populations.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 95.2
+    },
+    {
+      "id": "logiqa_64",
+      "question": "British cruise ships sold to Egypt were unpopular at first, while French-built cruise ships sold better. It turns out that there are many empty spaces for French cruise ships, but the rooms for British cruise ships are much larger than those built in France. Through analysis, the British come to the conclusion that psychologically, people care about the width of the outside far more than the need for the width of the room. As a result, the British shrank the size of the rooms on the cruise ship and widened the rest. As a result, British cruise ships became bestsellers.\n\nThe statement 'The moderation of width and narrowness is what we really need' is an inaccurate understanding of this passage.",
+      "gold": "not-entailment",
+      "predicted": "Correct. The text suggests that people prioritize exterior spaciousness over room size, not seeking a moderate balance between the two.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 21.48
+    },
+    {
+      "id": "logiqa_65",
+      "question": "Ethicist: under normal circumstances, it is wrong to take some kind of experimental medical treatment without the patient's consent, because the patient has the right to know all the detailed medical options available and to accept or reject a certain treatment. However, in the case of emergency treatment, sometimes only beyond the patient's right of consent to experimental treatment can we know how to best deal with emergency patients. Therefore, some restricted experimental treatments without the patient's consent should be allowed.\n\nIn at least some cases of emergency treatment, the possible benefits of experimental treatment without the patient's consent are more important than the patient's right of consent is an assumption required for this ethicist's argument.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.6
+    },
+    {
+      "id": "logiqa_66",
+      "question": "Factory director: the adoption of the new process flow can greatly reduce the sulfur dioxide produced by the copper smelting workshop. The key point of this new process is to replace the original open furnace with a closed furnace. However, not only does it cost a lot to purchase and install new equipment, but also the cost of operating the new process is higher than the current process. Therefore, on the whole, the adoption of the new process flow will greatly increase the production cost and make the plant unprofitable. Chief engineer: I have different opinions. In fact, the smelting capacity of the latest closed furnace is unmatched by the existing open furnace.\n\nThe chief engineer and the factory director are most likely to disagree on whether the smelting capacity of the latest closed furnace is indeed significantly better than that of the existing open furnace.",
+      "gold": "not-entailment",
+      "predicted": "No, they disagree on its cost being justified or if it makes the plant unprofitable.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 17.89
+    },
+    {
+      "id": "logiqa_67",
+      "question": "Township sages mediation refers to the civil mediation method in which rural dignitaries with high prestige and influence come forward to resolve disputes after disputes occur among villagers.\n\nLao Zhou and Lao Ma went to court because of the dispute over loans. After the court accepted it, they went to the village for a hearing and invited several township sages to attend. After on-the-spot mediation, the two sides reached an understanding does not belong to the township sages mediation.",
+      "gold": "entailment",
+      "predicted": "No. According to the context, township sages mediation refers to civil mediation led by rural dignitaries with high prestige and influence after disputes occur among villagers. In this scenario, the court accepted the case and invited township sages for on-the-spot mediation, which is a different approach than what the definition describes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 51.81
+    },
+    {
+      "id": "logiqa_68",
+      "question": "Critic: Fillmore, an influential television executive, argues that watching television regularly is not detrimental to very young children. Fillmore bases this on the claim, which I grant, that children can learn much that is beneficial from television. But we should reject Fillmore' s argument, because clearly it is to Fillmore' s benefit to convince parents that television is not harmful to their children.\n\nThe flaw in the critic's reasoning is that it rejects an argument solely on the grounds that the argument could serve the interests of the person making that argument.",
+      "gold": "entailment",
+      "predicted": "Ad Hominem (Conflict of Interest). The critic dismisses Fillmore's argument because it may benefit him personally, rather than addressing its merits. This type of fallacy targets the person presenting an argument instead of engaging with the argument itself. Just because Fillmore might gain from convincing parents about television\u2019s safety doesn't automatically invalidate his argument; the content and reasoning within his argument should be evaluated on their own terms.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 68.68
+    },
+    {
+      "id": "logiqa_69",
+      "question": "The notion that one might be justified in behaving irrationally in the service of a sufficiently worthy end is incoherent. For if such an action is justified, then one would be behaving rationally, not irrationally.\n\nThe argument that one cannot intend to spill a glass of water accidentally and that spilling it accidentally means that the act will not have been done intentionally is most similar in its reasoning to the argument above.",
+      "gold": "entailment",
+      "predicted": "Both arguments rely on the idea that an action's character (rational/justified vs intentional) is determined by one's intentions or justifications, and thus cannot simultaneously possess contradictory properties.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 30.91
+    },
+    {
+      "id": "logiqa_70",
+      "question": "In a recent study, a group of subjects had their normal daily caloric intake increased by 25 percent. This increase was entirely in the form of alcohol. Another group of similar subjects had alcohol replace nonalcoholic sources of 25 percent of their normal daily caloric intake. All subjects gained body fat over the course of the study, and the amount of body fat gained was the same for both groups.\n\nAn increased amount of body fat does not necessarily imply a weight gain is most strongly supported by the information above.",
+      "gold": "not-entailment",
+      "predicted": "It is not entirely clear whether \"weight gain\" refers to total body mass or only to nonfat body mass. If it includes alcohol and/or water retained, subjects with a 25 percent caloric increase would show more apparent weight gain than those who simply replaced existing calories with equal amounts of alcohol.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 50.0
+    },
+    {
+      "id": "logiqa_71",
+      "question": "Susan: Many rare plants have provided cures for various diseases. Since many plants have been lost to extinction, it is likely that there could have been cures for many more diseases. That is why it is important for us to manage our resources responsibly and prevent plant extinction. Robert: But plants are not our resources, they are part of the same environment we inhabit, and we are not superior to them. We must treat plants as the co-equal inhabitants of this planet that they are.\n\nThe issue of whether plants should be treated humanely is one about which Susan and Robert disagree.",
+      "gold": "not-entailment",
+      "predicted": "No.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.6
+    },
+    {
+      "id": "logiqa_72",
+      "question": "Conditional civil legal act means a civil legal act with a condition that determines the validity or elimination of the act.\n\nThe conditional civil legal act is A, B to enter into a lease contract. Promise to terminate the contract when lessor A's son needs to decorate the new house once he gets married.",
+      "gold": "entailment",
+      "predicted": "This is a conditional civil legal act because it contains a condition that determines the elimination of the act: \"when lessor A's son gets married\".",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 26.06
+    },
+    {
+      "id": "logiqa_73",
+      "question": "Multiple sclerosis is an autoimmune disease: white blood cells attack the myelin sheath that protects nerve fibers in the spinal cord and brain. Medical science now has a drug that can be used to successfully treat multiple sclerosis, but the path that led medical researchers to this drug was hardly straightforward. Initially, some scientists believed attacks characteristic of multiple sclerosis might be triggered by chronic viral infections. So in 1984 they began testing gamma interferon, one of the body' s own antiviral weapons. To their horror, all the multiple sclerosis patients tested became dramatically worse. The false step proved to be instructive however.\n\nGamma interferon stopping white blood cells from producing myelin-destroying compounds is LEAST compatible with the results of the gamma interferon experiment.",
+      "gold": "entailment",
+      "predicted": "This statement would not explain why MS patients got WORSE after being given gamma interferon. If anything, it's possible that the opposite happened: gamma interferon either triggered white blood cells to produce MORE myelin-destroying compounds or enhanced their destructive effects. Either way, the experiment showed that interfering with natural antiviral agents led to increased damage\u2014useful info in the long run but frightening for researchers at first since they'd expected to find a viable treatment when testing began.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 82.47
+    },
+    {
+      "id": "logiqa_74",
+      "question": "In preagricultural societies, social roles were few and were easily predicted for each phase of a person' s life. Accordingly, interpersonal relations, although not always pleasant or fair, were stable and predictable. Modern society, on the other hand, has thousands of different social roles. Technology and consumerism require that each of us fill highly particularized niches, and these niches are differentiating at an astonishing pace. Ttherefore, __ .\n\nThe statement 'interpersonal relations in modern societies are less stable and less predictable than they were in preagricultural societies' most logically completes the argument.",
+      "gold": "entailment",
+      "predicted": "Interpersonal relations in modern societies are less stable and less predictable than they were in pre-agricultural societies.\n\n(This conclusion logically follows because with thousands of different social roles and rapidly changing niches, it would be more difficult to establish and maintain stable relationships compared to a simpler, more predictable societal structure.)",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 47.91
+    },
+    {
+      "id": "logiqa_75",
+      "question": "Recent research indicates that increased consumption of fruits and vegetables by middle-aged people reduces their susceptibility to stroke in later years. The researchers speculate that this may be because fruits and vegetables are rich in folic acid. Low levels of folic acid are associated with high levels of homocysteine, an amino acid that contributes to blocked arteries.\n\nA decreased risk of stroke is correlated with increased levels of folic acid is most strongly supported by the information above.",
+      "gold": "entailment",
+      "predicted": "Yes",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 2.6
+    },
+    {
+      "id": "logiqa_76",
+      "question": "An agent refers to an institution or entity that acts as an agent for the sales, service and other related business matters of a certain product. The agent does not buy out the product, does not bear the risk of being unable to sell, and does not enjoy the profit of product sales, but depends on the service commission given by the product.\n\nEngage in activities for the benefit of the client, and the economic benefits and losses caused by his actions shall be borne by the client does not belong to the characteristics that an agent should have.",
+      "gold": "entailment",
+      "predicted": "False. \n\nThis statement actually describes a characteristic of an agent, which is that they act on behalf of the client and the client bears the economic benefits and losses, rather than the agent themselves. This aligns with the definition provided in the context.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 39.06
+    },
+    {
+      "id": "logiqa_77",
+      "question": "Company spokesperson: Household Products magazine claims that our Filterator X water filter does not remove chemical contaminants in significant amounts. This attack on the quality of our product is undermined by the experience of the millions of Filterator X owners who are satisfied with the product' s performance.\n\nMost Filterator X owners have no way to determine how effectively the product removes chemical contaminants from water most seriously undermines the company spokesperson's argument.",
+      "gold": "entailment",
+      "predicted": "Yes. If most Filterator X owners cannot determine the product's effectiveness at removing contaminants, their satisfaction does not discredit the magazine's claim.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 23.3
+    },
+    {
+      "id": "logiqa_78",
+      "question": "The Hyksos invaded the Nile Delta of Egypt and ruled it from 1650 to 1550 B. C. Their origin is uncertain, but archaeologists hypothesize that they were Canaatites. In support of this hypothesis, the archaeologists point out that excavations of Avaris, the Hyksos capital in Egypt, have uncovered large numbers of artifacts virtually identical to artifacts produced in Ashkelon, a major city of Canaan at the time of the Hyksos' invasion.\n\nIn order to evaluate the force of the archaeologists' evidence, it would be most useful to determine whether any artifacts produced by the Hyksos after 1550 B.C. have been found in Egypt.",
+      "gold": "not-entailment",
+      "predicted": "If such artifacts had been found, that could be an indication of continued immigration from Canaan (or wherever the Hyksos came from) long after the initial invasion, and if so, this could cast doubt on whether the large number of similar artifacts is evidence specifically of where the original invaders came from.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 50.64
+    },
+    {
+      "id": "logiqa_79",
+      "question": "Several students guessed the ranking of the physics competition. Zhong said, Hua is third and Ren is fifth. Hua said, Min is fifth and Gong is fourth. Ren said, Zhong is first and Min is fourth. Min said, Ren is first and Hua is second.Gong said, Zhong is third and Min is fourth. It is known that there is no parallel ranking in this competition, and there are talents for each ranking.\n\nRen is first, Hua is second, Zhong is third, Gong is fourth and Min is fifth should be the ranking.",
+      "gold": "entailment",
+      "predicted": "If Ren is indeed first, then it must be that Zhong said a lie about Ren being 5th. Since there are no parallel rankings, Zhong's statement \"Hua is third\" must also be false, as we can't have two people in the same position. \n\nNow, Gong says that Min is fourth and Zhong is third. If Hua is indeed second (as deduced earlier), then Gong must be saying the truth about at least one person to make his overall statement true, so he cannot be lying about both positions.\n\nTherefore, if Gong were saying a lie, it would have to be about Zhong being third. However, this creates parallel rankings with Zhong and Min in the 4th position. Since we know there are no parallel rankings, Gong must actually be telling the truth about Zhong not being third (and also being true about Min by default).",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 146.11
+    },
+    {
+      "id": "logiqa_80",
+      "question": "Recently, many traffic lights and street markings were temporarily removed from a heavily traveled street in a major metropolitan area. Given that this street experiences significant volumes of automobile traffic, the number of accidents on the street was expected to increase. However, even though the street experienced no reduction in traffic, the number of accidents was greatly reduced.\n\nThe statement 'The lack of traffic lights and street markings caused drivers to drive more cautiously' most helps to resolve the apparent conflict described above.",
+      "gold": "entailment",
+      "predicted": "YES",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 2.66
+    },
+    {
+      "id": "logiqa_81",
+      "question": "Television commercial: Compared to other television cable services, Acme is clearly superior. Around the nation, thousands of satisfied Acme customers have testified on Acme' s website that they have had uninterrupted cable service for two or more years. Some of these Acme customers even testify that they have had uninterrupted cable service for five years! Obviously, if you sign up for Acme television cable service, you can be assured that you will have uninterrupted cable service for years at a time.\n\nThe commercial makes a broad conclusion based on a few choice circumstances that may, or may not, be representative is the reason why the television commercial's reasoning is most susceptible to criticism.",
+      "gold": "entailment",
+      "predicted": "This commercial commits the \"hasty generalization\" fallacy. It attempts to make a sweeping claim about Acme's superiority and reliability based on selected testimonials from satisfied customers. The sample of testimonials may not be representative of the overall experience of Acme customers, potentially ignoring less favorable outcomes or cherry-picking exceptional cases.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 53.61
+    },
+    {
+      "id": "logiqa_82",
+      "question": "Activist: Although the environmental bill before the legislature is popular with voters, it will have mainly negative economic consequences if it is passed, especially when we try to lure new businesses to our country. Great leaders have the courage to look beyond popularity to what is sound policy; legislators ought to do the same by not voting for this bill.\n\nThe activist's argumentation is most vulnerable to criticism on the grounds that it presumes, without providing justification, that most of the legislators are great leaders.",
+      "gold": "not-entailment",
+      "predicted": "No. Rather, it assumes (without justification) that negative economic consequences for business outweigh benefits for the environment; however, this was not offered as an option in the original question stem for criticism of the activist\u2019s argumentation. Of the available options in the original question stem, the most likely point of departure for critics of the argument would be \u201cit presents a misleading choice between sound policy and popularity.\u201d After that option from the original stem, one could make the case that this is actually the best option (with some creative stretching).",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 86.48
+    },
+    {
+      "id": "logiqa_83",
+      "question": "Cultural and creative industry is a kind of new business type that integrates culture, creativity, science and technology, capital, manufacturing and other elements. Americans have made big creative industries with a glass of water (Coca-Cola), a bread (McDonald's), a chip (Intel) and a mouse (Disney), which generate far more profits and impact than their cars, steel and other industries.\n\nCoca-Cola and McDonald's are one of the representatives of American cultural and creative industries conforms to the original meaning.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.5
+    },
+    {
+      "id": "logiqa_84",
+      "question": "Structural unemployment refers to the unemployment caused by changes in economic structure, system and growth mode, which makes the supply structure of labor force inconsistent with the demand structure in terms of skills, experience, types of work, knowledge, age, gender, subjective will and region.\n\nXiao Zhao graduated from university last year and wanted to stay and work in a big city, but he couldn't make a difference, and in desperation, he continued to study and prepare to apply for a master's degree is not structural unemployment according to the above definition.",
+      "gold": "not-entailment",
+      "predicted": "No \n\nAlthough Xiao Zhao graduated from university last year and could not find work, it was his subjective will (desire to stay in big city) that led him to change his plan and continue studying. Therefore, his inability to find a job is due to his own choice rather than structural changes in the economy making his skills and experience unmarketable.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 57.23
+    },
+    {
+      "id": "logiqa_85",
+      "question": "There is an elderly model in Redmi mobile phone, which is an innovation forced according to the user feedback in the forum. We first heard a large number of users complain that the elderly dare not use smart phones because the Android system is too complex for the elderly to know what to do. Technicians focus on developing products on these issues. The current Redmi mobile phone 'elderly mode' removes all information aggregation and focuses on the card interface, laying out the functions such as SMS, phone, news and photography that the elderly can use on the desktop very good. \n\nWhat the market needs should be decided by consumers, not enterprises is confirmed by the above cases.",
+      "gold": "entailment",
+      "predicted": "Not necessarily. The text actually supports the opposite idea - that listening to consumer feedback can lead to innovative solutions that meet their needs. In this case, Redmi responded to user complaints and developed an \"elderly mode\" that simplifies the smartphone experience for seniors. This shows that enterprises can effectively respond to market needs by listening to consumers.",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 55.93
+    },
+    {
+      "id": "logiqa_86",
+      "question": "Ireland has a large area of peat, rich wetland environmentalists have been opposed to coal mining in wetland areas.Their argument is that mining peat can damage the ecological balance of Ireland's wetlands, with immediate and serious consequences for polluting water sources. However, this fear is untenable. In the last 50 years of statistics, there have never been any reports of contaminated water sources due to coal mining.\n\nIn Ireland, the ecological environment of coal mining wetlands is not substantially different from that before mining best reinforces the argument.",
+      "gold": "entailment",
+      "predicted": "No.\n\n(It appears there may be an error in the question as it seems to mix \"peat\" and \"coal\". Peat is typically formed from plant matter, while coal is a fossil fuel formed from ancient plant life. If we assume this refers to peat mining rather than coal mining...)\n\nThe statement that there have been no reports of contaminated water sources due to coal (or more likely, peat) mining does not necessarily mean the ecological balance has not been disrupted or damaged in other ways. The lack of reported contamination does not exclude possible negative impacts on biodiversity, habitat disruption, or other environmental concerns.\n\nTherefore, the fact that there have been no reports of contaminated water sources doesn't directly support the argument that coal (or peat) mining doesn't damage the ecological balance of wetlands.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 132.1
+    },
+    {
+      "id": "logiqa_87",
+      "question": "If deep-sea divers ascend too rapidly from ocean depths, the decreasing pressure causes nitrogen to be released as gas bubbles in the blood. This condition is known as the bends.  Sea snakes, who, like humans, breathe air that contributes nitrogen to the blood, are nevertheless able to make extremely rapid ascents and descents in ocean waters without suffering from the bends.\n\nSea snakes, unlike humans, can excrete nitrogen from their blood into the sea by means of extremely small blood vessels beneath their skin contributes most to an explanation of the difference described between humans and sea snakes.",
+      "gold": "entailment",
+      "predicted": "Yes.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 3.59
+    },
+    {
+      "id": "logiqa_88",
+      "question": "Unpaid prompting: non economic remuneration refers to the remuneration received by employees from their own work. Employees are praised, promoted and valued for their hard work, resulting in a sense of work honor, achievement and responsibility, as well as social respect and career development opportunities\n\nOrganize some employees to travel abroad before the Spring Festival is not unpaid prompting.",
+      "gold": "entailment",
+      "predicted": "No",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 2.7
+    },
+    {
+      "id": "logiqa_89",
+      "question": "All unemployed artists are sympathetic to social justice. And no employed artists are interested in the prospect of great personal fame.\n\nIf the claims made above are true, then if there are artists interested in the prospect of great personal fame, they are sympathetic to social justice.",
+      "gold": "entailment",
+      "predicted": "No",
+      "semantic_score": 2,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 2.51
+    },
+    {
+      "id": "logiqa_90",
+      "question": "Employment discrimination refers to a phenomenon that the employer has no legal basis and makes various restrictive provisions on potential employees in the future, so as to exclude the equal employment right of personnel who should be in line with relevant positions.\n\nA company recruits ordinary clerks and requires candidates to be unmarried women is employment discrimination according to the above definition.",
+      "gold": "entailment",
+      "predicted": "Yes. \n\nAccording to the definition provided, this scenario constitutes employment discrimination because the employer has no legal basis for requiring candidates to be unmarried women, thereby excluding individuals who are otherwise qualified based on their marital status. This restricts equal employment opportunities for personnel who could fulfill the role of an ordinary clerk regardless of their marital status.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 52.82
+    },
+    {
+      "id": "logiqa_91",
+      "question": "There are many repertoire of dazzling skills in classical music, and there are multiple forces to promote dazzling skills in the development of history. Sometimes, it is the composer who wants to test the limits of sound, writing a passage that the performer at that time generally cannot play for the sake of melody or harmony. Sometimes, it is the composer who does not know enough about a solo instrument to think rationally from the point of view of playing, so he writes a piece that is difficult or even impossible to play. Sometimes, it is the performer who takes the initiative to pursue a breakthrough, asking for music that could not be performed in the past, so as to highlight the difference between himself and other performers.\n\nThe performer takes the initiative to perform a breakthrough in order to highlight his own personality is not in line with the meaning of the text with regard to the driving force of the dazzling skills of music.",
+      "gold": "not-entailment",
+      "predicted": "Actually, according to the text, the correct interpretation is that the performer takes the initiative to pursue a breakthrough in order to \"highlight the difference between himself and other performers\", which means to showcase their unique skill or talent compared to others. This is indeed mentioned as one of the driving forces behind dazzling skills in music.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 52.07
+    },
+    {
+      "id": "logiqa_92",
+      "question": "Nutrition education in schools once promoted daily consumption of food from each of the four food groups: milk, meat, fruit and vegetables, and breads and cereals. This recommendation was, however, dangerous to health.\n\nThe division into four groups gave the impression that an equal amount of each should be consumed, but milk and meat tend to contain fats that promote heart disease and cancer and should be eaten in lesser amounts provides support for the critique above EXCEPT.",
+      "gold": "not-entailment",
+      "predicted": "According to this information, eating fruit and vegetables every day does not pose a health risk. If anything, these foods are known to provide essential nutrients and help prevent chronic diseases like heart disease and some cancers. \n\n(Note: I am providing a short answer \"EXCEPT\" the statement regarding fruits and vegetables",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 48.46
+    },
+    {
+      "id": "logiqa_93",
+      "question": "When a star in the entertainment industry was accused of evading personal income tax, she defended herself: over the years, I have paid millions of yuan in personal income tax, which is more than my cousin's state-owned machinery factory. Is this also a sin? \n\nThe tax paid by an individual is higher than that paid by a state-owned machinery factory, which does not mean that her contribution to society is greater than that of a state-owned machinery factory accurately points out the flaws in the above defense.",
+      "gold": "entailment",
+      "predicted": "The amount of tax paid doesn't necessarily equate to one's contribution to society. A machinery factory provides essential goods and employment opportunities, whereas an individual's income is primarily based on personal gain. The comparison is flawed as it fails to consider the broader societal impact of a state-owned factory versus an individual's income generation.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 51.59
+    },
+    {
+      "id": "logiqa_94",
+      "question": "Interbank lending refers to the business mode of mutual financing of short-term funds between financial institutions, which aims to adjust short positions and temporary capital surplus and shortage.\n\nInterbank lending is not described by the statement \"Bank A invests in real estate with funds.\" Interbank lending refers to the lending of funds between banks, typically for the purpose of meeting reserve requirements or for short-term borrowing needs.",
+      "gold": "entailment",
+      "predicted": "No.",
+      "semantic_score": 3,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 3.26
+    },
+    {
+      "id": "logiqa_95",
+      "question": "Xiao Li said to Xiao Zhang, you eat less pickles. If you eat too salty at ordinary times, you will get high blood pressure in the future. Xiao Zhang retorted: whether you eat salty or not has nothing to do with high blood pressure. You see, people in the 1950s ate pickle bumps every day, and not so many people have high blood pressure now.\n\nEating too much salt will affect the absorption of calcium and zinc, easily suffer from osteoporosis, and increase the metabolic burden of liver and kidney will not help Xiao Li question Xiao Zhang's point of view.",
+      "gold": "entailment",
+      "predicted": "No. Xiao Zhang's argument is flawed because he is comparing the incidence of high blood pressure in people who ate pickles daily in the 1950s to the current generation, without considering other lifestyle factors that have changed over time, such as diet, physical activity level, and overall health care access.\n\nAdditionally, while it is true that eating too much salt can increase blood pressure, Xiao Zhang's argument that there were not many people with high blood pressure in the 1950s among those who ate pickles daily is an anecdotal evidence and does not prove a cause-and-effect relationship between consuming salty foods (such as pickles) and developing hypertension.",
+      "semantic_score": 1,
+      "em": 0,
+      "f1": 0.0,
+      "time_s": 108.19
+    },
+    {
+      "id": "logiqa_96",
+      "question": "Principle: A law whose purpose is to protect wild animal populations should not be enforced against those whose actions do not threaten wild animal populations. Application: Even though there is a law against capturing wild snakes, which was enacted to protect wild snake populations, snake charmers who violate this law should not be prosecuted.\n\nThe statement that \"Since there are relatively few snake charmers and they each capture relatively few snakes per year, snake charmers have a minimal effect on wild populations\" most justifies the above application of the principle.",
+      "gold": "entailment",
+      "predicted": "Yes. This statement provides a clear justification for why snake charmers' actions do not threaten wild animal populations, thus supporting the decision not to prosecute them based on the given principle.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 29.76
+    },
+    {
+      "id": "logiqa_97",
+      "question": "In a magic show, from the seven magicians - G.H.K.L.N.P and Q, select 6 to perform, perform into two teams: 1 team and 2 team. Each team by the front, middle and after three positions, playing the magician just each occupies a position, the selection and position arrangement of the magician must meet the following conditions :(1) if the arrangement of G or H play, they must be in the front. (2) If K is to play, he must be in the middle. (3) If L is to play, he must be in team 1. (4) Neither P nor K can be on the same team as N. (5) P cannot be in the same team as Q. (6) If H is in team 2, Q is in the middle position of team 1.\n\nIf H is in team 2, Front: L Middle: Q Rear: N is listed as an acceptable arrangement for team 1.",
+      "gold": "entailment",
+      "predicted": "Is this a trick question?\n\nYes, that arrangement for Team 1 is acceptable... BUT...\n\nSince P and K cannot be on the same team as N (condition 4), and H, G are already assigned to team 2 and front respectively in one of teams or need another magician on front and L must be an team 1 therefore only viable pair with H will remain Q at middle but that implies there is P. However we already placed N which directly impacts the placement as none (P/K) can occupy same place i.e 3rd.\n\nHowever, Team 2 does need a front performer. The arrangement for Team 2 would be: Front: H Middle:? Rear:.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 119.12
+    },
+    {
+      "id": "logiqa_98",
+      "question": "With the increase of age, people's daily demand for calories is decreasing, while the demand for vitamin B6 is gradually increasing. Unless older people take vitamin B6 as a supplement, or eat foods that contain more vitamin B6 than they ate when they were young, they are unlikely to get the vitamin B6 they need.\n\nThe answer to the question 'Did most people eat far more vitamin B6 than they needed every day when they were young?' is most helpful to evaluate the appeal argument.",
+      "gold": "entailment",
+      "predicted": "No. \n\nThis information would indicate that eating foods with even the same amount of vitamin B6 as before may not be enough for older adults, which supports the argument's appeal.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 29.46
+    },
+    {
+      "id": "logiqa_99",
+      "question": "Compensation of competence refers to the mutual substitution and compensation of different competences of the same individual or among members of the organization, so as to maintain or maintain the normal progress of activities. Among them, radiation compensation refers to the phenomenon that the superior ability effectively strengthens the mutual connection between various abilities or drives the improvement of other abilities at the same time. Amplified compensation refers to the high development of superior capabilities, which effectively compensates for some weak capabilities.\n\nRadiation compensation is applied to the No. 7 player of Country A football team.",
+      "gold": "entailment",
+      "predicted": "In the context of the No. 7 player on Country A's football team, radiation compensation would mean that their exceptional skill in one area (e.g., dribbling) strengthens their connections with other skills (e.g., passing, shooting) or drives improvement in those areas. For example, their superior ball control might enhance their ability to make precise passes or create scoring opportunities through better positioning.",
+      "semantic_score": 5,
+      "em": 1,
+      "f1": 0.0,
+      "time_s": 64.57
+    }
+  ],
+  "aggregate": {
+    "avg_semantic_score": 3.97,
+    "em": 0.79,
+    "f1": 0.0,
+    "total": 100
+  }
+}

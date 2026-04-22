@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 2,
+    "f1": 0.4444,
+    "duration_s": 13.12768,
+    "timestamp": "2026-04-21T19:02:14.275433"
+  },
+  "query": "Ellie Goulding worked with what other writers on her third studio album, Delirium?",
+  "predicted_answer": "Max Martin",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.500169, depth_selected=1, api_calls_used=0, timestamp=1776798134.2791414)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is visible in the preview: **Max Martin**, **Savan Kotecha**, and **Ilya Salmanzadeh**.\n\nFINAL ANSWER: Max Martin",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

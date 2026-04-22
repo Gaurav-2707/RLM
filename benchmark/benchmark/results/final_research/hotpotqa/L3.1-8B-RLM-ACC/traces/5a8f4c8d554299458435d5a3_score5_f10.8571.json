@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "em": 1,
+    "f1": 0.8571,
+    "duration_s": 18.371359,
+    "timestamp": "2026-04-21T07:08:47.435040"
+  },
+  "query": "Scott Parkin has been a vocal critic of Exxonmobil and another corporation that has operations in how many countries ?",
+  "predicted_answer": "More than 70",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.602187, depth_selected=2, api_calls_used=0, timestamp=1776755327.4405277)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The Global Context Preview mentions that Scott Parkin has been a vocal critic of ExxonMobil and Halliburton. \n\nHalliburton \"has operations in more than 70 countries.\"\n\nFINAL ANSWER: More than 70",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 4
+  }
+}

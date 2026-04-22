@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "f1": 1.0,
+    "duration_s": 7.006338,
+    "timestamp": "2026-04-21T18:53:45.549559"
+  },
+  "query": "Who is older, Annie Morton or Terry Richardson?",
+  "predicted_answer": "Terry Richardson",
+  "acc_data": {
+    "depth_selected": 3,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.611906, depth_selected=3, api_calls_used=0, timestamp=1776797625.5550404)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "According to the [Global Context Preview], Annie Morton was born on October 8, 1970, while Terry Richardson was born on August 14, 1965. Therefore, the answer is visible in the preview.\n\nFINAL ANSWER: Terry Richardson",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

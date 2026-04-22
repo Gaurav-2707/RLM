@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "semantic_score": 1,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 20.892052,
+    "timestamp": "2026-04-17T09:45:15.665347"
+  },
+  "query": "The 2011\u201312 VCU Rams men's basketball team, led by third year head coach Shaka Smart, represented Virginia Commonwealth University which was founded in what year?",
+  "predicted_answer": "",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "trace_consistency": 2
+  }
+}

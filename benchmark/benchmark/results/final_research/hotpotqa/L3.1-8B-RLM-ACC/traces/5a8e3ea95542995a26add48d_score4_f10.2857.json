@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.2857,
+    "duration_s": 13.303435,
+    "timestamp": "2026-04-21T06:54:52.457260"
+  },
+  "query": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+  "predicted_answer": "Greenwhich Village",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.500418, depth_selected=2, api_calls_used=0, timestamp=1776754492.461878)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The director of the romantic comedy \"Big Stone Gap\" is Adriana Trigiani.\n\nAccording to the [Global Context Preview] (8,000 characters), Adriana Trigiani is mentioned as based in Greenwich Village, New York City.\n\n\nFINAL ANSWER: Greenwhich Village",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 1
+  }
+}

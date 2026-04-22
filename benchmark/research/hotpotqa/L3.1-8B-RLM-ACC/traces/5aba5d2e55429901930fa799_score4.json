@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "f1": 0.6667,
+    "duration_s": 19.547021,
+    "timestamp": "2026-04-21T18:48:11.108201"
+  },
+  "query": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+  "predicted_answer": "Monica",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.578072, depth_selected=2, api_calls_used=0, timestamp=1776797291.1136844)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is visible in the global context preview.\n\nAccording to the preview, one of the women mentioned in the book \"Their Lives: The Women Targeted by the Clinton Machine\" was Monica Lewinsky, who was also a former White House intern.\n\nFINAL ANSWER: Monica",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

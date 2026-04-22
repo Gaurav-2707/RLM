@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.0,
+    "duration_s": 19.052024,
+    "timestamp": "2026-04-21T09:37:32.008126"
+  },
+  "query": "Employment discrimination refers to a phenomenon that the employer has no legal basis and makes various restrictive provisions on potential employees in the future, so as to exclude the equal employment right of personnel who should be in line with relevant positions.\n\nA company recruits ordinary clerks and requires candidates to be unmarried women is employment discrimination according to the above definition.",
+  "predicted_answer": "Employment discrimination",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The preview already includes an example that illustrates employment discrimination:\n\nFINAL ANSWER: Employment discrimination",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 3
+  }
+}

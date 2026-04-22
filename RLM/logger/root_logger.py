@@ -161,3 +161,9 @@ class ColorfulLogger:
         print(response)
         self._print_separator("=", "GREEN")
         print() 
+
+    def info(self, msg: str):
+        """Generic informative log message."""
+        if not self.enabled:
+            return
+        print(f"{self._colorize('[INFO]', 'CYAN')} {msg}")

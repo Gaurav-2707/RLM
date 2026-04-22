@@ -64,6 +64,21 @@ class REPLResult:
     def __str__(self):
         return f"REPLResult(stdout={self.stdout}, stderr={self.stderr}, locals={self.locals}, execution_time={self.execution_time})"
 
+class Snippet(str):
+    """
+    A string subclass that allows dictionary-style access to support model hallucinations.
+    e.g. snippet['text'] returns the string itself.
+    """
+    def __getitem__(self, key):
+        if key == 'text':
+            return self
+        return super().__getitem__(key)
+    
+    def get(self, key, default=None):
+        if key == 'text':
+            return self
+        return default
+
 class REPLEnv:
     def __init__(
         self,
@@ -190,40 +205,47 @@ class REPLEnv:
         # Add (R)LM query function to globals
         self.globals['llm_query'] = llm_query
 
-        def search_context(query: str, n_results: int = 3, snippet_length: int = 300, **kwargs) -> str:
+        def read_full_context() -> str:
+            """Returns the ENTIRE context as a single string."""
+            return self.globals.get('context', '')
+        self.globals['read_full_context'] = read_full_context
+
+        def search_context(query: str, n_results: int = 5, snippet_length: int = 500, **kwargs) -> list:
             """
             Search for snippets in the context that match the query.
-            Returns a formatted string of matched snippets.
+            Returns a list of Snippet objects with more context around match.
             """
             ctx = self.globals.get('context', '')
             if not isinstance(ctx, str) or not ctx:
-                return "Error: context is not available as a string for searching."
+                return []
             
-            # Simple keyword-based snippet extraction
-            query_words = query.lower().split()
+            # Improved keyword-based snippet extraction with windowing
+            query_words = set(query.lower().split())
             sentences = ctx.split('. ')
             
-            scored_sentences = []
-            for sent in sentences:
+            scored_segments = []
+            for i, sent in enumerate(sentences):
+                # Score based on word presence
                 score = sum(1 for word in query_words if word in sent.lower())
                 if score > 0:
-                    scored_sentences.append((score, sent))
+                    # Capture window: 2 sentences before, match, 2 sentences after
+                    start = max(0, i - 2)
+                    end = min(len(sentences), i + 3)
+                    window = ". ".join(sentences[start:end])
+                    scored_segments.append((score, window))
             
             # Sort by score descending
-            scored_sentences.sort(key=lambda x: x[0], reverse=True)
+            scored_segments.sort(key=lambda x: x[0], reverse=True)
             
-            top_matches = [s[1] for s in scored_sentences[:n_results]]
+            # Deduplicate windows while keeping order
+            seen = set()
+            top_matches = []
+            for score, text in scored_segments:
+                if text not in seen and len(top_matches) < n_results:
+                    top_matches.append(Snippet(text))
+                    seen.add(text)
             
-            if not top_matches:
-                return "No direct matches found in context."
-            
-            result = "Matched snippets from context:\n"
-            for i, snippet in enumerate(top_matches):
-                # Clean up and truncate snippet if needed (though sentences are usually short enough)
-                clean_snippet = snippet.strip().replace('\n', ' ')
-                result += f"{i+1}. [...]{clean_snippet}[...]\n"
-            
-            return result
+            return top_matches
             
         self.globals['search_context'] = search_context
         
@@ -251,6 +273,15 @@ class REPLEnv:
             raise RuntimeError("'FINAL()' should NOT be used inside Python code blocks! Output your final answer as raw text directly.")
         self.globals['FINAL'] = final_error
 
+        # Guard against the model writing 'repl' as a standalone statement (NameError prevention)
+        class _ReplGuard:
+            """Catches the model's habit of writing 'repl' as a standalone statement."""
+            def __repr__(self): return "repl"
+            def __str__(self): return "repl"
+            def __call__(self, *a, **k):
+                raise RuntimeError("'repl' is not a valid command. Remove it from your code block.")
+        self.globals['repl'] = _ReplGuard()
+
         # Inject any additional plugin functions (e.g. memory_retrieve, deep_reason)
         if plugins:
             for name, fn in plugins.items():
@@ -261,28 +292,18 @@ class REPLEnv:
             self.code_execution(setup_code)
     
     def load_context(self, context_json: Optional[dict | list] = None, context_str: Optional[str] = None):
-        # Write context JSON to temporary directory using absolute (temp dir) path
-        if context_json is not None:
-            context_path = os.path.join(self.temp_dir, "context.json")
-            with open(context_path, "w") as f:
-                json.dump(context_json, f, indent=2)
-            context_code = (
-                f"import json\n"
-                f"with open(r'{context_path}', 'r') as f:\n"
-                f"    context = json.load(f)\n"
-            )
-            self.code_execution(context_code)
+        """Load context into the REPL environment."""
+        if context_str:
+            self.globals['context'] = context_str
+        elif context_json:
+            self.globals['context'] = json.dumps(context_json)
+        else:
+            self.globals['context'] = ""
         
-        if context_str is not None:
-            context_path = os.path.join(self.temp_dir, "context.txt")
-            with open(context_path, "w") as f:
-                f.write(context_str)
-            context_code = (
-                f"import os\n"
-                f"with open(r'{context_path}', 'r') as f:\n"
-                f"    context = f.read()\n"
-            )
-            self.code_execution(context_code)
+        # Also write to local file for persistence support if needed by other tools
+        context_path = os.path.join(self.temp_dir, "context.txt")
+        with open(context_path, "w") as f:
+            f.write(self.globals['context'])
     
     def __del__(self):
         """Clean up temporary directory when object is destroyed"""
@@ -388,14 +409,26 @@ class REPLEnv:
                     
                     # INJECT HINTS BASED ON ERROR TYPE
                     hint = ""
-                    if isinstance(e, AttributeError) and "attribute 'answer'" in error_msg:
-                        hint = "\nHINT: llm_query() returns a raw STRING, not an object. Don't use '.answer'. Use 'result = llm_query(...)' directly."
+                    if isinstance(e, AttributeError) and any(attr in error_msg for attr in ["'answer'", "'generated_text'", "'content'"]):
+                        try:
+                            attr_name = error_msg.split("'")[-2]
+                        except:
+                            attr_name = "attribute"
+                        hint = f"\nHINT: llm_query() returns a raw STRING, not an object. Don't use '.{attr_name}'. Use the result directly."
                     elif isinstance(e, NameError) and "analysis" in error_msg:
                         hint = "\nHINT: You used 'analysis' before defining it. Did you mean to define it in the REPL first?"
+                    elif isinstance(e, TypeError) and "indices must be integers" in error_msg:
+                        hint = "\nHINT: search_context() returns a LIST of snippets. Use 'matches[0]' to get a snippet. If you tried 'matches[0][\"text\"]', it should work now, but check if you are indexing a string accidentally."
                     elif isinstance(e, TypeError) and "unexpected keyword argument 'text'" in error_msg:
                         hint = "\nHINT: search_context() uses 'context' automatically. Don't pass 'text=context' to it."
+                    elif isinstance(e, IndentationError):
+                        hint = "\nHINT: Indentation Error. Python code inside ```repl``` blocks must be indented with 4 spaces. Make sure code after 'if:', 'else:', or 'for:' is indented correctly."
+                    elif isinstance(e, (SyntaxError, IndentationError)) and "expected an indented block" in error_msg:
+                        hint = "\nHINT: You missed an indentation. Always indent code after a colon (:) by 4 spaces."
+                    elif isinstance(e, IndexError):
+                        hint = "\nHINT: Index out of range. Check if search_context() or a list is empty before accessing it with [0]. Use 'if matches:' to check."
                     elif isinstance(e, SyntaxError):
-                        hint = "\nHINT: Check if you used an f-string (e.g., f\"{context}\"), it likely crashed or failed. Use \"...\" + context or llm_query(\"prompt\", context) instead."
+                        hint = "\nHINT: Syntax Error. Check if you used an f-string (e.g., f\"{context}\"), it likely crashed. Use \"...\" + context or llm_query(\"prompt\", context) instead."
                     
                     sys.stderr.write(f"{type(e).__name__}: {error_msg}{hint}\n")
         

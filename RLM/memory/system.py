@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from .base import MemoryEntry
 from .retrieval import DenseRetriever
 import math
@@ -63,10 +64,13 @@ class EpisodicMemorySystem:
         # Remove the lowest scoring one
         self.memories = self.memories[1:]
 
-    def retrieve(self, current_state: str, top_k: int = 5) -> List[Tuple[MemoryEntry, float]]:
-        """Retrieves top_k memories based on the consolidated score."""
+    def retrieve(self, current_state: str, top_k: int = 5) -> Tuple[List[Tuple[MemoryEntry, float]], List[str]]:
+        """
+        Retrieves top_k memories and a list of conflict warnings.
+        returns: (scored_memories, conflict_warnings)
+        """
         if not self.memories:
-            return []
+            return [], []
 
         # Update BM25 index with current memories
         states = [m.state for m in self.memories]
@@ -74,6 +78,7 @@ class EpisodicMemorySystem:
         
         current_time = time.time()
         scored_memories = []
+        conflicts = []
 
         for i, m in enumerate(self.memories):
             relevance = self.retriever.score(current_state, i)
@@ -83,6 +88,33 @@ class EpisodicMemorySystem:
             total_score = (self.alpha * relevance) + (self.beta * (recency * m.outcome_score))
             scored_memories.append((m, total_score))
 
+            # Logic for "Failure Pattern" detection (Conflict Awareness for Paper)
+            # If similarity is high but outcome was bad, flag as internal conflict 
+            if relevance > self.conflict_thresh and m.outcome_score < 0:
+                conflicts.append(
+                    f"Warning: A previous similar approach for '{m.state[:50]}...' "
+                    f"failed (score: {m.outcome_score}). Reason: {m.outcome}."
+                )
+
         # Sort by total_score descending
         scored_memories.sort(key=lambda x: x[1], reverse=True)
-        return scored_memories[:top_k]
+        return scored_memories[:top_k], list(set(conflicts))
+    def save(self, filepath: str):
+        """Persist memories to a JSON file."""
+        import json
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump([asdict(m) for m in self.memories], f, indent=2, ensure_ascii=False)
+
+    def load(self, filepath: str):
+        """Load memories from a JSON file."""
+        import json
+        import os
+        if not os.path.exists(filepath):
+            return
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            self.memories = [MemoryEntry(**d) for d in data]
+        
+        # Prune if over capacity after loading
+        if len(self.memories) > self.capacity:
+            self._prune()

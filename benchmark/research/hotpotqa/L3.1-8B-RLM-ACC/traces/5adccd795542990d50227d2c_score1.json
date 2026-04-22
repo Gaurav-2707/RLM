@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 1,
+    "f1": 0.0,
+    "duration_s": 19.707761,
+    "timestamp": "2026-04-21T18:51:22.452429"
+  },
+  "query": "In which city is the ambassador of the Rabat-Salé-Kénitra administrative region to China based?",
+  "predicted_answer": "RABAT",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.505574, depth_selected=1, api_calls_used=0, timestamp=1776797482.45786)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "Upon reviewing the Global Context Preview:\n\n**Rabat**\nRabat (Berber: , Arabic: الرِّبَاط‎ ‎ , Moroccan Arabic: رّباط‎ ‎ ) is the capital city of Morocco and its second largest city with an urban population of approximately 580,000 (2014) and a metropolitan population of over 1.2 million. \n\nThe answer to this question can be found in the preview because Rabat has a separate article discussing its role as the administrative region's center.\n\nFINAL ANSWER: RABAT",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 3,
+    "f1": 0.0,
+    "duration_s": 19.446825,
+    "timestamp": "2026-04-21T20:55:19.209375"
+  },
+  "query": "Many people who call themselves teachers are not actually teachers, because teaching is not their main source of income.\n\nThe conclusion that low income prevents teachers from being dedicated to their work is assumed by the above discussion.",
+  "predicted_answer": "lackofincome",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.594569, depth_selected=2, api_calls_used=0, timestamp=1776804919.2095194)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The preview indicates that teaching is not the main source of income for many who call themselves teachers. This is given as the reason why many people who claim to be teachers are not actually teachers.\n\nFINAL ANSWER: lackofincome",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

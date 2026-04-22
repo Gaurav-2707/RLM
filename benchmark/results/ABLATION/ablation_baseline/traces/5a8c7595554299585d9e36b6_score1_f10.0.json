@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "semantic_score": 1,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 19.597471,
+    "timestamp": "2026-04-17T09:35:25.158266"
+  },
+  "query": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+  "predicted_answer": "",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "trace_consistency": 2
+  }
+}

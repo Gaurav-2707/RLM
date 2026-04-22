@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "semantic_score": 1,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 20.597181,
+    "timestamp": "2026-04-17T09:45:36.558729"
+  },
+  "query": "Are both Dictyosperma, and Huernia described as a genus?",
+  "predicted_answer": "",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "trace_consistency": 2
+  }
+}

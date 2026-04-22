@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "semantic_score": 1,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 25.699694,
+    "timestamp": "2026-04-17T09:46:47.157491"
+  },
+  "query": "When was Poison's album \"Shut Up, Make Love\" released?",
+  "predicted_answer": "",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "trace_consistency": 2
+  }
+}

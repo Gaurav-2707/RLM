@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 3,
+    "f1": 0.0,
+    "duration_s": 14.215431,
+    "timestamp": "2026-04-21T19:01:10.246706"
+  },
+  "query": "What type of forum did a former Soviet statesman initiate?",
+  "predicted_answer": "Summit",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.590715, depth_selected=2, api_calls_used=0, timestamp=1776798070.2504373)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "I'll check the preview first.\n\nSearching for keywords \"former Soviet statesman\" in the Global Context Preview... \n\n**Mikhail Gorbachev**\nMikhail Sergeyevich Gorbachev, ( ; Russian: Михаи́л Серге́евич Горбачёв ; ] ; born 2 March 1931) is a former Soviet Statesman...\n\nThe answer seems to be present in the preview!\n\nFINAL ANSWER: Summit",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

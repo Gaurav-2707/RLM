@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.0,
+    "duration_s": 15.146292,
+    "timestamp": "2026-04-21T06:33:45.053727"
+  },
+  "query": "Vince Phillips held a junior welterweight title by an organization recognized by what larger Hall of Fame?",
+  "predicted_answer": "IBHOF",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "According to the [Global Context Preview], Vince Phillips held the IBF junior welterweight title.\n\nThe International Boxing Federation (IBF) is one of four major organizations recognized by the International Boxing Hall of Fame (IBHOF).\n\nTherefore, Vince Phillips held a junior welterweight title by an organization recognized by the larger International Boxing Hall of Fame (IBHOF).\n\nFINAL ANSWER: IBHOF",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 5
+  }
+}

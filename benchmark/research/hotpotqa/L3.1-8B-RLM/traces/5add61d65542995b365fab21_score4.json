@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "f1": 0.1667,
+    "duration_s": 18.802187,
+    "timestamp": "2026-04-21T18:15:20.154325"
+  },
+  "query": "What type of forum did a former Soviet statesman initiate?",
+  "predicted_answer": "Forum for Peace Organizations",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The preview shows that Mikhail Gorbachev initiated the World Summit of Nobel Peace Laureates as a forum for Nobel Peace Laureates and peace organizations to address global issues.\n\nFINAL ANSWER: Forum for Peace Organizations",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

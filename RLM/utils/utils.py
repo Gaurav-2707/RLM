@@ -1,11 +1,13 @@
 import re
 from typing import Optional,List,Dict,Tuple,Any
+import string
 
 def find_code_blocks(text:str) -> List[str]:
-    pattern = r'```repl\s*\n(.*?)\n```'
+    # Match ```repl, ```python, or ```py followed by optional whitespace and newline
+    pattern = r'```(?:repl|python|py)\s*\n(.*?)\n```'
     results = []
 
-    for match in re.finditer(pattern,text,re.DOTALL):
+    for match in re.finditer(pattern, text, re.DOTALL):
         code_content = match.group(1).strip()
         results.append(code_content)
 
@@ -24,17 +26,29 @@ def find_final_answer(text:str) -> Optional[Tuple[str,str]]:
     if match:
         return ('FINAL_VAR', match.group(1).strip())
     
-    # Try FINAL(...)  — use greedy match but only on the cleaned text
-    # We allow multiline here but will clean it later
-    match = re.search(r'FINAL\s*\((.*)\)', cleaned, re.DOTALL)
+    # Try FINAL(...) — use greedy match but only on the cleaned text
+    match = re.search(r'FINAL\s*\((.*?)\)', cleaned, re.DOTALL)
     if match:
         content = match.group(1).strip()
+        # Clean up redundant model verbosity inside the parenthesis
+        content = re.sub(r'(?i)^(the|is|answer|is:)\s+', '', content)
         # Strip wrapping quotes if the model wrote FINAL("answer")
+        content = content.strip(string.punctuation + string.whitespace)
         if (content.startswith('"') and content.endswith('"')) or \
            (content.startswith("'") and content.endswith("'")):
-            content = content[1:-1]
+            content = content[1:-1].strip()
         return ('FINAL', content)
     
+    # Try FINAL ANSWER: ...
+    match = re.search(r'(?i)FINAL\s*ANSWER\s*:\s*(.*)', cleaned)
+    if match:
+        content = match.group(1).strip()
+        content = content.strip(string.punctuation + string.whitespace)
+        if (content.startswith('"') and content.endswith('"')) or \
+           (content.startswith("'") and content.endswith("'")):
+            content = content[1:-1].strip()
+        return ('FINAL', content)
+        
     return None
 
 
@@ -205,14 +219,25 @@ def convert_context_for_repl(context):
         if len(context) > 0 and isinstance(context[0], dict):
             if "content" in context[0]:
                 context_data = [msg.get("content", "") for msg in context]
+                context_str = " ".join(context_data)
             else:
                 context_data = context
-            context_str = None
+                context_str = json.dumps(context)
+        elif len(context) > 0 and isinstance(context[0], (list, tuple)):
+            # HotpotQA format: list of [title, list of sentences]
+            flat_parts = []
+            for item in context:
+                if len(item) > 1 and isinstance(item[1], list):
+                    flat_parts.append(f"{item[0]}: " + " ".join(item[1]))
+                else:
+                    flat_parts.append(str(item))
+            context_data = context
+            context_str = " ".join(flat_parts)
         else:
             context_data = context
-            context_str = None
+            context_str = " ".join(map(str, context))
     else:
         context_data = context
-        context_str = None
+        context_str = str(context)
     
     return context_data, context_str

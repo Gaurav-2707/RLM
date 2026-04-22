@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 2,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 21.390538,
+    "timestamp": "2026-04-21T10:25:21.508425"
+  },
+  "query": "Social phobia is an important subtype of anxiety disorder, its main symptom is the fear of being watched, such as fear of speaking in public, and even afraid to go out when the symptoms are serious. Shyness is a common personality trait, which is not pathological in itself. However, the vast majority of patients with social phobia will be significantly relieved after treatment, and psychotherapy should be the first choice for patients with mild symptoms; if patients are unable or unwilling to receive psychotherapy because of busy work and other reasons, drug treatment can be the first choice, but the combination of drug therapy and psychotherapy is the most effective way to treat social phobia. In addition, most people with social phobias start in adolescence, so prevention is very important.\n\nCombination therapy is the most effective in patients with mild symptoms is true according to the passage.",
+  "predicted_answer": "Psychotherapy",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.525978, depth_selected=2, api_calls_used=0, timestamp=1776767121.5149424)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is visible in the preview:\n\n\"drug therapy and psychotherapy\"\n\nis mentioned as the combination that can be used when patients with mild symptoms receive either treatment, but this isn't what it says for \"mild symptoms\".\n\nHowever,\n\"The combination of drug therapy and psychotherapy is the most effective way to treat social phobia.\"\n\nwhich does indeed mention \"psychotherapy\" being recommended by itself as a 1st choice for those with \"mild symptoms\", suggesting it's just about 'the first line'.\n\nFINAL ANSWER: Psychotherapy",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 3
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "id": "5a8b57f25542995d1e6f1371",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "predicted": "Yes, both Scott Derrickson and Ed Wood were American filmmakers.",
+      "semantic_score": 4,
+      "em": 1,
+      "f1": 0.1818,
+      "time_s": 17.84
+    }
+  ],
+  "aggregate": {
+    "avg_semantic_score": 4.0,
+    "em": 1.0,
+    "f1": 0.1818,
+    "total": 1
+  }
+}

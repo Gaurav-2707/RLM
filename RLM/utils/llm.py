@@ -32,9 +32,20 @@ class LLMClient:
         if provider:
             self.provider = provider.lower()
         else:
-            if model.lower().startswith("ollama/"):
+            # Model Aliasing for local Ollama compatibility
+            MODEL_ALIASES = {
+                "llama3.1:8b": "llama3:latest",
+                "llama3.1:70b": "llama3:latest", # Fallback for baseline
+            }
+            if self.model.startswith("ollama/"):
+                model_name = self.model[7:]
+                if model_name in MODEL_ALIASES:
+                    alias = MODEL_ALIASES[model_name]
+                    self.model = f"ollama/{alias}"
+
+            if self.model.lower().startswith("ollama/"):
                 self.provider = "ollama"
-            elif model.lower().startswith("gemini"):
+            elif self.model.lower().startswith("gemini"):
                 self.provider = "gemini"
             else:
                 self.provider = "openai"

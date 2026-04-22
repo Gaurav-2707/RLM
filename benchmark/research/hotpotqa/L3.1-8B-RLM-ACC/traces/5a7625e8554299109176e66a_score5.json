@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "f1": 1.0,
+    "duration_s": 0.642294,
+    "timestamp": "2026-04-21T18:47:17.353409"
+  },
+  "query": "In which year was the King who made the 1925 Birthday Honours born?",
+  "predicted_answer": "1865",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.404315, depth_selected=1, api_calls_used=0, timestamp=1776797237.3577256)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The preview mentions that George V was King of the United Kingdom from 6 May 1910 until his death in 1936.\n\nFINAL ANSWER: 1865",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

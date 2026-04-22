@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "f1": 1.0,
+    "duration_s": 6.444377,
+    "timestamp": "2026-04-21T18:58:47.332103"
+  },
+  "query": "When was Poison's album \"Shut Up, Make Love\" released?",
+  "predicted_answer": "2000",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.590877, depth_selected=2, api_calls_used=0, timestamp=1776797927.3358107)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The Global Context Preview shows: **\"Shut Up, Make Love\" is a song by American rock band Poison; released in 2000**\n\nFINAL ANSWER: 2000",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

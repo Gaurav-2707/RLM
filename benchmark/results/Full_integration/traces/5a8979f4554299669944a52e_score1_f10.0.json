@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 1,
+    "em": 0,
+    "f1": 0.0,
+    "duration_s": 41.376154,
+    "timestamp": "2026-04-17T03:19:02.711891"
+  },
+  "query": "What is the middle name of the actress who plays Bobbi Bacha in Suburban Madness?",
+  "predicted_answer": "Rose McGowan.",
+  "acc_data": {
+    "depth_selected": 2,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.584091, depth_selected=2, api_calls_used=0, timestamp=1776395942.7540004)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "```python\n# Search for the key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\n# Look for the full name pattern, if it exists.\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')):\n            for key_phrase in ['plays', 'in']:\n                j = min(i, len(words)) - 1 # Look back past \"who\"\n                while True:\n                    if j < i or words[j] == key_phrase:\n                        name_words = words[max(0,j-1):i]\n                        if len(name_words) > 2: \n                            has_middle_word = True\n                            for k, word_k in enumerate(words[i+1:]):\n                                if not (word_k.startswith('_') or 'is' in [v.strip() for v in snippet.split('who')[0].split('.'))) and (\"that\" in [v.strip() for v in snippet.split('who')[0].split('.')]) == False:\n                                    has_middle_word = False\n                                    break \n                            if (has_middle_word):\n                                middle_name_match = ' '.join(name_words)\n                        break    \n                    j -= 1          \n                break  \n        i += 1\n\n# Output the result of our query within these lines:       \nprint(middle_name_match) \n\n\"\"\"\nHere is the middle name, from what we've extracted.\n\"\"\"\n\nmiddle_name = middle_name_match\n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 2,
+      "response": "```python\n# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')):\n            for key_phrase in ['plays', 'in']:\n                j = min(i, len(words)) - 1 # Look back past \"who\"\n                while True:\n                    if j < i or words[j] == key_phrase:\n                        name_words = words[max(0,j-1):i]\n                        has_middle_word = (len(name_words) > 2)\n                        middle_name_match = ' '.join(name_words)\n                        break  \n                    j -= 1          \n                break  \n            print(middle_name_match)\n            break\n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 3,
+      "response": "```python\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')):\n            for key_phrase in ['plays', 'in']:\n                j = min(i, len(words)) - 1 \n                while True:\n                    if j < i or words[j] == key_phrase:\n                        name_words = words[max(0,j-1):i]\n                        has_middle_word = (len(name_words) > 2)\n                        if (has_middle_word):\n                            middle_name_match = ' '.join([word for word in name_words[1:-1]])\n                    j -= 1          \n                break  \n        i += 1\nprint(middle_name_match) \n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 4,
+      "response": "```repl\n# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\n# Look for pattern: \"name is middle name surname\"\nfor snippet in matches:\n    # Get individual words\n    words = snippet.split()\n    \n    # Find the index of \"plays\" and extract surrounding names (as words)\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif words[i] == 'who':\n            actress_name_index = min(i + 5, len(words))\n            name_words = [word for word in words[max(actress_name_index - 4, 0):i+1]]\n            names = []\n            surname = ''\n            \n            for word in name_words:\n                if ('_' not in word) and (not(word.startswith('in') or 'is' in [v.strip() for v in snippet.split('who')[0].split('.'))) and (\"that\" in [v.strip() for v in snippet.split('who')[0].split('.')])):\n                    # Check it's actually inside the query\n                    if ([c.strip() for c in snippet.split('Plays',1)][0] == name_words[-1]):\n                        surname = name_words[-1]\n                else:\n                    names.append(word)\n            print(names[1])\n        i += 1\n```",
+      "code": "# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\n# Look for pattern: \"name is middle name surname\"\nfor snippet in matches:\n    # Get individual words\n    words = snippet.split()\n    \n    # Find the index of \"plays\" and extract surrounding names (as words)\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif words[i] == 'who':\n            actress_name_index = min(i + 5, len(words))\n            name_words = [word for word in words[max(actress_name_index - 4, 0):i+1]]\n            names = []\n            surname = ''\n            \n            for word in name_words:\n                if ('_' not in word) and (not(word.startswith('in') or 'is' in [v.strip() for v in snippet.split('who')[0].split('.'))) and (\"that\" in [v.strip() for v in snippet.split('who')[0].split('.')])):\n                    # Check it's actually inside the query\n                    if ([c.strip() for c in snippet.split('Plays',1)][0] == name_words[-1]):\n                        surname = name_words[-1]\n                else:\n                    names.append(word)\n            print(names[1])\n        i += 1",
+      "stdout": "",
+      "stderr": "SyntaxError: closing parenthesis ')' does not match opening parenthesis '[' (<string>, line 21)\nHINT: Syntax Error. Check if you used an f-string (e.g., f\"{context}\"), it likely crashed. Use \"...\" + context or llm_query(\"prompt\", context) instead.\n",
+      "engine_history": []
+    },
+    {
+      "iteration": 5,
+      "response": "```python\n# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')):\n            for key_phrase in ['plays', 'in']:\n                j = min(i, len(words)) - 1 # Look back past \"who\"\n                while True:\n                    if j < i or words[j] == key_phrase:\n                        name_words = words[max(0,j-1):i]\n                        has_middle_word = (len(name_words) > 2)\n                        middle_name_match = ' '.join([word for word in name_words[1:-1]])\n                        print(middle_name_match)\n                    j -= 1          \n                break  \n        i += 1\n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 6,
+      "response": "```python\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Find the index of \"plays\" and extract surrounding names (as words)\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif words[i] == 'who':\n            actress_name_index = min(i + 5, len(words))\n            name_words = [word for word in words[max(actress_name_index - 4, 0):i+1]]\n            \n            # Find the middle word(s) (if any)\n            middle_index = -1\n            for j, word in enumerate(name_words):\n                if '_in' not in word:\n                    middle_index += 1\n            middle_word = name_words[middle_index]\n            \n            print(middle_word)\n\n        i += 1\n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 7,
+      "response": "```python\n# Search for key phrases that match our query\nmatches = search_context(\"who plays Bobbi Bacha in Suburban Madness\")\n\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    play_index = -1\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')) :\n            play_index = max(play_index, i)\n        elif words[i] == 'in':\n            for j in range(max(0,play_index-4), i):\n                if '_' not in words[j]:\n                    middle_name_match = words[j]\n        \n        i += 1\nprint(middle_name_match) \n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 8,
+      "response": "```python\n# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Find the index of \"plays\" and extract surrounding names (as words)\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif words[i] == 'who':\n            actress_name_index = min(i + 5, len(words))\n            name_words = [word for word in words[max(actress_name_index - 4, 0):i+1]]\n            \n            # Find the middle word(s) (if any)\n            if len(name_words) > 2:\n                middle_word = ' '.join([name for name in name_words[1:-1]])\n                print(middle_word)\n\n        i += 1\n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 9,
+      "response": "```python\n# Search for key phrases that match our query\nmatches = search_context(\"actress who plays Bobbi Bacha in Suburban Madness\")\n\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    play_index = -1\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')) :\n            play_index = max(play_index, i)\n        elif words[i] == 'in':\n            for j in range(max(0,play_index-4), i):\n                if '_' not in words[j]:\n                    middle_name_match = words[j]\n\n        i += 1\nprint(middle_name_match) \n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    },
+    {
+      "iteration": 10,
+      "response": "```python\nmatches = search_context(\"actress who plays Bobbi Bacha\")\nmiddle_name_match = ''\nfor snippet in matches:\n    words = snippet.split()\n    \n    # Analyze name words, searching after \"who\" and before the gender specifier \"in\"\n    i = 0\n    while True:\n        if i == len(words):\n            break\n        elif (words[i] == 'who' or words[i] == 'WhO') and ((i + 1 <= len(words) and words[i+1] != 'is')):\n            for key_phrase in ['plays', 'in']:\n                j = min(i, len(words)) - 1 \n                while True:\n                    if j < i or words[j] == key_phrase:\n                        name_words = words[max(0,j-1):i]\n                        has_middle_word = (len(name_words) > 2)\n                        middle_name_match = ' '.join([word for word in name_words[1:-1]])\n                    j -= 1          \n                break  \n        i += 1\nprint(middle_name_match) \n```",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ]
+}

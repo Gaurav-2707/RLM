@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 5,
+    "f1": 1.0,
+    "duration_s": 6.319256,
+    "timestamp": "2026-04-21T21:19:10.914325"
+  },
+  "query": "Employment discrimination refers to a phenomenon that the employer has no legal basis and makes various restrictive provisions on potential employees in the future, so as to exclude the equal employment right of personnel who should be in line with relevant positions.\n\nA company recruits ordinary clerks and requires candidates to be unmarried women is employment discrimination according to the above definition.",
+  "predicted_answer": "entailment",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.559906, depth_selected=1, api_calls_used=0, timestamp=1776806350.9145465)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The answer is directly stated in the preview: requiring candidates to be unmarried women for an ordinary clerk position is an example of employment discrimination.\n\nFINAL ANSWER: entailment",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

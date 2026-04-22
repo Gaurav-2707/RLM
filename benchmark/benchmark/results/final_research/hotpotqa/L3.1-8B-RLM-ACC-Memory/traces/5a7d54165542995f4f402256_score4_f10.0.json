@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "em": 1,
+    "f1": 0.0,
+    "duration_s": 13.420354,
+    "timestamp": "2026-04-21T07:32:15.042317"
+  },
+  "query": "A medieval fortress in Dirleton, East Lothian, Scotland borders on the south side of what coastal area?",
+  "predicted_answer": "Yellowcraigs",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.496101, depth_selected=1, api_calls_used=0, timestamp=1776756735.0460804)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "A quick check of the Global Context Preview reveals that Dirleton Castle borders on the south side of ... Yellowcraigs! \n\nFINAL ANSWER: Yellowcraigs",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "trace_consistency": 4
+  }
+}

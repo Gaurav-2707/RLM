@@ -37,24 +37,13 @@ class MemoryREPL:
     # RLM_REPL outer-loop interface
     # ------------------------------------------------------------------
 
-    def retrieve_as_context(self, query: str, top_k: int = 3) -> str:
+    def retrieve_as_context(self, query: str, top_k: int = 3) -> tuple[str, List[str]]:
         """
-        Retrieve top_k memories relevant to *query* and return a formatted
-        string ready to be prepended to the system prompt.
-
-        Returns an empty string if no memories exist yet.
-
-        Format
-        ------
-        === Relevant Past Experience ===
-        [1] State: <state>
-            Reasoning: <reasoning>
-            Outcome: <outcome> (score: <score>)
-        [2] ...
+        Retrieve top_k memories relevant to *query* and return a (context_str, conflicts).
         """
-        results = self.system.retrieve(current_state=query, top_k=top_k)
+        results, conflicts = self.system.retrieve(current_state=query, top_k=top_k)
         if not results:
-            return ""
+            return "", []
 
         lines = ["=== Relevant Past Experience ==="]
         for i, (entry, score) in enumerate(results, 1):
@@ -64,7 +53,7 @@ class MemoryREPL:
             lines.append(
                 f"    Outcome: {entry.outcome} (score: {entry.outcome_score:.2f})"
             )
-        return "\n".join(lines)
+        return "\n".join(lines), conflicts
 
     def store(
         self,
@@ -114,7 +103,8 @@ class MemoryREPL:
         """
         def memory_retrieve(query: str, top_k: int = 3) -> str:
             """Retrieve relevant past experiences from memory. Returns a formatted string."""
-            return self.retrieve_as_context(query=query, top_k=top_k)
+            context, _ = self.retrieve_as_context(query=query, top_k=top_k)
+            return context
 
         return memory_retrieve
 
@@ -144,3 +134,10 @@ class MemoryREPL:
                 outcome=ex.get("outcome", ""),
                 outcome_score=ex.get("score", 1.0)
             )
+    def save(self, filepath: str):
+        """Save memories to disk."""
+        self.system.save(filepath)
+
+    def load(self, filepath: str):
+        """Load memories from disk."""
+        self.system.load(filepath)

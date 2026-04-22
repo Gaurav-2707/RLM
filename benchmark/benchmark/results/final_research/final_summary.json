@@ -1,0 +1,96 @@
+{
+  "hotpotqa": {
+    "L3.1-8B-Baseline": {
+      "avg_semantic_score": 3.86,
+      "em": 0.73,
+      "f1": 0.6347,
+      "avg_time": 3.92,
+      "total": 100,
+      "total_em": 73,
+      "avg_consistency": "N/A (Baseline)"
+    },
+    "L3.1-8B-RLM": {
+      "avg_semantic_score": 3.93,
+      "em": 0.74,
+      "f1": 0.6265,
+      "avg_time": 5.0,
+      "total": 100,
+      "total_em": 74,
+      "avg_consistency": 4.31
+    },
+    "L3.1-8B-RLM-ACC": {
+      "avg_semantic_score": 3.96,
+      "em": 0.75,
+      "f1": 0.6306,
+      "avg_time": 5.38,
+      "total": 100,
+      "total_em": 75,
+      "avg_consistency": 4.21
+    },
+    "L3.1-8B-RLM-ACC-Memory": {
+      "avg_semantic_score": 3.9,
+      "em": 0.72,
+      "f1": 0.597,
+      "avg_time": 5.23,
+      "total": 100,
+      "total_em": 72,
+      "avg_consistency": 4.16
+    },
+    "L3.1-70B-Baseline": {
+      "avg_semantic_score": 4.3,
+      "em": 0.81,
+      "f1": 0.7416,
+      "avg_time": 12.33,
+      "total": 100,
+      "total_em": 81,
+      "avg_consistency": "N/A (Baseline)"
+    }
+  },
+  "logiqa": {
+    "L3.1-8B-Baseline": {
+      "avg_semantic_score": 3.09,
+      "em": 0.52,
+      "f1": 0.0,
+      "avg_time": 7.23,
+      "total": 100,
+      "total_em": 52,
+      "avg_consistency": "N/A (Baseline)"
+    },
+    "L3.1-8B-RLM": {
+      "avg_semantic_score": 2.7,
+      "em": 0.29,
+      "f1": 0.0,
+      "avg_time": 7.72,
+      "total": 100,
+      "total_em": 29,
+      "avg_consistency": 3.79
+    },
+    "L3.1-8B-RLM-ACC": {
+      "avg_semantic_score": 2.92,
+      "em": 0.38,
+      "f1": 0.0,
+      "avg_time": 8.01,
+      "total": 100,
+      "total_em": 38,
+      "avg_consistency": 3.74
+    },
+    "L3.1-8B-RLM-ACC-Memory": {
+      "avg_semantic_score": 2.99,
+      "em": 0.41,
+      "f1": 0.0,
+      "avg_time": 7.96,
+      "total": 100,
+      "total_em": 41,
+      "avg_consistency": 3.96
+    },
+    "L3.1-70B-Baseline": {
+      "avg_semantic_score": 3.35,
+      "em": 0.54,
+      "f1": 0.0,
+      "avg_time": 3.86,
+      "total": 100,
+      "total_em": 54,
+      "avg_consistency": "N/A (Baseline)"
+    }
+  }
+}

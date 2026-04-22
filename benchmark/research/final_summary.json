@@ -1,0 +1,66 @@
+{
+  "hotpotqa": {
+    "L3.1-8B-Baseline": {
+      "avg_semantic_score": 4.1,
+      "em": 0.77,
+      "f1": 0.4976,
+      "total": 100
+    },
+    "L3.1-8B-RLM": {
+      "avg_semantic_score": 3.85,
+      "em": 0.71,
+      "f1": 0.5787,
+      "total": 100
+    },
+    "L3.1-8B-RLM-ACC": {
+      "avg_semantic_score": 3.67,
+      "em": 0.66,
+      "f1": 0.4738,
+      "total": 100
+    },
+    "L3.1-8B-RLM-ACC-Memory": {
+      "avg_semantic_score": 3.95,
+      "em": 0.77,
+      "f1": 0.6034,
+      "total": 100
+    },
+    "L3.1-70B-Baseline": {
+      "avg_semantic_score": 4.56,
+      "em": 0.91,
+      "f1": 0.6202,
+      "total": 100
+    }
+  },
+  "logiqa": {
+    "L3.1-8B-Baseline": {
+      "avg_semantic_score": 3.64,
+      "em": 0.66,
+      "f1": 0.0,
+      "total": 100
+    },
+    "L3.1-8B-RLM": {
+      "avg_semantic_score": 3.31,
+      "em": 0.52,
+      "f1": 0.23,
+      "total": 100
+    },
+    "L3.1-8B-RLM-ACC": {
+      "avg_semantic_score": 3.58,
+      "em": 0.6,
+      "f1": 0.24,
+      "total": 100
+    },
+    "L3.1-8B-RLM-ACC-Memory": {
+      "avg_semantic_score": 3.49,
+      "em": 0.65,
+      "f1": 0.08,
+      "total": 100
+    },
+    "L3.1-70B-Baseline": {
+      "avg_semantic_score": 3.97,
+      "em": 0.79,
+      "f1": 0.0,
+      "total": 100
+    }
+  }
+}

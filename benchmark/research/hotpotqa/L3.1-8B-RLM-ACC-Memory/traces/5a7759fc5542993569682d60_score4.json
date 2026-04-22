@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": true,
+    "enable_engine": true,
+    "semantic_score": 4,
+    "f1": 0.8,
+    "duration_s": 13.118895,
+    "timestamp": "2026-04-21T19:10:04.844804"
+  },
+  "query": "Where are Teide National Park and Garajonay National Park located?",
+  "predicted_answer": "Canary Islands",
+  "acc_data": {
+    "depth_selected": 1,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.417307, depth_selected=1, api_calls_used=0, timestamp=1776798604.8485608)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "The Global Context Preview indicates that both Teide National Park and Garajonay National Park are located in the Canary Islands, Spain.\n\nFinal Answer: Canary Islands",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 1.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}

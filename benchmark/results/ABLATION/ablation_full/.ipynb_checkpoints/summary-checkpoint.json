@@ -1,0 +1,29 @@
+{
+  "mode": "full",
+  "results": [
+    {
+      "id": "5a8b57f25542995d1e6f1371",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "predicted": "ERROR: Error during openai completion: Error code: 404 - {'error': {'message': \"model 'llama3.1:8b' not found\", 'type': 'not_found_error', 'param': None, 'code': None}}",
+      "type": "comparison",
+      "semantic_score": 1,
+      "em": 0,
+      "em_strict": 0,
+      "f1": 0.0,
+      "time_s": 3.53,
+      "mode": "full",
+      "index": 0,
+      "consistency_score": 1
+    }
+  ],
+  "aggregate": {
+    "avg_semantic_score": 1.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "avg_time": 3.53,
+    "total": 1,
+    "total_em": 0,
+    "avg_consistency": 1.0
+  }
+}

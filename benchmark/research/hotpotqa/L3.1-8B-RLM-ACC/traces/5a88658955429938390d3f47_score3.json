@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "model": "ollama/llama3.1:8b",
+    "recursive_model": "ollama/llama3.1:8b",
+    "enable_acc": true,
+    "enable_memory": false,
+    "enable_engine": true,
+    "semantic_score": 3,
+    "f1": 0.0,
+    "duration_s": 13.412421,
+    "timestamp": "2026-04-21T18:47:38.049425"
+  },
+  "query": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+  "predicted_answer": "registration",
+  "acc_data": {
+    "depth_selected": 3,
+    "records": [
+      "DepthRecord(step=0, complexity_score=0.638746, depth_selected=3, api_calls_used=0, timestamp=1776797258.0539858)"
+    ]
+  },
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "According to the [Global Context Preview], we find that \"Rostker v. Goldberg, 453 U.S. 57 (1981) , was a decision of the United States Supreme Court holding that the practice of requiring only men to register for the draft was constitutional.\"\n\nTherefore, since the answer is clearly visible in the preview, our FINAL ANSWER is:\n\nFINAL ANSWER: registration",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0
+  }
+}
