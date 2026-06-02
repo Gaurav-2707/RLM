@@ -1,64 +1,20 @@
-# ---------------------------------------------------------------------------
-# Python
-# ---------------------------------------------------------------------------
+# Python-generated files
 __pycache__/
-*.py[cod]
-*$py.class
-*.pyo
-*.pyd
-
-# Distribution / packaging
-*.egg
-*.egg-info/
-dist/
+*.py[oc]
 build/
-.eggs/
+dist/
 wheels/
+*.egg-info
 
 # Virtual environments
-.venv/
-venv/
-env/
-ENV/
+.venv
 
-# ---------------------------------------------------------------------------
-# Testing
-# ---------------------------------------------------------------------------
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-
-# ---------------------------------------------------------------------------
-# Environment / secrets
-# ---------------------------------------------------------------------------
-.env
-.env.*
-*.env
-
-# ---------------------------------------------------------------------------
-# IDE / editor
-# ---------------------------------------------------------------------------
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# ---------------------------------------------------------------------------
-# OS
-# ---------------------------------------------------------------------------
+# OS files
 .DS_Store
-Thumbs.db
-desktop.ini
 
-# ---------------------------------------------------------------------------
-# Project-specific
-# ---------------------------------------------------------------------------
-# REPL temp directories created at runtime
-repl_env_*/
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
 
-# Log files
-*.log
-integration_test.log
-continuity_report.md
+# Temporary data/memories/traces
+rlm_memory.json
+experiments/results/
