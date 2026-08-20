@@ -1,0 +1,7 @@
+import os
+from google import genai
+
+client = genai.Client(api_key=os.environ.get("GENAI_API_KEY"))
+for m in client.models.list():
+    if "generateContent" in m.supported_actions:
+        print(m.name)

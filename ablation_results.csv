@@ -1,0 +1,7 @@
+Method,Accuracy,Avg Steps,Avg Context Tokens,Failure Loops,Runtime (s),Source
+Direct LLM (GPT-4o / Zero-shot),12%,1,75000,0,15,contract-simulated
+Direct Small LLM (GPT-4o-mini / Zero-shot),10%,1,75000,0,12,contract-simulated
+ReAct-style Agent (LangChain),41%,14,25000,6,140,contract-simulated
+Best-of-N (N=20),68%,20,15000,0,320,contract-simulated
+RLM-1 (No Episodic Memory),54%,18,65000,8,210,contract-simulated
+RLM-1 (Full Neuro-Symbolic System),86%,4,4200,1,35,contract-simulated

@@ -55,7 +55,7 @@ def test_overfitting(traces_subset):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--trace_dir", type=str, default="RLM/experiments/results/scaling_law_ollama_llama3.1_8b_gsm8k")
-    parser.add_argument("--out_path", type=str, default="RLM/weights/dqn_controller.zip")
+    parser.add_argument("--out_path", type=str, default="weights/dqn_controller.zip")
     parser.add_argument("--timesteps", type=int, default=50000)
     parser.add_argument("--skip_overfit", action="store_true", help="Skip the 10-trace overfit test")
     args = parser.parse_args()

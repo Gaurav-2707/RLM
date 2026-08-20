@@ -24,7 +24,11 @@ class EpisodicMemorySystem:
         self.decay_rate = decay_rate
         self.conflict_thresh = conflict_thresh
         self.memories: List[MemoryEntry] = []
-        self.retriever = DenseRetriever()
+        try:
+            self.retriever = DenseRetriever()
+        except Exception:
+            from .retrieval import BM25Retriever
+            self.retriever = BM25Retriever()
         self.global_step_count = 0
 
     def add_memory(self, entry: MemoryEntry) -> List[str]:
@@ -90,17 +94,42 @@ class EpisodicMemorySystem:
             if m.outcome_score > 0:
                 scored_memories.append((m, total_score))
 
-            # Logic for "Failure Pattern" detection (Conflict Awareness for Paper)
+             # Logic for "Failure Pattern" detection (Conflict Awareness for Paper)
             # If similarity is high but outcome was bad, flag as internal conflict 
             if relevance > self.conflict_thresh and m.outcome_score < 0:
+                path = self.get_path(m)
+                path_str = " -> ".join(f"[{p.action}]" for p in path)
                 conflicts.append(
                     f"Warning: A previous similar approach for '{m.state[:50]}...' "
-                    f"failed (score: {m.outcome_score}). Reason: {m.outcome}."
+                    f"failed (score: {m.outcome_score}). Path: {path_str}. Reason: {m.outcome}."
                 )
 
         # Sort by total_score descending
         scored_memories.sort(key=lambda x: x[1], reverse=True)
         return scored_memories[:top_k], list(set(conflicts))
+
+    def get_path(self, entry: MemoryEntry) -> List[MemoryEntry]:
+        """Traverses backwards from the entry to reconstruct the path of actions."""
+        path = []
+        visited = set()
+        
+        # Helper to find entry by ID
+        id_to_mem = {m.entry_id: m for m in self.memories if m.entry_id}
+        
+        curr = entry
+        while curr and curr.entry_id not in visited:
+            visited.add(curr.entry_id)
+            path.append(curr)
+            # Take the first parent for linear sequence representation (if multiple)
+            if curr.parent_ids and curr.parent_ids[0] in id_to_mem:
+                curr = id_to_mem[curr.parent_ids[0]]
+            else:
+                curr = None
+                
+        # Return path starting from the oldest parent
+        path.reverse()
+        return path
+
     def save(self, filepath: str):
         """Persist memories to a JSON file."""
         import json

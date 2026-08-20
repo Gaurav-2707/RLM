@@ -1,0 +1,32 @@
+[
+  {
+    "task_id": "fix-off-by-one",
+    "task_description": "Fix the off-by-one error in range_sum so it includes the endpoint.",
+    "repo_path": "/sandbox/repos/range_sum",
+    "test_command": "pytest -q",
+    "error_type": "off_by_one",
+    "novel_error": false,
+    "requires_rollback": false,
+    "broken_states": {}
+  },
+  {
+    "task_id": "null-deref-novel",
+    "task_description": "Handle the None config case that crashes load_settings.",
+    "repo_path": "/sandbox/repos/settings",
+    "test_command": "pytest -q tests/test_settings.py",
+    "error_type": "none_deref",
+    "novel_error": true,
+    "requires_rollback": false,
+    "broken_states": {}
+  },
+  {
+    "task_id": "needs-rollback",
+    "task_description": "Refactor parse(); the obvious greedy fix breaks an edge test and must be reverted before the correct fix.",
+    "repo_path": "/sandbox/repos/parser",
+    "test_command": "pytest -q",
+    "error_type": "regression",
+    "novel_error": false,
+    "requires_rollback": true,
+    "broken_states": {"0": true}
+  }
+]

@@ -1,16 +1,67 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = [".."]
+include = ["RLM*"]
+
 [project]
 name = "rlm"
 version = "0.1.0"
-description = "Add your description here"
+description = "RLM Runtime — turn any LLM into a Recursive Language Model"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
-    "datasets>=4.8.5",
-    "gymnasium>=1.2.3",
-    "matplotlib>=3.10.9",
-    "numpy>=2.4.5",
-    "python-dotenv>=1.2.2",
-    "scipy>=1.17.1",
-    "stable-baselines3>=2.8.0",
-    "torch>=2.12.0",
+    # Core Runtime — no GPU required
+    "python-dotenv>=1.0.0",
+    "networkx>=3.0",
+    "rich>=13.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "pydantic>=2.0.0",
+    "websockets>=12.0",
+    # LLM provider SDKs (all optional at runtime, imported lazily)
+    "openai>=1.20.0",
+    "anthropic>=0.25.0",
+    "google-genai>=1.0.0",
+    "mistralai>=1.0.0",
+    "cohere>=5.0.0",
 ]
+
+[project.optional-dependencies]
+# Full training stack — requires GPU and significant disk space
+training = [
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "bitsandbytes>=0.43.0",
+    "datasets>=2.18.0",
+    "sentence-transformers>=3.0.0",
+    "accelerate>=0.29.0",
+]
+# RL experiments
+rl = [
+    "gymnasium>=0.29.0",
+    "stable-baselines3>=2.2.0",
+    "matplotlib>=3.7.0",
+]
+# SWE-bench Lite evaluation harness (experiments/swe_bench_eval.py)
+swe-bench = [
+    "datasets>=2.18.0",
+    "gitpython>=3.1.0",
+]
+# All optional extras
+all = [
+    "rlm[training]",
+    "rlm[rl]",
+    "rlm[swe-bench]",
+]
+
+[project.scripts]
+rlm = "RLM.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "demo_target"]

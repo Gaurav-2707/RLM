@@ -53,6 +53,10 @@ class ConformalCalibrator:
         # ACI online state
         self._online_errors: List[bool] = []
         
+        # Online Calibration Buffer
+        self._calibration_buffer: List[Tuple[float, bool, int]] = []
+        self.window_size = 50
+        
     def _nonconformity_score(self, confidence: float, is_correct: bool) -> float:
         """
         Compute the nonconformity score for a single (confidence, correctness) pair.
@@ -151,6 +155,39 @@ class ConformalCalibrator:
         if not self._online_errors:
             return 0.0
         return sum(self._online_errors) / len(self._online_errors)
+
+    def add_online_observation(self, confidence: float, is_correct: bool, iteration: int) -> None:
+        """
+        Add a new online observation and dynamically adjust conformal quantiles.
+        
+        Parameters
+        ----------
+        confidence : float
+            Confidence score of the exit decision.
+        is_correct : bool
+            Whether the decision was actually correct.
+        iteration : int
+            The reasoning iteration at which the exit occurred.
+        """
+        # 1. Update ACI alpha
+        self.aci_update(is_correct)
+        
+        # 2. Append to online buffer
+        self._calibration_buffer.append((confidence, is_correct, iteration))
+        if len(self._calibration_buffer) > self.window_size:
+            self._calibration_buffer.pop(0)
+            
+        # 3. Recalculate quantile for this iteration based on buffer content
+        iter_scores = [
+            self._nonconformity_score(conf, corr)
+            for conf, corr, iter_num in self._calibration_buffer
+            if iter_num == iteration
+        ]
+        
+        n = len(iter_scores)
+        if n >= 5: # Only update if we have sufficient samples to avoid high variance
+            quantile_level = min(1.0, (1 - self.alpha) * (1 + 1.0 / n))
+            self._quantiles[iteration] = float(np.quantile(iter_scores, quantile_level))
     
     def save(self, filepath: str) -> None:
         """Save calibration state to JSON."""

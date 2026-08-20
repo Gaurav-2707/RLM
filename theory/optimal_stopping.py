@@ -113,15 +113,21 @@ class ReasoningOvershootTheory:
         return q_peak * alpha * np.exp(-alpha * t) - self.beta
     
     def bellman_backward_induction(self, max_T: int = 20, q_peak: float = 0.9,
-                                    n_samples: int = 10000) -> List[float]:
+                                    n_samples: int = 10000,
+                                    c_vector: Optional[List[float]] = None) -> Tuple[List[float], List[bool]]:
         """
         Exact backward induction solution to the Bellman equation.
         
-        V(t) = max{ q(t),  -c + E[V(t+1)] }
+        V(t) = max{ q(t),  -c_t + E[V(t+1)] }
         
         At each step the agent chooses between the current quality (stopping)
-        and paying cost c for one more iteration (continuing).
+        and paying cost c_t for one more iteration (continuing).
         """
+        if c_vector is None:
+            c_vector = [self.c] * (max_T + 1)
+        elif len(c_vector) < max_T + 1:
+            c_vector = list(c_vector) + [self.c] * (max_T + 1 - len(c_vector))
+
         np.random.seed(42)  # Reproducibility for the paper
         V = np.zeros(max_T + 1)
         stop_decisions = [False] * (max_T + 1)
@@ -140,18 +146,20 @@ class ReasoningOvershootTheory:
             noise = np.random.normal(0, sigma_next, n_samples)
             observed_quality_samples = np.clip(q_next_mean + noise, 0, 1)
             
-            # Expected value of continuing: pay cost c, then get V(t+1)
+            # Expected value of continuing: pay cost c_t, then get V(t+1)
             # But V(t+1) is evaluated on the OBSERVED (noisy) quality
             # The agent at t+1 will choose max(observed_q, continuation_from_t+2)
             # We approximate this by: agent sees noisy q and compares to V[t+2]
+            c_t = c_vector[t]
             if t + 1 < max_T:
-                continuation_from_next = -self.c + V[t + 2]
+                c_next = c_vector[t + 1]
+                continuation_from_next = -c_next + V[t + 2]
                 # Agent at t+1 chooses max(noisy_q, continue_further)
                 v_next_samples = np.maximum(observed_quality_samples, continuation_from_next)
             else:
                 v_next_samples = observed_quality_samples
             
-            expected_continuation = -self.c + np.mean(v_next_samples)
+            expected_continuation = -c_t + np.mean(v_next_samples)
             
             if q_t >= expected_continuation:
                 V[t] = q_t

@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Add project root to PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/.." >> $GITHUB_ENV
+
+      - name: Run tests
+        env:
+          OPENAI_API_KEY: "sk-test-fake-key-for-ci-only"
+        run: uv run python -m pytest tests/ -q --tb=short
+
+      - name: Verify CLI entry point
+        run: uv run rlm --help
+
+      - name: Verify SWE-bench harness CLI
+        run: uv run python -m experiments.swe_bench_eval --help
+
+      - name: Verify synthetic generator CLI
+        run: uv run python -m training.synthetic --help

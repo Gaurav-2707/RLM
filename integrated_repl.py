@@ -17,6 +17,7 @@ Usage:
     answer = rlm.completion(context=..., query=...)
 """
 
+import os
 from typing import Dict, List, Optional, Any
 
 from RLM.rlm_repl import RLM_REPL
@@ -25,6 +26,7 @@ from RLM.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_pr
 import RLM.utils.utils as utils
 from RLM.utils.tracing import TraceStorage
 from RLM.utils.llm import DEFAULT_MODEL
+from RLM.utils.trajectory import TrajectoryCollector
 
 
 class IntegratedRLM(RLM_REPL):
@@ -63,6 +65,10 @@ class IntegratedRLM(RLM_REPL):
         enable_acc: bool = False,
         enable_memory: bool = False,
         enable_engine: bool = False,
+        enable_tdrl: bool = False,
+        repo_path: Optional[str] = None,
+        test_command: Optional[str] = None,
+        contribute_traces: bool = False,
         memory_capacity: int = 200,
         memory_path: str = "rlm_memory.json",
         force_iterations: bool = False,
@@ -78,10 +84,27 @@ class IntegratedRLM(RLM_REPL):
         self.enable_acc = enable_acc
         self.enable_memory = enable_memory
         self.enable_engine = enable_engine
+        self.enable_tdrl = enable_tdrl
+        self.repo_path = repo_path
+        self.test_command = test_command
+        self.contribute_traces = contribute_traces
         self.force_iterations = force_iterations
         self._current_iteration = 0
 
         self.tracer = TraceStorage()
+
+        # Trajectory collector — always on, contribute flag controls upload
+        from RLM.utils.trajectory import TrajectoryCollector
+        self._trajectory_collector = TrajectoryCollector(contribute=contribute_traces)
+
+        # TDRL: file snapshots and env
+        self._file_snapshots: Dict[str, str] = {}
+        self._tdrl_env = None
+        if enable_tdrl:
+            if not repo_path:
+                raise ValueError("enable_tdrl=True requires repo_path to be set")
+            if not test_command:
+                raise ValueError("enable_tdrl=True requires test_command to be set")
 
         # Lazy-init adapters
         self._acc_adapter = None
@@ -172,7 +195,101 @@ class IntegratedRLM(RLM_REPL):
                 return f"Budget extended. Max iterations is now {self._max_iterations}. Reason: {reason}"
             plugins["extend_budget"] = extend_budget
 
+        # ── TDRL plugins: edit_file, run_tests, rollback ─────────────────
+        if self.enable_tdrl:
+            import subprocess
+            import glob as _glob
+
+            def _snapshot_repo():
+                """Snapshot all Python files in the repo to RAM."""
+                self._file_snapshots = {}
+                for fpath in _glob.glob(
+                    os.path.join(self.repo_path, "**", "*.py"), recursive=True
+                ):
+                    try:
+                        with open(fpath, "r", encoding="utf-8") as _f:
+                            self._file_snapshots[fpath] = _f.read()
+                    except Exception:
+                        pass
+
+            # Take initial snapshot
+            _snapshot_repo()
+
+            def edit_file(file_path: str, new_content: str) -> str:
+                """
+                Write new_content to file_path.
+                Automatically snapshots the file first so rollback() can restore it.
+                Returns: confirmation string or error.
+                """
+                abs_path = os.path.join(self.repo_path, file_path) if not os.path.isabs(file_path) else file_path
+                # Snapshot before editing
+                if abs_path not in self._file_snapshots:
+                    try:
+                        with open(abs_path, "r", encoding="utf-8") as _f:
+                            self._file_snapshots[abs_path] = _f.read()
+                    except FileNotFoundError:
+                        self._file_snapshots[abs_path] = ""  # new file
+                try:
+                    os.makedirs(os.path.dirname(abs_path), exist_ok=True)
+                    with open(abs_path, "w", encoding="utf-8") as _f:
+                        _f.write(new_content)
+                    return f"✓ Edited {file_path} ({len(new_content)} chars)"
+                except Exception as e:
+                    return f"✗ Edit failed: {e}"
+
+            def run_tests() -> str:
+                """
+                Run the test command and return structured output.
+                Returns: pass/fail summary + stdout (last 3000 chars).
+                """
+                try:
+                    result = subprocess.run(
+                        self.test_command,
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        cwd=self.repo_path,
+                        timeout=120,
+                    )
+                    output = (result.stdout + result.stderr)[-3000:]
+                    passed = result.returncode == 0
+                    status = "✓ TESTS PASSED" if passed else "✗ TESTS FAILED"
+                    return f"{status}\n\n{output}"
+                except subprocess.TimeoutExpired:
+                    return "✗ TEST TIMEOUT (120s)"
+                except Exception as e:
+                    return f"✗ Test runner error: {e}"
+
+            def rollback(reason: str = "reverting failed edit") -> str:
+                """
+                Physically restore all files to their pre-edit snapshots.
+                Use this when run_tests() fails and you want to try a different approach.
+                Returns: list of restored files.
+                """
+                restored = []
+                for fpath, content in self._file_snapshots.items():
+                    try:
+                        if content == "":
+                            if os.path.exists(fpath):
+                                os.remove(fpath)
+                            restored.append(f"deleted {os.path.basename(fpath)}")
+                        else:
+                            with open(fpath, "w", encoding="utf-8") as _f:
+                                _f.write(content)
+                            restored.append(os.path.basename(fpath))
+                    except Exception as e:
+                        restored.append(f"failed to restore {fpath}: {e}")
+                # Re-snapshot clean state
+                _snapshot_repo()
+                summary = ", ".join(restored) if restored else "nothing to restore"
+                return f"↩ Rollback complete. Restored: {summary}. Reason: {reason}"
+
+            plugins["edit_file"] = edit_file
+            plugins["run_tests"] = run_tests
+            plugins["rollback"] = rollback
+
         self._final_answer_submitted = None
+        self._messages_snapshots = {}
         self._snapshot_answers = {}
         self._snapshot_confidences = {}
         
@@ -183,6 +300,10 @@ class IntegratedRLM(RLM_REPL):
             
             current_iter = getattr(self, '_current_iteration', 0)
             
+            self._snapshot_answers[current_iter] = str(answer)
+            self._snapshot_confidences[current_iter] = float(confidence)
+
+            executed_code = self._code_history[-1] if self._code_history else None
             gate_result = {"exit": True}
             if self.enable_acc and not self.force_iterations:
                 gate_result = self._acc_controller.should_exit(
@@ -190,14 +311,12 @@ class IntegratedRLM(RLM_REPL):
                     retrieved_context=context_str[:5000],
                     llm_client=self.llm,
                     confidence=float(confidence),
-                    iteration=current_iter
+                    iteration=current_iter,
+                    executed_code=executed_code
                 )
             
-            if not gate_result["exit"] and not self.force_iterations:
+            if not gate_result["exit"] and not self.force_iterations and not gate_result.get("rollback"):
                 return "ERROR: Answer not supported by context. You must search for more information."
-            
-            self._snapshot_answers[current_iter] = str(answer)
-            self._snapshot_confidences[current_iter] = float(confidence)
             
             if self.force_iterations:
                 return f"Snapshot answer '{answer}' recorded with confidence {confidence}. FORCE_ITERATIONS is active. You must continue verifying or exploring alternative approaches."
@@ -205,8 +324,22 @@ class IntegratedRLM(RLM_REPL):
                 if gate_result.get("rollback"):
                     peak_iter = gate_result.get("peak_iteration")
                     rolled_back_answer = self._snapshot_answers.get(peak_iter, answer)
-                    self._final_answer_submitted = str(rolled_back_answer)
-                    return f"ACC ROLLBACK: Confidence dropped. Rolling back to peak answer '{rolled_back_answer}' from iteration {peak_iter}. Exit triggered."
+                    
+                    if gate_result.get("terminal_rollback", True):
+                        self._final_answer_submitted = str(rolled_back_answer)
+                        return f"ACC TERMINAL ROLLBACK: Confidence dropped. Rolling back to peak answer '{rolled_back_answer}' from iteration {peak_iter}. Exit triggered."
+                    else:
+                        if peak_iter in self._messages_snapshots:
+                            import copy
+                            self.messages = copy.deepcopy(self._messages_snapshots[peak_iter])
+                        
+                        rollback_msg = (
+                            f"ACC DIRECTED ROLLBACK: Confidence fell to {confidence:.2f} (peak was {self._snapshot_confidences.get(peak_iter, 1.0):.2f}). "
+                            f"We have rolled back the execution context to the state of iteration {peak_iter} where you obtained the peak answer '{rolled_back_answer}'. "
+                            f"Reason: {gate_result['reason']}. Please execute a different reasoning path or run query search tool to verify info."
+                        )
+                        self.messages.append({"role": "user", "content": rollback_msg})
+                        return f"WARNING: ACC Rollback triggered. Context restored to iteration {peak_iter}. {rollback_msg}"
                 else:
                     self._final_answer_submitted = str(answer)
                     return f"Final answer '{answer}' accepted with confidence {confidence}."
@@ -219,6 +352,15 @@ class IntegratedRLM(RLM_REPL):
             context_str=context_str,
             recursive_model=self.recursive_model,
             plugins=plugins if plugins else None,
+        )
+
+        # ── Start trajectory collection ───────────────────────────────────
+        self._trajectory_collector.start(
+            model_provider=getattr(self.llm, "provider", "unknown"),
+            model_name=getattr(self.llm, "model", "unknown"),
+            task_description=query or "",
+            repo_path=self.repo_path or "",
+            test_command=self.test_command or "",
         )
 
         # --- ACC episode start ---
@@ -268,6 +410,9 @@ class IntegratedRLM(RLM_REPL):
         # Standard REPL loop
         for iteration in range(self._max_iterations):
             self._current_iteration = iteration + 1
+            import copy
+            self._messages_snapshots[iteration + 1] = copy.deepcopy(self.messages)
+            
             response = self.llm.completion(
                 self.messages + [next_action_prompt(query, iteration)]
             )
@@ -364,23 +509,47 @@ class IntegratedRLM(RLM_REPL):
     # Post-completion hooks (memory store, ACC report)
     # ------------------------------------------------------------------
 
-    def _post_completion(self, query: str, answer: str):
-        """Called after every successful completion to store memory and close ACC episode."""
+    def _post_completion(self, query: str, answer: str, success: bool = True):
+        """Called after every completion to store memory, close ACC, save trajectory."""
         if self.enable_acc:
             self.last_acc_report = self._acc_controller.end_episode()
 
         if self.enable_memory and self._memory_adapter:
-            # Store this QA pair with a neutral-positive outcome initially
             reasoning_summary = f"Ran REPL loop, depth={getattr(self, 'last_depth', 'N/A')}"
             self._memory_adapter.store(
                 query=query,
                 reasoning=reasoning_summary,
                 action="repl_completion",
                 outcome=f"Answered: {answer[:200]}",
-                outcome_score=0.6,
+                outcome_score=0.6 if success else -0.5,
             )
-            # Persist immediately
             self._memory_adapter.save(self._memory_path)
+
+        # ── Trajectory serialization (training data collection) ───────────
+        if self._trajectory_collector.active is not None:
+            final_diff = ""
+            if self.enable_tdrl:
+                import difflib
+                diffs = []
+                for fpath, before in self._file_snapshots.items():
+                    if os.path.exists(fpath):
+                        with open(fpath, "r", encoding="utf-8") as _f:
+                            after = _f.read()
+                        if before != after:
+                            diffs.extend(difflib.unified_diff(
+                                before.splitlines(), after.splitlines(),
+                                fromfile=f"a/{os.path.basename(fpath)}",
+                                tofile=f"b/{os.path.basename(fpath)}",
+                                lineterm="",
+                            ))
+                final_diff = "\n".join(diffs)
+
+            path = self._trajectory_collector.finish(
+                success=success,
+                final_diff=final_diff,
+            )
+            if path:
+                self.logger.log_final_response(f"[Trajectory saved: {path}]")
 
         # Finalise tracer
         self.tracer.set_predicted_answer(answer)
@@ -406,3 +575,10 @@ class IntegratedRLM(RLM_REPL):
             self._memory_adapter.system.memories[-1].outcome_score = normalized_score
             self._memory_adapter.save(self._memory_path)
             self.logger.info(f"Memory Updated: Last entry score set to {normalized_score} (Judge: {judge_score})")
+
+        if self.enable_acc and hasattr(self, '_acc_controller') and getattr(self._acc_controller, '_conformal', None) is not None:
+            is_correct = (judge_score >= 4)
+            last_iter = self._current_iteration
+            last_conf = self._snapshot_confidences.get(last_iter, 1.0)
+            self._acc_controller.update_conformal(is_correct, last_conf, last_iter)
+            self.logger.info(f"Conformal Updated: Online observation added (Correct: {is_correct}, Conf: {last_conf}, Iter: {last_iter})")

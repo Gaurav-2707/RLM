@@ -8,9 +8,11 @@ across an episode.
 
 from .controller import AdaptiveComputeController
 from .models import DepthRecord, EpisodeReport
+from .complexity import ComplexityScorer
 
 __all__ = [
     "AdaptiveComputeController",
     "DepthRecord",
     "EpisodeReport",
+    "ComplexityScorer",
 ]

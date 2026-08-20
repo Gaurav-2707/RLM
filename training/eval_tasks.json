@@ -1,0 +1,82 @@
+[
+  {
+    "task_id": "off_by_one_loop",
+    "task_description": "The function `sum_range(a, b)` returns the sum of integers from a to b inclusive, but it currently excludes b. Fix the off-by-one error.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_sum_range -x -q",
+    "error_type": "off_by_one",
+    "novel_error": false,
+    "requires_rollback": false,
+    "broken_states": {"0": true, "1": false}
+  },
+  {
+    "task_id": "none_return_bug",
+    "task_description": "The function `find_max(lst)` raises AttributeError when called on an empty list because it returns None and the caller accesses .value on the result. Add a guard that returns None gracefully.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_find_max_empty -x -q",
+    "error_type": "null_deref",
+    "novel_error": false,
+    "requires_rollback": false,
+    "broken_states": {"0": true}
+  },
+  {
+    "task_id": "wrong_operator",
+    "task_description": "The function `divide(a, b)` uses integer floor division `//` but should use true division `/`. Fix the operator so `divide(7, 2)` returns 3.5.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py -x -q",
+    "error_type": "wrong_operator",
+    "novel_error": false,
+    "requires_rollback": false,
+    "broken_states": {"0": true, "1": false}
+  },
+  {
+    "task_id": "rollback_required_sort",
+    "task_description": "The function `sort_descending(lst)` is broken. A first fix attempt using `sorted(lst)` passes the smoke test but fails the ordering assertion. You must rollback and use `sorted(lst, reverse=True)` instead.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_sort_descending -x -q",
+    "error_type": "wrong_sort_order",
+    "novel_error": false,
+    "requires_rollback": true,
+    "broken_states": {"0": true, "1": true, "2": false}
+  },
+  {
+    "task_id": "key_error_dict",
+    "task_description": "The function `get_user_score(data, user_id)` raises KeyError when user_id is missing. It should return 0 as a default. Fix it using `.get()` with a default.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_get_user_score -x -q",
+    "error_type": "missing_key_guard",
+    "novel_error": false,
+    "requires_rollback": false,
+    "broken_states": {"0": true}
+  },
+  {
+    "task_id": "novel_type_error",
+    "task_description": "The function `concatenate(a, b)` raises TypeError when b is an integer instead of a string. Add type coercion so it works for any scalar b.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_concatenate_types -x -q",
+    "error_type": "type_coercion",
+    "novel_error": true,
+    "requires_rollback": false,
+    "broken_states": {"0": true, "1": false}
+  },
+  {
+    "task_id": "rollback_required_auth",
+    "task_description": "The `authenticate(token)` function in auth.py returns True for all non-empty tokens. A first fix that checks `len(token) > 8` still fails the constant-time comparison test. Rollback and implement hmac.compare_digest instead.",
+    "repo_path": "advanced_demo_target",
+    "test_command": "pytest advanced_demo_target/test_auth.py -x -q",
+    "error_type": "insecure_comparison",
+    "novel_error": false,
+    "requires_rollback": true,
+    "broken_states": {"0": true, "1": true, "2": false}
+  },
+  {
+    "task_id": "novel_async_bug",
+    "task_description": "The function `fetch_all(urls)` uses `asyncio.run()` inside a loop, which raises RuntimeError when called from an already-running event loop. Refactor to use `asyncio.gather()` in a single event loop call.",
+    "repo_path": "demo_target",
+    "test_command": "pytest demo_target/test_math.py::test_fetch_all -x -q",
+    "error_type": "nested_event_loop",
+    "novel_error": true,
+    "requires_rollback": true,
+    "broken_states": {"0": true, "1": true, "2": false}
+  }
+]
