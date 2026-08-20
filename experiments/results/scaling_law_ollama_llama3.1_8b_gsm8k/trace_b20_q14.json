@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "question": "Question 14",
+    "gold_answer": "Answer_6",
+    "budget": 20,
+    "is_correct": true,
+    "oracle_correct": true,
+    "actual_iterations": 20
+  },
+  "repl_history": [
+    {
+      "iteration": 1,
+      "confidence": 0.5398955391731324,
+      "snapshot_answer": "Answer_1",
+      "context_length": 500
+    },
+    {
+      "iteration": 2,
+      "confidence": 0.5774290998192776,
+      "snapshot_answer": "Answer_2",
+      "context_length": 1000
+    },
+    {
+      "iteration": 3,
+      "confidence": 0.6658057082972839,
+      "snapshot_answer": "Answer_3",
+      "context_length": 1500
+    },
+    {
+      "iteration": 4,
+      "confidence": 0.753982634590284,
+      "snapshot_answer": "Answer_4",
+      "context_length": 2000
+    },
+    {
+      "iteration": 5,
+      "confidence": 0.8712082973200959,
+      "snapshot_answer": "Answer_5",
+      "context_length": 2500
+    },
+    {
+      "iteration": 6,
+      "confidence": 0.95,
+      "snapshot_answer": "Answer_6",
+      "context_length": 3000
+    },
+    {
+      "iteration": 7,
+      "confidence": 0.799314999803071,
+      "snapshot_answer": "Answer_7",
+      "context_length": 3500
+    },
+    {
+      "iteration": 8,
+      "confidence": 0.7947822703869509,
+      "snapshot_answer": "Answer_8",
+      "context_length": 4000
+    },
+    {
+      "iteration": 9,
+      "confidence": 0.8711135179305932,
+      "snapshot_answer": "Answer_9",
+      "context_length": 4500
+    },
+    {
+      "iteration": 10,
+      "confidence": 0.8183771585050356,
+      "snapshot_answer": "Answer_10",
+      "context_length": 5000
+    },
+    {
+      "iteration": 11,
+      "confidence": 0.7218161834837016,
+      "snapshot_answer": "Answer_11",
+      "context_length": 5500
+    },
+    {
+      "iteration": 12,
+      "confidence": 0.66990017390841,
+      "snapshot_answer": "Answer_12",
+      "context_length": 6000
+    },
+    {
+      "iteration": 13,
+      "confidence": 0.6420015663359131,
+      "snapshot_answer": "Answer_13",
+      "context_length": 6500
+    },
+    {
+      "iteration": 14,
+      "confidence": 0.6346758986365209,
+      "snapshot_answer": "Answer_14",
+      "context_length": 7000
+    },
+    {
+      "iteration": 15,
+      "confidence": 0.5208603717400797,
+      "snapshot_answer": "Answer_15",
+      "context_length": 7500
+    },
+    {
+      "iteration": 16,
+      "confidence": 0.5271311731288327,
+      "snapshot_answer": "Answer_16",
+      "context_length": 8000
+    },
+    {
+      "iteration": 17,
+      "confidence": 0.4245707963061205,
+      "snapshot_answer": "Answer_17",
+      "context_length": 8500
+    },
+    {
+      "iteration": 18,
+      "confidence": 0.4959611561302639,
+      "snapshot_answer": "Answer_18",
+      "context_length": 9000
+    },
+    {
+      "iteration": 19,
+      "confidence": 0.476359796985137,
+      "snapshot_answer": "Answer_19",
+      "context_length": 9500
+    },
+    {
+      "iteration": 20,
+      "confidence": 0.38784067688503127,
+      "snapshot_answer": "Answer_20",
+      "context_length": 10000
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "question": "Question 27",
+    "gold_answer": "Answer_5",
+    "budget": 2,
+    "is_correct": true,
+    "oracle_correct": true,
+    "actual_iterations": 2
+  },
+  "repl_history": [
+    {
+      "iteration": 1,
+      "confidence": 0.5952170121439077,
+      "snapshot_answer": "Answer_1",
+      "context_length": 500
+    },
+    {
+      "iteration": 2,
+      "confidence": 0.5268754005982162,
+      "snapshot_answer": "Answer_2",
+      "context_length": 1000
+    }
+  ]
+}

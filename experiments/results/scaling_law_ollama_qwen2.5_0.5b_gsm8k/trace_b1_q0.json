@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "model": "ollama/qwen2.5:0.5b",
+    "recursive_model": "ollama/qwen2.5:0.5b",
+    "enable_acc": false,
+    "enable_memory": false,
+    "enable_engine": false,
+    "model_label": "ollama_qwen2.5_0.5b",
+    "dataset": "gsm8k",
+    "question": "Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+    "gold_answer": "Janet sells 16 - 3 - 4 = <<16-3-4=9>>9 duck eggs a day.\nShe makes 9 * 2 = $<<9*2=18>>18 every day at the farmer’s market.\n#### 18",
+    "is_correct": false,
+    "oracle_correct": false,
+    "budget": 1,
+    "duration_s": 15.925731,
+    "timestamp": "2026-08-19T00:20:53.082623"
+  },
+  "query": "Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+  "predicted_answer": "unknown",
+  "acc_data": {},
+  "memory_data": {},
+  "repl_history": [
+    {
+      "iteration": 1,
+      "response": "[Global Context Preview (First 2000 chars)]\nInsufficient information.\n\nQuery: \"Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?\"\nFINAL ANSWER: In order to calculate how much Janet makes at the farmers' market each day, we first need to determine what percentage of her total ducks are remaining. Since 16 eggs are laid daily by her ducks and it's not specified whether this applies to all of them:\n\nInsufficient information.\n\nTherefore, the Final Answer can't be determined.",
+      "code": null,
+      "stdout": null,
+      "stderr": null,
+      "engine_history": null,
+      "context_length": 1651,
+      "snapshot_answer": null,
+      "confidence": null
+    }
+  ],
+  "research_metrics": {
+    "error_recovery_rate": 1.0,
+    "compute_to_accuracy_ratio": 0.0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "syntax_errors": 0
+  }
+}

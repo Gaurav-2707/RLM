@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "question": "Question 46",
+    "gold_answer": "Answer_5",
+    "budget": 4,
+    "is_correct": true,
+    "oracle_correct": true,
+    "actual_iterations": 4
+  },
+  "repl_history": [
+    {
+      "iteration": 1,
+      "confidence": 0.5049298926557182,
+      "snapshot_answer": "Answer_1",
+      "context_length": 500
+    },
+    {
+      "iteration": 2,
+      "confidence": 0.658765622923899,
+      "snapshot_answer": "Answer_2",
+      "context_length": 1000
+    },
+    {
+      "iteration": 3,
+      "confidence": 0.7157814044221977,
+      "snapshot_answer": "Answer_3",
+      "context_length": 1500
+    },
+    {
+      "iteration": 4,
+      "confidence": 0.8189211056014017,
+      "snapshot_answer": "Answer_4",
+      "context_length": 2000
+    }
+  ]
+}
